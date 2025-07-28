@@ -1,0 +1,238 @@
+/* General Layout */
+.home-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 40px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+/* Instructor CTA */
+.instructor-button {
+  background-color: #1a1a1a;
+  padding: 5px;
+  border-radius: 999px;
+  font-weight: bold;
+  color: #ccc;
+  margin-top: 64px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: fit-content;
+}
+
+.instructor-button:hover {
+  transform: scale(0.95);
+}
+
+.instructor-inner {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 24px;
+  border-radius: 999px;
+}
+
+/* Hero Text */
+.home-heading {
+  margin-top: 28px;
+  font-size: 32px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.home-subtext {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 18px;
+  color: #ccc;
+  max-width: 90%;
+  font-weight: 500;
+}
+
+/* CTA Buttons */
+.cta-buttons {
+  margin-top: 32px;
+  display: flex;
+  gap: 24px;
+}
+
+.video-container {
+  margin: 40px auto;           /* center horizontally */
+  padding: 0 16px;             /* optional: for side spacing */
+  max-width: 800px;            /* LIMIT the width */
+  width: 100%;                 /* allow it to shrink on smaller screens */
+}
+
+.video-player {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow:
+    0 4px 12px rgba(255, 255, 255, 0.4),
+    0 4px 12px rgba(191, 219, 254, 0.5);
+  object-fit: contain;         /* ensures full video fits */
+  display: block;
+}
+
+
+
+/* Code Headings */
+.code-heading {
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+}
+
+@media screen and (min-width: 1024px) {
+  .code-heading {
+    text-align: left;
+  }
+}
+
+/* Yellow Highlight Text */
+.text-yellow-25 {
+  color: #f9f295; /* soft yellow */
+}
+
+/* Responsive Flex Layouts for CodeBlocks */
+.flex-row-lg,
+.flex-row-reverse-lg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin: 80px 0;
+  text-align: center;
+}
+
+@media screen and (min-width: 1024px) {
+  .flex-row-lg {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .flex-row-reverse-lg {
+    flex-direction: row-reverse;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+
+/* Section Two */
+.section-two {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.homepage-bg {
+  background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+  height: 310px;
+}
+
+.section-two-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.spacer {
+  height: 140px;
+}
+
+.cta-group {
+  display: flex;
+  gap: 24px;
+  color: white;
+}
+
+.cta-link {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Skills Section */
+.section-two-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.skills-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 120px;
+}
+
+.skills-heading {
+  font-size: 32px;
+  font-weight: 600;
+  width: 45%;
+}
+
+.skills-subtext {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skills-para {
+  font-size: 16px;
+}
+
+/* Section Three */
+.section-three {
+  background-color: #0f0f0f;
+  color: white;
+  padding: 64px 16px;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.review-heading {
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+  .skills-section {
+    flex-direction: column;
+  }
+
+  .skills-heading,
+  .skills-subtext {
+    width: 100%;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .code-heading,
+  .home-heading,
+  .review-heading {
+    font-size: 24px;
+  }
+}

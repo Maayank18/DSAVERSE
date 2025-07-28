@@ -1,0 +1,17 @@
+/* Global App Layout */
+.app-wrapper {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #000814; /* richblack-900 */
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Background image class for homepage section */
+.homepage_bg {
+  background-image: url('./assets/Images/bghome.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}

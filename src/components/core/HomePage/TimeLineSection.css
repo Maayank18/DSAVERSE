@@ -1,0 +1,145 @@
+.timeline-wrapper {
+  padding: 40px 0;
+}
+
+.timeline-container {
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Left Section */
+.timeline-left {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline-left::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 25px;
+  height: 100%;
+  border-left: 2px dotted #ccc;
+}
+
+.timeline-item {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  position: relative;
+}
+
+.timeline-icon {
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-icon img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.timeline-text h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.timeline-text p {
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0 0;
+}
+
+/* Right Image Section */
+.timeline-image-wrapper {
+  position: relative;
+  width: 45%;
+}
+
+.timeline-main-image {
+  width: 100%;
+  object-fit: cover;
+  box-shadow: 0 0 10px #ccc;
+}
+
+.timeline-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #1dbf73; /* caribbeangreen-700 */
+  display: flex;
+  flex-direction: row;
+  color: white;
+  padding: 40px;
+  gap: 40px;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px #1dbf73;
+}
+
+.timeline-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid #34e89e;
+  padding-right: 20px;
+}
+
+.timeline-metric:last-child {
+  border-right: none;
+}
+
+.metric-number {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: #c4fff9;
+  text-align: center;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .timeline-container {
+    flex-direction: column;
+  }
+
+  .timeline-left,
+  .timeline-image-wrapper {
+    width: 100%;
+  }
+
+  .timeline-overlay {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .timeline-metric {
+    border-right: none;
+    border-bottom: 1px solid #34e89e;
+    padding-bottom: 10px;
+  }
+
+  .timeline-metric:last-child {
+    border-bottom: none;
+  }
+}

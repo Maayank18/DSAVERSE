@@ -1,0 +1,111 @@
+.codeblock-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  justify-content: space-between;
+  margin: 80px 0;
+  align-items: center; /* ✅ center on small screens */
+  text-align: center;  /* ✅ center text on small screens */
+}
+
+/* Responsive layout */
+.flex-row-lg {
+  flex-direction: column;
+}
+.flex-row-reverse-lg {
+  flex-direction: column;
+}
+
+@media screen and (min-width: 1024px) {
+  .flex-row-lg {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+  }
+  .flex-row-reverse-lg {
+    flex-direction: row-reverse;
+    text-align: left;
+    align-items: flex-start;
+  }
+}
+
+/* Left Section */
+.codeblock-left {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center; /* ✅ center heading + buttons */
+}
+
+@media screen and (min-width: 1024px) {
+  .codeblock-left {
+    width: 50%;
+    align-items: flex-start; /* revert to left align on large screens */
+  }
+}
+
+.codeblock-subtext {
+  color: #ccc;
+  font-weight: bold;
+  max-width: 500px;
+}
+
+.codeblock-buttons {
+  display: flex;
+  gap: 28px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media screen and (min-width: 1024px) {
+  .codeblock-buttons {
+    justify-content: flex-start;
+  }
+}
+
+.cta-content {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Right Section */
+.codeblock-right {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 16px 0;
+  justify-content: center;
+}
+
+@media screen and (min-width: 1024px) {
+  .codeblock-right {
+    width: 500px;
+    justify-content: flex-start;
+  }
+}
+
+.codeblock-lines {
+  width: 10%;
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
+  text-align: center;
+  color: #aaa;
+}
+
+.codeblock-code {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: bold;
+  font-family: monospace;
+  text-align: left;
+}
+
+/* Replacement for "text-yellow-25" */
+.text-yellow-25 {
+  color: #f9f295;
+}

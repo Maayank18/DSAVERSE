@@ -1,0 +1,100 @@
+.template-container {
+  display: grid;
+  min-height: calc(100vh - 3.5rem);
+  place-items: center;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #6366f1; /* Indigo-500 (Tailwind-like) */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+  display: block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.content-wrapper {
+  max-width: 1200px;
+  width: 91.666667%;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
+  gap: 3rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .content-wrapper {
+    flex-direction: row;
+    gap: 3rem;
+  }
+}
+
+.form-section {
+  width: 91.666667%;
+  max-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .form-section {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.form-title {
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 2.375rem;
+  color: #f1f2f7; /* richblack-5 */
+}
+
+.form-description {
+  margin-top: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+}
+
+.description-main {
+  color: #838894; /* richblack-100 */
+}
+
+.description-highlight {
+  font-family: "Edu SA Beginner", cursive;
+  font-weight: bold;
+  font-style: italic;
+  color: #8bf0ff; /* blue-100 */
+}
+
+.image-section {
+  position: relative;
+  width: 91.666667%;
+  max-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .image-section {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.overlay-image {
+  position: absolute;
+  top: -1rem;
+  right: 1rem;
+  z-index: 10;
+}

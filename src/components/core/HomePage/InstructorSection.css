@@ -1,0 +1,72 @@
+.instructor-wrapper {
+  margin-top: 60px; /* equivalent to mt-15 */
+}
+
+.instructor-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 80px;
+  flex-wrap: wrap;
+}
+
+.instructor-image {
+  width: 100%;
+  max-width: 50%;
+}
+
+.image-shadow {
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+  width: 100%;
+  height: auto;
+}
+
+.instructor-content {
+  width: 100%;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.instructor-heading {
+  font-size: 32px;
+  font-weight: 600;
+  max-width: 50%;
+}
+
+.instructor-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #a3a3a3; /* Tailwind's text-richblack-300 */
+  max-width: 80%;
+}
+
+.instructor-button {
+  width: fit-content;
+}
+
+.instructor-cta {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Responsive */
+@media screen and (max-width: 1024px) {
+  .instructor-container {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .instructor-image,
+  .instructor-content {
+    max-width: 100%;
+  }
+
+  .instructor-heading,
+  .instructor-text {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,75 @@
+.learning-wrapper {
+  margin-top: 135px;
+  margin-bottom: 128px; /* approx mb-32 */
+}
+
+.learning-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.learning-heading {
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.learning-subheading {
+  text-align: center;
+  color: #525252; /* richblack-600 */
+  font-size: 16px;
+  font-weight: 500;
+  width: 50%;
+  margin: 0 auto;
+}
+
+/* Images section */
+.learning-images {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.img-left {
+  object-fit: contain;
+  margin-right: -128px; /* Tailwind's -mr-32 */
+  max-width: 100%;
+}
+
+.img-center {
+  object-fit: contain;
+  max-width: 100%;
+}
+
+.img-right {
+  object-fit: contain;
+  margin-left: -144px; /* Tailwind's -ml-36 */
+  max-width: 100%;
+}
+
+/* Button container */
+.learning-button {
+  width: fit-content;
+}
+
+/* Responsive tweaks */
+@media screen and (max-width: 768px) {
+  .learning-subheading {
+    width: 90%;
+  }
+
+  .img-left,
+  .img-right {
+    margin: 0;
+  }
+
+  .learning-images {
+    flex-direction: column;
+  }
+}
