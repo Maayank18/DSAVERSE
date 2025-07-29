@@ -12,67 +12,69 @@ require("dotenv").config();
 // -> check user exist or not -> yes return yes and if no ->actual otp generate
 // -> that should be unique -> storing otp in db and send the response
 
-exports.sendOTP = async (req,res) => {
-    try{
-        // fetch email request body
-        const {email} = req.body;
+exports.sendOTP = async (req, res) => {
+  try {
+    // ✅ fetch email and checkUserPresent flag from body
+    const { email, checkUserPresent } = req.body;
 
-        // check if user exist on basis of email
-        const checkUserExist = await User.findOne({email});
+    // ✅ check if user exists
+    const checkUserExist = await User.findOne({ email });
 
-        // if the user exist send a response
-        if(checkUserExist){
-            return res.status(401).json({
-                success:false,
-                message:"User already exist",
-            });
-        }
-
-        // if not exits generate an otp
-        let otp = otpGenerator.generate(6, {
-            upperCaseAlphabets: false,
-            lowerCaseAlphabets: false,
-            specialChars: false,
-        });
-
-        console.log("OTP generated is : ", otp);
-
-        // making sure that otp is unique from otp collection
-        // brute froce way
-        let result = await OTP.findOne({Otp:otp});
-        while(result){
-            otp = otpGenerator(6,{
-                upperCaseAlphabets:false,
-                lowerCaseAlphabets:false,
-                specialChars:false,
-            });
-            result = await OTP.findOne({otp:otp});
-        }
-
-
-        // otp ka object creation adn entry in database
-        const otppayload = {email,otp};
-
-        // entry create in db
-        const otpbody = await OTP.create(otppayload);
-        console.log(otpbody);
-
-        // return response success
-        res.status(200).json({
-            success:true,
-            message : 'otp sent successfully ',
-            otp,
-        });
-
-
-    }catch(error){
-        console.log(error);
-        return res.status(500).json({
-            success:false,
-            message:error.message,
-        });
+    // ✅ block or allow based on checkUserPresent logic
+    if (checkUserPresent && checkUserExist) {
+      return res.status(401).json({
+        success: false,
+        message: "User already exists",
+      });
     }
-}
+
+    if (!checkUserPresent && !checkUserExist) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // ✅ generate OTP
+    let otp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    });
+
+    console.log("OTP generated is : ", otp);
+
+    // ✅ ensure OTP is unique in the DB
+    let result = await OTP.findOne({ otp:otp });
+    while (result) {
+      otp = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        lowerCaseAlphabets: false,
+        specialChars: false,
+      });
+      result = await OTP.findOne({ otp:otp }); // checking
+    }
+
+    // ✅ save OTP in DB
+    const otpPayload = { email, otp };
+    const otpEntry = await OTP.create(otpPayload);
+    console.log("OTP saved in DB:", otpEntry);
+
+    // ✅ return success
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent successfully",
+      otp, // remove this in production
+    });
+  } catch (error) {
+    console.log("SEND OTP ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 
 
 
@@ -127,13 +129,13 @@ exports.signup = async (req,res) => {
                 success:false,
                 message:" the otp is not valid/  not found",
             });
-        }else if( !recentOtp || (String(recentOtp.otp) !== String(otp))){ // tetsing changes 
-            // invalid otp
-            return res.status(400).json({
-                success:false,
-                message:" INvalid match ",
-            });
+        }if (String(recentOtp.otp) !== String(otp)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid OTP",
+          });
         }
+
 
         const hashedPassword  = await bcrypt.hash(password,10);
 

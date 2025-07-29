@@ -1,0 +1,21 @@
+.contact-section-container {
+  margin: 0 auto;
+}
+
+.contact-title {
+  text-align: center;
+  font-size: 2.25rem; /* 4xl */
+  font-weight: 600;
+}
+
+.contact-subtitle {
+  text-align: center;
+  margin-top: 0.75rem; /* mt-3 */
+  color: #a1a1aa; /* richblack-300 */
+}
+
+.contact-form-wrapper {
+  margin-top: 3rem; /* mt-12 */
+  margin-left: auto;
+  margin-right: auto;
+}

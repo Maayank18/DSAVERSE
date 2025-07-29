@@ -1,0 +1,62 @@
+.learning-grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding: 2rem;
+  background-color: #000814; /* dark background */
+  color: white;
+}
+
+.learning-grid-card {
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+}
+
+.learning-grid-card:hover {
+  transform: translateY(-5px);
+}
+
+.bg-700 {
+  background-color: #1a1a2e;
+}
+
+.bg-800 {
+  background-color: #16213e;
+}
+
+.bg-none {
+  background-color: transparent;
+}
+
+.card-span-large {
+  grid-column: span 3;
+  background-color: #0f3460;
+}
+
+.card-start-2 {
+  grid-column-start: 2;
+}
+
+.learning-card-main .learning-card-heading {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.learning-card-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #d3d3d3;
+}
+
+.learning-card-button {
+  margin-top: 1.5rem;
+}
+
+.learning-card-secondary .secondary-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}

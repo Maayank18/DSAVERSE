@@ -1,0 +1,164 @@
+.about-hero {
+  background-color: #2c2f36;
+}
+
+.about-hero-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+  text-align: center;
+  color: white;
+}
+
+.about-header {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0 auto;
+  max-width: 70%;
+}
+
+.about-subtext {
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #a1a1aa;
+  max-width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-spacer {
+  height: 150px;
+}
+
+.about-banner-images {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 30%);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.about-quote-section {
+  border-bottom: 1px solid #2c2f36;
+}
+
+.about-quote-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  color: #a1a1aa;
+}
+
+.quote-spacer {
+  height: 100px;
+}
+
+.about-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  color: #a1a1aa;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.about-story {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.about-story-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 6rem;
+}
+
+.about-story-text p {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.founding-image {
+  box-shadow: 0 0 20px #FC6767;
+  max-width: 100%;
+  height: auto;
+}
+
+.about-vision-mission {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.about-vision,
+.about-mission {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 6rem;
+}
+
+.about-vision p,
+.about-mission p {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.gradient-text-1 {
+  background: linear-gradient(to bottom right, #833AB4, #FD1D1D, #FCB045);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.gradient-text-2 {
+  background: linear-gradient(to bottom, #FF512F, #F09819);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.gradient-text-3 {
+  background: linear-gradient(to bottom, #1FA2FF, #12D8FA, #A6FFCB);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+.about-learning-contact {
+  max-width: 1200px;
+  margin: 5rem auto;
+  padding: 2rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.about-reviews {
+  max-width: 1200px;
+  margin: 5rem auto;
+  padding: 2rem;
+  background-color: #0f0f0f;
+  color: white;
+  text-align: center;
+}
+
+.about-reviews h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
