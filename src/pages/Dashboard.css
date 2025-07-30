@@ -1,0 +1,41 @@
+.dashboard-loader-wrapper {
+  display: grid;
+  min-height: calc(100vh - 3.5rem);
+  place-items: center;
+}
+
+.dashboard-wrapper {
+  position: relative;
+  display: flex;
+  min-height: calc(100vh - 3.5rem);
+}
+
+.dashboard-content {
+  flex: 1;
+  height: calc(100vh - 3.5rem);
+  overflow: auto;
+}
+
+.dashboard-inner {
+  width: 91.666667%; /* w-11/12 */
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+/* Spinner styles — if not already defined globally */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #6366f1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

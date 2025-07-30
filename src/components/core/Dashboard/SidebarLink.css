@@ -1,0 +1,49 @@
+/* Sidebar link wrapper */
+.sidebar-link {
+  position: relative;
+  display: block;
+  padding: 0.5rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #d1d5db; /* richblack-300 */
+  background-color: transparent;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-left: 4px solid transparent; /* placeholder for active bar */
+}
+
+/* Active link styling */
+.sidebar-link.active {
+  background-color: #854d0e;  /* yellow-800 */
+  color: #fefce8;             /* yellow-50 */
+  border-left: 4px solid #fefce8;  /* left accent bar */
+}
+
+/* Optional highlight bar (used if you want a smooth fade-in bar) */
+.sidebar-highlight {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0.25rem;
+  background-color: #fefce8; /* yellow-50 */
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Show highlight */
+.sidebar-highlight.show {
+  opacity: 1;
+}
+
+/* Layout for icon + text */
+.sidebar-link-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Icon styling */
+.sidebar-icon {
+  font-size: 1.125rem;
+}

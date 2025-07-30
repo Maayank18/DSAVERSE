@@ -1,0 +1,9 @@
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.875rem; /* equivalent to text-3xl */
+  color: white;
+  height: 100vh; /* Full viewport height for centering */
+  background-color: #0f0f0f; /* Optional dark background for contrast */
+}

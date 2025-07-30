@@ -1,0 +1,21 @@
+.render-total-container {
+  min-width: 280px;
+  padding: 1.5rem;
+  border: 1px solid #334155; /* border-richblack-700 */
+  background-color: #1e293b;  /* bg-richblack-800 */
+  border-radius: 0.375rem;    /* rounded-md */
+}
+
+.render-total-label {
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #cbd5e1; /* text-richblack-300 */
+}
+
+.render-total-price {
+  margin-bottom: 1.5rem;
+  font-size: 1.875rem;
+  font-weight: 500;
+  color: #fef08a; /* text-yellow-100 */
+}
