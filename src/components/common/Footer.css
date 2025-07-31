@@ -139,3 +139,25 @@
     justify-content: flex-start;
   }
 }
+
+
+/* Reset link styling inside footer */
+.footer a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Optional: Add hover effect for visual feedback */
+.footer a:hover {
+  color: #ffd60a;
+}
+
+/* You can also target bottom footer links more specifically if needed */
+.footer-bottom-link a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer-bottom-link a:hover {
+  color: #c4b772;
+}

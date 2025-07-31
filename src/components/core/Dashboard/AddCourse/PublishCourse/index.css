@@ -1,0 +1,64 @@
+.publish-course-container {
+  border: 1px solid #2c2f41; /* richblack-700 */
+  background-color: #1e1f2b; /* richblack-800 */
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+
+.publish-course-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f1f2f7; /* richblack-5 */
+}
+
+.checkbox-wrapper {
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.125rem;
+}
+
+.checkbox-input {
+  height: 1rem;
+  width: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background-color: #4b5563; /* richblack-500 */
+  color: #a1a1aa; /* richblack-400 */
+  accent-color: #f1f2f7; /* fallback for custom ring */
+}
+
+.checkbox-input:focus {
+  outline: 2px solid #f1f2f7;
+}
+
+.checkbox-text {
+  margin-left: 0.5rem;
+  color: #a1a1aa; /* richblack-400 */
+}
+
+.publish-course-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  max-width: max-content;
+  margin-left: auto;
+}
+
+.back-button {
+  background-color: #d1d5db; /* richblack-300 */
+  color: #0f172a; /* richblack-900 */
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

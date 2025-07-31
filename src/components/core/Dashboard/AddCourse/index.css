@@ -1,0 +1,55 @@
+.add-course-container {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.add-course-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-course-heading {
+  margin-bottom: 3.5rem;
+  font-size: 1.875rem;
+  font-weight: 500;
+  color: #f1f2f7; /* richblack-5 */
+}
+
+.add-course-steps {
+  flex: 1;
+}
+
+.course-tips {
+  position: sticky;
+  top: 2.5rem;
+  display: none;
+  max-width: 400px;
+  flex: 1;
+  border: 1px solid #2c2f41; /* richblack-700 */
+  border-radius: 6px;
+  padding: 1.5rem;
+  background-color: #1e1f2b; /* richblack-800 */
+}
+
+@media screen and (min-width: 1280px) {
+  .course-tips {
+    display: block;
+  }
+}
+
+.course-tips-title {
+  margin-bottom: 2rem;
+  font-size: 1.125rem;
+  color: #f1f2f7; /* richblack-5 */
+}
+
+.course-tips-list {
+  margin-left: 1.25rem;
+  list-style-type: disc;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #f1f2f7; /* richblack-5 */
+}

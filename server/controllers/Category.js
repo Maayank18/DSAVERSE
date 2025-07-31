@@ -51,7 +51,8 @@ exports.showAllcategory = async (req,res) => {
     try{
 
     //though i dont have any parameter of finding but name and description should be present
-    const allcategory = await Category.find({},{name:true, description:true});
+    const allcategory = await Category.find({}, { name: 1, description: 1 });
+    // DEBUG CHAANGE 
 
     // returning the response
         return res.status(200).json({

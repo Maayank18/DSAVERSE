@@ -1,0 +1,26 @@
+.subsection-container {
+  width: 100%;
+}
+
+.subsection-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.subsection-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.subsection-icon {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.subsection-title {
+  font-size: 0.95rem;
+  color: #f1f1f1; /* richblack-5 */
+}

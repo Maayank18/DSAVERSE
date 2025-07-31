@@ -61,8 +61,8 @@ function SignupForm() {
     <div>
       <Tab tabData={tabData} field={accountType} setField={setAccountType} />
       <form onSubmit={handleOnSubmit} className="signup-form">
-        <div className="name-fields">
-          <label>
+        <div className="form-row">
+          <label className="forms-field">
             <p className="field-label">
               First Name <sup className="required">*</sup>
             </p>
@@ -76,7 +76,7 @@ function SignupForm() {
               className="input-field"
             />
           </label>
-          <label>
+          <label className="forms-field">
             <p className="field-label">
               Last Name <sup className="required">*</sup>
             </p>

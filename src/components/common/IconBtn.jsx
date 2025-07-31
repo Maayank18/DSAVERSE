@@ -7,15 +7,15 @@ export default function IconBtn({
   children,
   disabled,
   outline = false,
-  customClasses = "",
+  customClasses,
   type,
 }) {
   return (
     <button
       disabled={disabled}
       onClick={onclick}
-      className={`icon-btn ${outline ? "icon-btn-outline" : "icon-btn-filled"} ${customClasses}`}
       type={type}
+      className={`icon-btn ${outline ? "icon-btn-outline" : "icon-btn-filled"} ${customClasses}`}
     >
       {children ? (
         <>

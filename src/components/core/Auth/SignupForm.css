@@ -1,61 +1,120 @@
+/* SignupForm.css */
+
+/* Base styling */
 .signup-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
-.name-fields {
+/* Responsive field rows (first name + last name) */
+.form-row {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-}
-
-.full-width {
   width: 100%;
 }
+@media (min-width: 640px) {
+  .form-row {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
 
+/* Individual field styling */
+.forms-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Email field full width */
+.full-width {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Password fields layout - This uses gap for spacing */
+.name-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* This creates vertical gap for small screens */
+}
+@media (min-width: 640px) {
+  .name-fields {
+    flex-direction: row;
+    gap: 1rem; /* This creates horizontal gap for wider screens */
+  }
+}
+
+/* Password wrapper with icon positioning */
+.password-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+/* Label styling */
 .field-label {
-  margin-bottom: 0.25rem;
   font-size: 0.875rem;
   line-height: 1.375rem;
-  color: #f1f2f7; /* richblack-5 */
+  color: #f1f2f7;
 }
 
 .required {
-  color: #ff90b3; /* pink-200 */
+  color: #ff90b3;
 }
 
+/* Input field appearance */
 .input-field {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   border-radius: 0.5rem;
-  background-color: #2c2f41; /* richblack-800 */
-  color: #f1f2f7; /* richblack-5 */
+  background-color: #2c2f41;
+  color: #f1f2f7;
+  font-size: 0.95rem;
+  border: none;
+  outline: none;
   box-shadow: inset 0px -1px 0px rgba(255, 255, 255, 0.18);
 }
 
-.password-wrapper {
-  position: relative;
-  width: 100%;
-}
-
+/* Password field spacing for icon */
 .password-input {
-  padding-right: 2.5rem;
+  padding-right: 1rem;
 }
 
+/* Show/hide password icons */
 .toggle-visibility {
   position: absolute;
-  top: 38px;
-  right: 0.75rem;
-  z-index: 10;
+  top: 80%;
+  right: 0.30rem;
+  transform: translateY(-50%);
   cursor: pointer;
+  z-index: 10;
 }
 
+/* Submit button */
 .submit-button {
   margin-top: 1.5rem;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background-color: #ffd60a; /* yellow-50 */
-  color: #0f0f0f; /* richblack-900 */
-  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 0.5rem;
+  background-color: #ffd60a;
+  color: #0f0f0f;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #facc15;
 }

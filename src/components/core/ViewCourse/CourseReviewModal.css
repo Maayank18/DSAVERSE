@@ -1,0 +1,129 @@
+.review-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  margin-top: 0;
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.review-modal-wrapper {
+  margin: 2.5rem 0;
+  width: 90%;
+  max-width: 700px;
+  background-color: #1c1f25;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  color: white;
+}
+
+.review-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2a2e36;
+  padding: 1.25rem;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.review-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.close-icon {
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+}
+
+.review-modal-body {
+  padding: 1.5rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.posting-publicly {
+  font-size: 0.875rem;
+}
+
+.review-form {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 91.66%;
+  margin-top: 1rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.required {
+  color: #fda4af;
+}
+
+.review-textarea {
+  min-height: 130px;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #2d2f36;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  color: white;
+  resize: none;
+  font-family: inherit;
+}
+
+.error-text {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: #fda4af;
+  margin-top: 0.25rem;
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  width: 91.66%;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.cancel-button {
+  background-color: #d1d5db;
+  color: #111827;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}

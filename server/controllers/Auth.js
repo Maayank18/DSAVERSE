@@ -250,64 +250,121 @@ exports.login = async (req,res) => {
 }
 // change Password
 
-exports.changePassword = async (req,res) => {
-    try{
+// exports.changePassword = async (req,res) => {
+//     try{
+//         // get data from req body
+//         // get oldpassword, newpassword, confirm new password 
+//         // validation ( macth password , empty data )
+//         // ipdate password in database 
+//         // send mail for password updated
+//         // send response
+//         const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+//         const user = await User.findOne({ email: req.user.email }); // or req.body.email
+//         if (!user) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "User not found.",
+//             });
+//         }
+
+//         if (!oldPassword || !newPassword || !confirmNewPassword) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "All fields are required.",
+//             });
+//         }
+
+//         if (newPassword !== confirmNewPassword) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "New password and confirm password do not match.",
+//             });
+//         }
+
+//         // check if old password is correct or not
+//         const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+//         if (!isPasswordMatch) {
+//             return res.status(401).json({
+//                 success: false,
+//                 message: "Old password is incorrect.",
+//             });
+//         }
+
+//         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+//         const updatedUser = await User.findByIdAndUpdate(req.user.id,
+//             { password: hashedNewPassword },
+//             { new: true }
+//         );
+
+
+//         return res.status(200).json({
+//             success: true,
+//             message: "Password changed successfully.",
+//         });
+
+//     }catch(error){
+//         console.log(error);
+//         return res.status(500).json({
+//             success:false,
+//             message:"Something went wrong",
+//         });
+//     }
+// }
+
+exports.changePassword = async (req, res) => {
+  try {
+
         // get data from req body
         // get oldpassword, newpassword, confirm new password 
         // validation ( macth password , empty data )
         // ipdate password in database 
         // send mail for password updated
         // send response
-        const { oldPassword, newPassword, confirmNewPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
-        const user = await User.findOne({ email: req.user.email }); // or req.body.email
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found.",
-            });
-        }
-
-        if (!oldPassword || !newPassword || !confirmNewPassword) {
-            return res.status(400).json({
-                success: false,
-                message: "All fields are required.",
-            });
-        }
-
-        if (newPassword !== confirmNewPassword) {
-            return res.status(400).json({
-                success: false,
-                message: "New password and confirm password do not match.",
-            });
-        }
-
-        // check if old password is correct or not
-        const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
-        if (!isPasswordMatch) {
-            return res.status(401).json({
-                success: false,
-                message: "Old password is incorrect.",
-            });
-        }
-
-        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-        const updatedUser = await User.findByIdAndUpdate(req.user.id,
-            { password: hashedNewPassword },
-            { new: true }
-        );
-
-
-        return res.status(200).json({
-            success: true,
-            message: "Password changed successfully.",
-        });
-
-    }catch(error){
-        console.log(error);
-        return res.status(500).json({
-            success:false,
-            message:"Something went wrong",
-        });
+    // Validate inputs
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required.",
+      });
     }
-}
+
+    // Find user
+    const user = await User.findOne({ email: req.user.email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    // Check current password
+    const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Current password is incorrect.",
+      });
+    }
+
+    // Hash and update new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+    await user.save();
+
+    // Return success
+    return res.status(200).json({
+      success: true,
+      message: "Password changed successfully.",
+    });
+
+  } catch (error) {
+    console.error("Change Password Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while changing the password.",
+    });
+  }
+};

@@ -4,7 +4,7 @@ import DeleteAccount from "./DeleteAccount"
 import EditProfile from "./EditProfile"
 import UpdatePassword from "./UpdatePassword"
 
-import "./Settings.css"
+import "./index.css"
 
 export default function Settings() {
   return (

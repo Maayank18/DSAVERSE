@@ -1,0 +1,17 @@
+.my-courses-container {
+  padding: 0;
+  margin: 0;
+}
+
+.my-courses-header {
+  margin-bottom: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.my-courses-title {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 500;
+  color: #f1f1f1; /* richblack-5 */
+}

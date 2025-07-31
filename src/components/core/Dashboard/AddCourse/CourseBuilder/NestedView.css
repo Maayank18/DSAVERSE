@@ -1,0 +1,83 @@
+.nested-container {
+  background-color: #2c2f36;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+}
+
+.section-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 2px solid #4c4f57;
+  padding: 0.5rem 0;
+}
+
+.section-title,
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-title p {
+  font-weight: 600;
+  color: #f1f1f1;
+}
+
+.section-actions .icon {
+  font-size: 1.25rem;
+  color: #a1a1aa;
+  cursor: pointer;
+}
+
+.separator {
+  color: #a1a1aa;
+  font-weight: 500;
+}
+
+.subsection-wrapper {
+  padding: 0 1.5rem 1rem 1.5rem;
+}
+
+.subsection-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #4c4f57;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.subsection-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  color: #f1f1f1;
+  font-weight: 600;
+}
+
+.subsection-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.subsection-actions .icon {
+  font-size: 1.25rem;
+  color: #a1a1aa;
+  cursor: pointer;
+}
+
+.add-lecture-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  color: #facc15;
+  font-weight: 500;
+  cursor: pointer;
+}

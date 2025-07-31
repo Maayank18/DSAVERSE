@@ -1,0 +1,12 @@
+.course-slider-wrapper {
+  width: 100%;
+}
+
+.course-slider {
+  max-height: 30rem;
+}
+
+.no-course-text {
+  font-size: 1.25rem; /* text-xl */
+  color: #f9fafb; /* richblack-5 */
+}

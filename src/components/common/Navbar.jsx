@@ -121,7 +121,7 @@ import { BsChevronDown } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
 
-import logo from "../../assets/Images/WebsiteLogo.png";
+import Logo from "../../assets/Images/WebsiteLogo.png";
 import { NavbarLinks } from "../../data/navbar-links";
 import { apiConnector } from "../../services/apiconnector";
 import { categories } from "../../services/apis";
@@ -159,8 +159,14 @@ function Navbar() {
     <div className={`navbar-wrapper ${location.pathname !== "/" ? "navbar-colored" : ""}`}>
       <div className="navbar-container">
         <Link to="/">
-          <img src={logo} alt="Logo" width={160} height={32} loading="lazy" />
+          <img
+            src={Logo}
+            alt="Logo"
+            className="navbar-logo"
+            loading="lazy"
+          />
         </Link>
+
 
         <nav className="navbar-links">
           <ul>

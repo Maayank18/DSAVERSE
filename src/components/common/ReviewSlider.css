@@ -1,0 +1,73 @@
+.review-slider-container {
+  color: white;
+  width: 100%;
+}
+
+.review-slider-wrapper {
+  margin: 50px auto;
+  height: 184px;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background-color: #2c2f36; /* richblack-800 */
+  font-size: 14px;
+  color: #d1d5db; /* richblack-25 */
+  border-radius: 6px;
+  height: 100%;
+}
+
+.review-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.review-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.review-user-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-user-name {
+  font-weight: 600;
+  color: #f1f5f9; /* richblack-5 */
+  margin: 0;
+}
+
+.review-course-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280; /* richblack-500 */
+  margin: 0;
+}
+
+.review-text {
+  font-weight: 500;
+  color: #d1d5db;
+  margin: 0;
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.review-rating-value {
+  font-weight: 600;
+  color: #fde68a; /* yellow-100 */
+  margin: 0;
+}
+

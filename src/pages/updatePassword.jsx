@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 
 import { resetPassword } from "../services/operations/authAPI"
-import "./UpdatePassword.css"
+import "./updatePassword.css"
 
 function UpdatePassword() {
   const navigate = useNavigate()

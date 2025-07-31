@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import OtpInput from "react-otp-input";
 import { Link, useNavigate } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
@@ -10,58 +10,72 @@ import "./verifyEmail.css";
 function VerifyEmail() {
   const [otp, setOtp] = useState("");
   const [sending, setSending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const { signupData, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const otpSentOnce = useRef(false); // ✅ Prevent multiple OTP calls
+
+  // Redirect if signupData is missing
   useEffect(() => {
     if (!signupData?.email) {
       navigate("/signup");
     }
   }, [signupData, navigate]);
 
+  // Send OTP on first mount (guarded)
   useEffect(() => {
-    const fireOtp = async () => {
-      if (!signupData?.email) return;
+    if (!signupData?.email || otpSentOnce.current) return;
+
+    otpSentOnce.current = true;
+
+    const sendInitialOtp = async () => {
       try {
         setSending(true);
-        await dispatch(sendOtp(signupData.email, navigate,false)).unwrap();
+        await dispatch(sendOtp(signupData.email, navigate, true, false)).unwrap(); // showToast = false
+        setResendCooldown(30); // Start cooldown after initial send
       } catch (err) {
-        console.error("sendOtp failed:", err);
+        console.error("Initial OTP send failed:", err);
       } finally {
         setSending(false);
       }
     };
-    fireOtp();
+
+    // Avoid React 18 double fire
+    const timer = setTimeout(() => {
+      sendInitialOtp();
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [signupData, dispatch, navigate]);
+
+  // Cooldown timer
+  useEffect(() => {
+    let interval;
+    if (resendCooldown > 0) {
+      interval = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
 
   const handleVerifyAndSignup = (e) => {
     e.preventDefault();
-    const { accountType, firstName, lastName, email, password, confirmPassword } =
-      signupData;
-
-    dispatch(
-      signUp(
-        accountType,
-        firstName,
-        lastName,
-        email,
-        password,
-        confirmPassword,
-        otp,
-        navigate
-      )
-    );
+    const { accountType, firstName, lastName, email, password, confirmPassword } = signupData;
+    dispatch(signUp(accountType, firstName, lastName, email, password, confirmPassword, otp, navigate));
   };
 
   const handleResend = async () => {
-    if (!signupData?.email || sending) return;
+    if (!signupData?.email || sending || resendCooldown > 0) return;
+
     try {
       setSending(true);
-      console.log("signupData.email", signupData.email);
-      await dispatch(sendOtp(signupData.email, navigate,false)).unwrap();
+      await dispatch(sendOtp(signupData.email, navigate, true, true)).unwrap(); // showToast = true
+      setResendCooldown(30);
     } catch (err) {
-      console.error("resendOtp failed:", err);
+      console.error("Resend OTP failed:", err);
     } finally {
       setSending(false);
     }
@@ -75,8 +89,7 @@ function VerifyEmail() {
         <div className="verify-card">
           <h1 className="verify-title">Verify Email</h1>
           <p className="verify-description">
-            A verification code has been sent to <b>{signupData?.email}</b>. Enter
-            it below:
+            A verification code has been sent to <b>{signupData?.email}</b>. Enter it below:
           </p>
 
           <form onSubmit={handleVerifyAndSignup} className="verify-form">
@@ -105,10 +118,14 @@ function VerifyEmail() {
             <button
               className="verify-resend"
               onClick={handleResend}
-              disabled={sending}
+              disabled={sending || resendCooldown > 0}
             >
               <RxCountdownTimer />
-              {sending ? "Sending..." : "Resend OTP"}
+              {sending
+                ? "Sending..."
+                : resendCooldown > 0
+                ? `Resend in ${resendCooldown}s`
+                : "Resend OTP"}
             </button>
           </div>
         </div>

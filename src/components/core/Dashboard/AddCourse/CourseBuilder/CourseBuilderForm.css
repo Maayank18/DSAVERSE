@@ -1,0 +1,90 @@
+.course-builder-container {
+  padding: 24px;
+  border: 1px solid #4a4a4a;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+}
+
+.course-builder-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f1f1f1;
+  margin-bottom: 16px;
+}
+
+.course-builder-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field label {
+  font-size: 0.875rem;
+  color: #f1f1f1;
+}
+
+.required {
+  color: #ff90b3;
+}
+
+.form-style {
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  border: 1px solid #4a4a4a;
+  background-color: #2a2a2a;
+  color: #fff;
+  outline: none;
+}
+
+.form-style:disabled {
+  background-color: #3a3a3a;
+}
+
+.form-error {
+  font-size: 0.75rem;
+  color: #ff90b3;
+  margin-left: 8px;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cancel-edit {
+  font-size: 0.875rem;
+  color: #d1d5db;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.back-button {
+  padding: 8px 20px;
+  background-color: #d1d5db;
+  color: #0f0f0f;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.icon-yellow {
+  color: #facc15;
+}

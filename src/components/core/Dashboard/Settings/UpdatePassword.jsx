@@ -23,6 +23,7 @@ export default function UpdatePassword() {
   } = useForm()
 
   const submitPasswordForm = async (data) => {
+    console.log("Submitted Data >>>", data)
     try {
       await changePassword(token, data)
     } catch (error) {
@@ -35,18 +36,18 @@ export default function UpdatePassword() {
       <div className="password-container">
         <h2 className="password-heading">Password</h2>
         <div className="password-fields">
-          {/* Old Password */}
+          {/* Current Password */}
           <div className="input-group">
-            <label htmlFor="oldPassword" className="label-style">
+            <label htmlFor="currentPassword" className="label-style">
               Current Password
             </label>
             <input
               type={showOldPassword ? "text" : "password"}
-              name="oldPassword"
-              id="oldPassword"
+              name="currentPassword"
+              id="currentPassword"
               placeholder="Enter Current Password"
               className="form-style"
-              {...register("oldPassword", { required: true })}
+              {...register("currentPassword", { required: true })}
             />
             <span
               onClick={() => setShowOldPassword((prev) => !prev)}
@@ -58,7 +59,7 @@ export default function UpdatePassword() {
                 <AiOutlineEye fontSize={24} fill="#AFB2BF" />
               )}
             </span>
-            {errors.oldPassword && (
+            {errors.currentPassword && (
               <span className="error-msg">
                 Please enter your Current Password.
               </span>

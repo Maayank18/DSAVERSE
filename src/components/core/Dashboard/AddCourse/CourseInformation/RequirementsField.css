@@ -1,0 +1,68 @@
+.req-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.req-field-label {
+  font-size: 0.875rem;
+  color: #f1f2f7; /* richblack-5 */
+}
+
+.req-field-required {
+  color: #fca5a5; /* pink-200 */
+}
+
+.req-input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.req-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background-color: #1f2937;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  color: #f1f2f7;
+  font-size: 1rem;
+}
+
+.req-add-btn {
+  font-weight: 600;
+  color: #fde68a; /* yellow-50 */
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.req-list {
+  margin-top: 0.5rem;
+  list-style-type: disc;
+  padding-left: 1.25rem;
+}
+
+.req-list-item {
+  display: flex;
+  align-items: center;
+  color: #f1f2f7; /* richblack-5 */
+  font-size: 0.95rem;
+}
+
+.req-clear-btn {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: #d1d5db; /* pure-greys-300 */
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.req-error {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: #fca5a5; /* pink-200 */
+  letter-spacing: 0.02em;
+}

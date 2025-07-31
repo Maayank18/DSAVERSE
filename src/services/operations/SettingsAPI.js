@@ -70,24 +70,51 @@ export function updateProfile(token, formData) {
   }
 }
 
-export async function changePassword(token, formData) {
-  const toastId = toast.loading("Loading...")
+// export async function changePassword(token, formData) {
+//   const toastId = toast.loading("Loading...")
+//   try {
+//     const response = await apiConnector("POST", CHANGE_PASSWORD_API, formData, {
+//       Authorization: `Bearer ${token}`,
+//     })
+//     console.log("CHANGE_PASSWORD_API API RESPONSE............", response)
+
+//     if (!response.data.success) {
+//       throw new Error(response.data.message)
+//     }
+//     toast.success("Password Changed Successfully")
+//   } catch (error) {
+//     console.log("CHANGE_PASSWORD_API API ERROR............", error)
+//     toast.error(error.response.data.message)
+//   }
+//   toast.dismiss(toastId)
+// }
+export async function changePassword(token, data) {
+  const toastId = toast.loading("Updating password...")
+
   try {
-    const response = await apiConnector("POST", CHANGE_PASSWORD_API, formData, {
-      Authorization: `Bearer ${token}`,
-    })
-    console.log("CHANGE_PASSWORD_API API RESPONSE............", response)
+    const response = await apiConnector(
+      "POST",
+      CHANGE_PASSWORD_API,
+      JSON.stringify(data), // send raw JSON
+      {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json", // must be set
+      }
+    )
 
     if (!response.data.success) {
       throw new Error(response.data.message)
     }
-    toast.success("Password Changed Successfully")
+
+    toast.success("Password updated successfully")
   } catch (error) {
-    console.log("CHANGE_PASSWORD_API API ERROR............", error)
-    toast.error(error.response.data.message)
+    console.error("CHANGE_PASSWORD_API ERROR >>>", error)
+    toast.error("Could not update password")
+  } finally {
+    toast.dismiss(toastId)
   }
-  toast.dismiss(toastId)
 }
+
 
 export function deleteProfile(token, navigate) {
   return async (dispatch) => {

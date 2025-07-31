@@ -1,0 +1,126 @@
+.course-table {
+  border-radius: 0.75rem;
+  border: 1px solid #2c2f36; /* richblack-800 */
+  width: 100%;
+}
+
+.course-table-header-row {
+  display: flex;
+  gap: 2.5rem;
+  padding: 0.5rem 1.5rem;
+  border-bottom: 1px solid #2c2f36;
+  background-color: #1a1c22;
+}
+
+.course-table-header-cell {
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #d1d5db; /* richblack-100 */
+}
+
+.course-table-empty {
+  padding: 2.5rem 0;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #d1d5db;
+}
+
+.course-table-data-row {
+  display: flex;
+  gap: 2.5rem;
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid #2c2f36;
+}
+
+.course-table-course-info {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+}
+
+.course-table-thumbnail {
+  height: 148px;
+  width: 220px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.course-table-course-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.course-table-course-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #f1f1f1; /* richblack-5 */
+}
+
+.course-table-description {
+  font-size: 0.75rem;
+  color: #9ca3af; /* richblack-300 */
+}
+
+.course-table-date {
+  font-size: 0.75rem;
+  color: white;
+}
+
+.course-table-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  width: fit-content;
+}
+
+.course-table-status.draft {
+  background-color: #2f2f3b; /* richblack-700 */
+  color: #f9a8d4; /* pink-100 */
+}
+
+.course-table-status.published {
+  background-color: #2f2f3b;
+  color: #fde047; /* yellow-100 */
+}
+
+.status-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fde047;
+  color: #1a1c22;
+  height: 0.75rem;
+  width: 0.75rem;
+  border-radius: 50%;
+}
+
+.course-table-cell {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #d1d5db;
+}
+
+.action-btn {
+  padding: 0 0.25rem;
+  transition: transform 0.2s ease;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+.edit-btn:hover {
+  color: #2dd4bf; /* caribbeangreen-300 */
+}
+
+.delete-btn:hover {
+  color: #ff0000;
+}

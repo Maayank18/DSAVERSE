@@ -1,0 +1,46 @@
+.edit-course-wrapper {
+  padding: 1rem;
+}
+
+.edit-course-title {
+  margin-bottom: 3.5rem;
+  font-size: 1.875rem; /* 30px */
+  font-weight: 500;
+  color: #f1f1f1; /* richblack-5 */
+}
+
+.edit-course-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.edit-course-notfound {
+  margin-top: 3.5rem;
+  text-align: center;
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #d1d5db; /* richblack-100 */
+}
+
+.edit-course-loading-container {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  height: 100%;
+}
+
+/* Spinner animation */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #2c2f36; /* light grey */
+  border-top-color: #00bcd4; /* cyan */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

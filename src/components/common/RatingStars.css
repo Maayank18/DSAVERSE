@@ -1,0 +1,5 @@
+.rating-stars {
+  display: flex;
+  gap: 0.25rem; /* 4px gap between stars */
+  color: #facc15; /* text-yellow-100 (roughly #facc15) */
+}

@@ -1,0 +1,52 @@
+.course-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-card-img-container {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.course-card-img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+
+.course-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0.25rem;
+}
+
+.course-card-title {
+  font-size: 1.25rem;
+  color: #f1f1f1; /* richblack-5 */
+}
+
+.course-card-instructor {
+  font-size: 0.875rem;
+  color: #a3a3a3; /* richblack-50 */
+}
+
+.course-card-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.course-card-rating-count {
+  color: #ffd60a; /* yellow-5 */
+}
+
+.course-card-rating-label {
+  color: #6b7280; /* richblack-400 */
+}
+
+.course-card-price {
+  font-size: 1.25rem;
+  color: #f1f1f1; /* richblack-5 */
+}
