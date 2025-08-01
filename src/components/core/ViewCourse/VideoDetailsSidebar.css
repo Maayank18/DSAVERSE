@@ -9,7 +9,7 @@
 }
 
 .sidebar-header {
-  padding: 1.25rem 1.25rem 1.25rem;
+  padding: 1.25rem;
   border-bottom: 1px solid #3a3d44;
   font-size: 1.125rem;
   font-weight: bold;
@@ -37,6 +37,7 @@
   cursor: pointer;
   transition: transform 0.2s ease;
 }
+
 .back-button:hover {
   transform: scale(0.9);
 }
@@ -80,9 +81,11 @@
   display: inline-block;
   transition: transform 0.3s ease;
 }
+
 .rotate-180 {
   transform: rotate(180deg);
 }
+
 .rotate-0 {
   transform: rotate(0deg);
 }
@@ -99,6 +102,7 @@
   cursor: pointer;
   transition: background-color 0.3s;
 }
+
 .subsection-item:hover {
   background-color: #1f2024;
 }

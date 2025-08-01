@@ -1,22 +1,23 @@
-.modal-overlay {
+.modal-backdrop {
   position: fixed;
   inset: 0;
   z-index: 1000;
   display: grid;
   place-items: center;
-  background-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(6px);
-  overflow-y: auto;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  margin-top: 0 !important;
   height: 100vh;
   width: 100vw;
 }
 
 .modal-container {
-  margin: 2rem 0;
-  width: 92%;
+  margin: 2rem auto;
+  width: 90%;
   max-width: 700px;
-  border: 1px solid #4a4a4a;
-  background-color: #1c1c1e;
+  background-color: #1c1f24;
+  border: 1px solid #4a4e69;
   border-radius: 8px;
 }
 
@@ -24,20 +25,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2e2e30;
+  background-color: #2c2f36;
   padding: 1rem;
-  border-radius: 8px 8px 0 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .modal-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f0f0f0;
+  color: #f1f1f1;
 }
 
 .modal-close-icon {
   font-size: 1.5rem;
-  color: #f0f0f0;
+  color: #f1f1f1;
   cursor: pointer;
 }
 
@@ -48,43 +50,43 @@
   gap: 2rem;
 }
 
-.form-group {
+.modal-field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.form-group label {
-  font-size: 0.875rem;
-  color: #f0f0f0;
+.modal-field label {
+  font-size: 0.9rem;
+  color: #f1f1f1;
+}
+
+.modal-input,
+.modal-textarea {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #999;
+  background-color: #0f1117;
+  color: #fff;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.modal-textarea {
+  min-height: 130px;
+  resize: none;
+}
+
+.modal-error {
+  color: #ffb3c1;
+  font-size: 0.75rem;
 }
 
 .required {
-  color: #ffb6c1;
+  color: #ffb3c1;
 }
 
-.form-input,
-.form-textarea {
-  padding: 0.5rem;
-  background-color: #2a2a2e;
-  color: white;
-  border: 1px solid #3a3a3e;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.form-textarea {
-  resize: none;
-  min-height: 130px;
-}
-
-.error-text {
-  font-size: 0.75rem;
-  color: #ffb6c1;
-  margin-left: 0.25rem;
-}
-
-.form-actions {
+.modal-btn-wrapper {
   display: flex;
   justify-content: flex-end;
 }

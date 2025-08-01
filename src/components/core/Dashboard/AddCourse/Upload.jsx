@@ -1,12 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { FiUploadCloud } from "react-icons/fi";
-import { useSelector } from "react-redux";
-
-import "video-react/dist/video-react.css";
-import { Player } from "video-react";
-
-import "./Upload.css"; // <-- CSS file imported
+import { useEffect, useRef, useState } from "react"
+import { useDropzone } from "react-dropzone"
+import { FiUploadCloud } from "react-icons/fi"
+import { useSelector } from "react-redux"
+import './Upload.css'
 
 export default function Upload({
   name,
@@ -14,68 +10,82 @@ export default function Upload({
   register,
   setValue,
   errors,
-  video = false,
+  isVideo = false,
   viewData = null,
   editData = null,
 }) {
-  const { course } = useSelector((state) => state.course);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const { course } = useSelector((state) => state.course)
+  const [selectedFile, setSelectedFile] = useState(null)
   const [previewSource, setPreviewSource] = useState(
     viewData ? viewData : editData ? editData : ""
-  );
-  const inputRef = useRef(null);
+  )
+  const inputRef = useRef(null)
 
   const onDrop = (acceptedFiles) => {
-    const file = acceptedFiles[0];
+    const file = acceptedFiles[0]
     if (file) {
-      previewFile(file);
-      setSelectedFile(file);
+      previewFile(file)
+      setSelectedFile(file)
     }
-  };
+  }
 
-  const { getInputProps, getRootProps, isDragActive } = useDropzone({
-    accept: !video
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: !isVideo
       ? { "image/*": [".jpeg", ".jpg", ".png"] }
       : { "video/*": [".mp4"] },
     onDrop,
-  });
+    noClick: true,
+  })
 
   const previewFile = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPreviewSource(reader.result);
-    };
-  };
+    if (isVideo) {
+      const videoURL = URL.createObjectURL(file)
+      setPreviewSource(videoURL)
+    } else {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onloadend = () => {
+        setPreviewSource(reader.result)
+      }
+    }
+  }
 
   useEffect(() => {
-    register(name, { required: true });
-  }, [register]);
+    register(name, { required: true })
+  }, [register])
 
   useEffect(() => {
-    setValue(name, selectedFile);
-  }, [selectedFile, setValue]);
+    setValue(name, selectedFile)
+  }, [selectedFile, setValue])
 
   return (
-    <div className="upload-wrapper">
+    <div className="upload-container">
       <label className="upload-label" htmlFor={name}>
         {label} {!viewData && <sup className="required">*</sup>}
       </label>
-      <div className={`dropzone-container ${isDragActive ? "drag-active" : ""}`}>
+
+      <div className={`upload-dropzone ${isDragActive ? "drag-active" : ""}`} {...getRootProps()}>
+        <input {...getInputProps()} ref={inputRef} style={{ display: "none" }} />
+
         {previewSource ? (
           <div className="preview-wrapper">
-            {!video ? (
+            {!isVideo ? (
               <img src={previewSource} alt="Preview" className="preview-image" />
             ) : (
-              <Player aspectRatio="16:9" playsInline src={previewSource} />
+              <video
+                src={previewSource}
+                controls
+                className="preview-video"
+                width="100%"
+              />
             )}
             {!viewData && (
               <button
                 type="button"
                 onClick={() => {
-                  setPreviewSource("");
-                  setSelectedFile(null);
-                  setValue(name, null);
+                  setPreviewSource("")
+                  setSelectedFile(null)
+                  setValue(name, null)
                 }}
                 className="cancel-button"
               >
@@ -84,41 +94,32 @@ export default function Upload({
             )}
           </div>
         ) : (
-          // ✅ Corrected: Separated file input trigger from dropzone so "Browse" click works
           <div
-            className="dropzone-content"
-            onClick={() => inputRef.current.click()}
-            onDrop={getRootProps().onDrop}
-            onDragOver={(e) => e.preventDefault()}
+            className="upload-input"
+            onClick={() => {
+              inputRef.current?.click()
+            }}
           >
-            <input {...getInputProps()} ref={inputRef} />
             <div className="upload-icon-wrapper">
               <FiUploadCloud className="upload-icon" />
             </div>
-            <p className="dropzone-text">
-              Drag and drop an {!video ? "image" : "video"}, or{" "}
-              <span
-                className="highlight"
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevent parent onClick
-                  inputRef.current.click();
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                Browse
-              </span>{" "}
-              a file
+            <p className="upload-text">
+              Drag and drop an {!isVideo ? "image" : "video"}, or click to{" "}
+              <span className="highlight">Browse</span> a file
             </p>
-            <ul className="dropzone-hints">
+            <ul className="upload-guidelines">
               <li>Aspect ratio 16:9</li>
               <li>Recommended size 1024x576</li>
             </ul>
           </div>
         )}
       </div>
+
       {errors[name] && (
-        <span className="error-text">{label} is required</span>
+        <span className="upload-error">
+          {label} is required
+        </span>
       )}
     </div>
-  );
+  )
 }

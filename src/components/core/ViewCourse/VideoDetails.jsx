@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
-import "video-react/dist/video-react.css";
-import { BigPlayButton, Player } from "video-react";
+import ReactPlayer from "react-player";
 
 import { markLectureAsComplete } from "../../../services/operations/courseDetailsAPI";
 import { updateCompletedLectures } from "../../../slices/viewCourseSlice";
@@ -94,23 +93,25 @@ const VideoDetails = () => {
 
   return (
     <div className="video-details-container">
-      {!videoData ? (
+      {!videoData?.videoUrl ? (
         <img src={previewSource} alt="Preview" className="video-preview-image" />
       ) : (
-        <Player
-          ref={playerRef}
-          aspectRatio="16:9"
-          playsInline
-          onEnded={() => setVideoEnded(true)}
-          src={videoData?.videoUrl}
-        >
-          <BigPlayButton position="center" />
+        <div className="react-player-wrapper">
+          <ReactPlayer
+            ref={playerRef}
+            url={videoData?.videoUrl}
+            width="100%"
+            height="100%"
+            controls
+            playing
+            onEnded={() => setVideoEnded(true)}
+          />
           {videoEnded && (
             <div className="video-overlay">
               {!completedLectures.includes(subSectionId) && (
                 <IconBtn
                   disabled={loading}
-                  onclick={() => handleLectureCompletion()}
+                  onclick={handleLectureCompletion}
                   text={!loading ? "Mark As Completed" : "Loading..."}
                   customClasses="video-button"
                 />
@@ -119,7 +120,7 @@ const VideoDetails = () => {
                 disabled={loading}
                 onclick={() => {
                   if (playerRef?.current) {
-                    playerRef.current.seek(0);
+                    playerRef.current.seekTo(0, "seconds");
                     setVideoEnded(false);
                   }
                 }}
@@ -140,9 +141,8 @@ const VideoDetails = () => {
               </div>
             </div>
           )}
-        </Player>
+        </div>
       )}
-
       <h1 className="video-title">{videoData?.title}</h1>
       <p className="video-description">{videoData?.description}</p>
     </div>

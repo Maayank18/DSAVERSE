@@ -84,7 +84,38 @@ export const fetchCourseCategories = async () => {
 }
 
 // add the course details
-export const addCourseDetails = async (data, token) => {
+// DEBUG CHANGE 
+// export const addCourseDetails = async (data, token) => {
+//   let result = null;
+//   const toastId = toast.loading("Loading...");
+
+//   // ✅ Fix: parse token if it's coming directly from localStorage
+//   if (typeof token === "string" && token.startsWith('"')) {
+//     token = JSON.parse(token);
+//   }
+
+//   console.log("🪪 Token being sent:", token);
+
+//   try {
+//     const response = await apiConnector("POST", CREATE_COURSE_API, data, {
+//       Authorization: `Bearer ${token?.replace?.(/^"|"$/g, "")}`,
+//     });
+//     console.log("CREATE COURSE API RESPONSE............", response);
+//     if (!response?.data?.success) {
+//       throw new Error("Could Not Add Course Details");
+//     }
+//     toast.success("Course Details Added Successfully");
+//     result = response?.data?.data;
+//   } catch (error) {
+//     console.log("CREATE COURSE API ERROR............", error);
+//     toast.error(error?.response?.data?.message || error.message);
+//   }
+
+//   toast.dismiss(toastId);
+//   return result;
+// };
+
+export const addCourseDetails = async (data, token = localStorage.getItem("token")) => {
   let result = null
   const toastId = toast.loading("Loading...")
   try {
@@ -105,6 +136,7 @@ export const addCourseDetails = async (data, token) => {
   toast.dismiss(toastId)
   return result
 }
+
 
 // edit the course details
 export const editCourseDetails = async (data, token) => {
@@ -153,25 +185,35 @@ export const createSection = async (data, token) => {
 
 // create a subsection
 export const createSubSection = async (data, token) => {
-  let result = null
-  const toastId = toast.loading("Loading...")
+  let result = null;
+  const toastId = toast.loading("Loading...");
+
   try {
     const response = await apiConnector("POST", CREATE_SUBSECTION_API, data, {
-      Authorization: `Bearer ${token}`,
-    })
-    console.log("CREATE SUB-SECTION API RESPONSE............", response)
+      headers: {
+        Authorization: `Bearer ${token}`,
+        // DO NOT set Content-Type here; Axios will handle it for FormData
+      },
+    });
+
+    console.log("CREATE SUB-SECTION API RESPONSE............", response);
+
     if (!response?.data?.success) {
-      throw new Error("Could Not Add Lecture")
+      throw new Error("Could Not Add Lecture");
     }
-    toast.success("Lecture Added")
-    result = response?.data?.data
+
+    toast.success("Lecture Added");
+    result = response?.data?.data;
+
   } catch (error) {
-    console.log("CREATE SUB-SECTION API ERROR............", error)
-    toast.error(error.message)
+    console.log("CREATE SUB-SECTION API ERROR............", error);
+    toast.error(error?.response?.data?.message || error.message);
   }
-  toast.dismiss(toastId)
-  return result
-}
+
+  toast.dismiss(toastId);
+  return result;
+};
+
 
 // update a section
 export const updateSection = async (data, token) => {

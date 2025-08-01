@@ -10,46 +10,43 @@ import "./VideoDetailsSidebar.css"
 export default function VideoDetailsSidebar({ setReviewModal }) {
   const [activeStatus, setActiveStatus] = useState("")
   const [videoBarActive, setVideoBarActive] = useState("")
+
   const navigate = useNavigate()
   const location = useLocation()
   const { sectionId, subSectionId } = useParams()
+
   const {
-    courseSectionData,
-    courseEntireData,
-    totalNoOfLectures,
-    completedLectures,
+    courseSectionData = [],
+    courseEntireData = {},
+    totalNoOfLectures = 0,
+    completedLectures = [],
   } = useSelector((state) => state.viewCourse)
 
   useEffect(() => {
-    ;(() => {
-      if (!courseSectionData.length) return
-      const currentSectionIndx = courseSectionData.findIndex(
-        (data) => data._id === sectionId
-      )
-      const currentSubSectionIndx = courseSectionData?.[
-        currentSectionIndx
-      ]?.subSection.findIndex((data) => data._id === subSectionId)
-      const activeSubSectionId =
-        courseSectionData[currentSectionIndx]?.subSection?.[
-          currentSubSectionIndx
-        ]?._id
-      setActiveStatus(courseSectionData?.[currentSectionIndx]?._id)
-      setVideoBarActive(activeSubSectionId)
-    })()
-  }, [courseSectionData, courseEntireData, location.pathname])
+    if (!courseSectionData.length) return
+
+    const currentSectionIndex = courseSectionData.findIndex(
+      (section) => section._id === sectionId
+    )
+    const currentSubSectionIndex = courseSectionData[currentSectionIndex]?.subSection?.findIndex(
+      (sub) => sub._id === subSectionId
+    )
+    const activeSubSectionId = courseSectionData[currentSectionIndex]?.subSection?.[currentSubSectionIndex]?._id
+
+    setActiveStatus(courseSectionData[currentSectionIndex]?._id)
+    setVideoBarActive(activeSubSectionId)
+  }, [courseSectionData, sectionId, subSectionId, location.pathname])
 
   return (
     <div className="sidebar-wrapper">
       <div className="sidebar-header">
         <div className="sidebar-header-top">
           <div
-            onClick={() => {
-              navigate(`/dashboard/enrolled-courses`)
-            }}
+            onClick={() => navigate("/dashboard/enrolled-courses")}
             className="back-button"
-            title="back"
+            title="Back"
           >
-            <IoIosArrowBack size={30} />
+            <IoIosArrowBack size={24} />
           </div>
           <IconBtn
             text="Add Review"
@@ -57,6 +54,7 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
             onclick={() => setReviewModal(true)}
           />
         </div>
+
         <div className="sidebar-course-info">
           <p>{courseEntireData?.courseName}</p>
           <p className="progress">
@@ -66,48 +64,48 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
       </div>
 
       <div className="sidebar-sections">
-        {courseSectionData.map((course, index) => (
+        {courseSectionData.map((section) => (
           <div
             className="section-container"
-            onClick={() => setActiveStatus(course?._id)}
-            key={index}
+            onClick={() => setActiveStatus((prev) =>
+              prev === section._id ? "" : section._id
+            )}
+            key={section._id}
           >
             <div className="section-header">
-              <div className="section-title">{course?.sectionName}</div>
+              <div className="section-title">{section?.sectionName}</div>
               <div className="section-icon">
                 <span
-                  className={`${
-                    activeStatus === course?.sectionName
-                      ? "rotate-0"
-                      : "rotate-180"
-                  } arrow-icon`}
+                  className={`arrow-icon ${
+                    activeStatus === section._id ? "rotate-0" : "rotate-180"
+                  }`}
                 >
                   <BsChevronDown />
                 </span>
               </div>
             </div>
 
-            {activeStatus === course?._id && (
+            {activeStatus === section._id && (
               <div className="subsection-container">
-                {course.subSection.map((topic, i) => (
+                {section.subSection.map((sub) => (
                   <div
+                    key={sub._id}
                     className={`subsection-item ${
-                      videoBarActive === topic._id ? "active" : ""
+                      videoBarActive === sub._id ? "active" : ""
                     }`}
-                    key={i}
                     onClick={() => {
                       navigate(
-                        `/view-course/${courseEntireData?._id}/section/${course?._id}/sub-section/${topic?._id}`
+                        `/view-course/${courseEntireData._id}/section/${section._id}/sub-section/${sub._id}`
                       )
-                      setVideoBarActive(topic._id)
+                      setVideoBarActive(sub._id)
                     }}
                   >
                     <input
                       type="checkbox"
-                      checked={completedLectures.includes(topic?._id)}
+                      checked={completedLectures.includes(sub._id)}
                       onChange={() => {}}
                     />
-                    {topic.title}
+                    {sub.title}
                   </div>
                 ))}
               </div>

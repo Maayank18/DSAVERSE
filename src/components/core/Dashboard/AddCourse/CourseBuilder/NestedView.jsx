@@ -264,7 +264,8 @@ export default function NestedView({ handleChangeEditSectionName }) {
               {section.subSection.map((data) => (
                 <div
                   key={data?._id}
-                  onClick={() => setViewSubSection(data)}
+                  // ✅ ADDED: Pass sectionId to viewSubSection
+                  onClick={() => setViewSubSection({ ...data, sectionId: section._id })}
                   className="subsection-row"
                 >
                   <div className="subsection-title">
@@ -301,7 +302,8 @@ export default function NestedView({ handleChangeEditSectionName }) {
                 </div>
               ))}
               <button
-                onClick={() => setAddSubsection(section._id)}
+                // ✅ ADDED: Wrap sectionId in object for addSubSection
+                onClick={() => setAddSubsection({ sectionId: section._id })}
                 className="add-lecture-btn"
               >
                 <FaPlus className="icon" />

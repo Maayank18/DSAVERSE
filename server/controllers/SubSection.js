@@ -174,60 +174,77 @@
 
 
 // Import necessary modules
-const Section = require("../models/Section")
-const SubSection = require("../models/SubSection")
-const { uploadImageToCloudinary } = require("../utils/imageUploader")
+import { toast } from "react-hot-toast";
+import Section from "../models/Section.js";
+import SubSection from "../models/SubSection.js";
+import { uploadImageToCloudinary } from "../utils/imageUploader.js";
+
+
 
 // Create a new sub-section for a given section
-exports.createSubSection = async (req, res) => {
+export const createSubSection = async (req, res) => {
   try {
-    // Extract necessary information from the request body
-    const { sectionId, title, description } = req.body
-    const video = req.files.video
+    const { sectionId, title, description } = req.body;
+    const video = req.files?.video; // ✅ Moved this line above usage
 
-    // Check if all necessary fields are provided
+    // ✅ Log after defining video
+    console.log("📦 File:", video);
+    console.log("📨 Body:", req.body);
+
+    console.log("sectionId:", sectionId);
+    console.log("title:", title);
+    console.log("description:", description);
+    console.log("video:", video);
+
+
+    // ✅ Validate required fields
     if (!sectionId || !title || !description || !video) {
-      return res
-        .status(404)
-        .json({ success: false, message: "All Fields are Required" })
+      return res.status(400).json({
+        success: false,
+        message: "Missing fields",
+      });
     }
-    console.log(video)
 
-    // Upload the video file to Cloudinary
+    // 1. Upload video to Cloudinary or move it to temp folder
     const uploadDetails = await uploadImageToCloudinary(
       video,
-      process.env.FOLDER_NAME
-    )
-    console.log(uploadDetails)
-    // Create a new sub-section with the necessary information
-    const SubSectionDetails = await SubSection.create({
-      title: title,
-      timeDuration: `${uploadDetails.duration}`,
-      description: description,
+      "course-videos"
+    );
+
+    // 2. Create the SubSection
+    const newSubSection = await SubSection.create({
+      title,
+      description,
       videoUrl: uploadDetails.secure_url,
-    })
+    });
 
-    // Update the corresponding section with the newly created sub-section
-    const updatedSection = await Section.findByIdAndUpdate(
-      { _id: sectionId },
-      { $push: { subSection: SubSectionDetails._id } },
+    // 3. Update Section with new SubSection
+    await Section.findByIdAndUpdate(
+      sectionId,
+      {
+        $push: { subSection: newSubSection._id },
+      },
       { new: true }
-    ).populate("subSection")
+    );
 
-    // Return the updated section in the response
-    return res.status(200).json({ success: true, data: updatedSection })
-  } catch (error) {
-    // Handle any errors that may occur during the process
-    console.error("Error creating new sub-section:", error)
-    return res.status(500).json({
+    res.status(200).json({
+      success: true,
+      message: "SubSection created successfully",
+      data: newSubSection,
+    });
+  } catch (err) {
+    console.error("❌ Error creating subsection:", err);
+    res.status(500).json({
       success: false,
-      message: "Internal server error",
-      error: error.message,
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
-exports.updateSubSection = async (req, res) => {
+
+
+
+export const updateSubSection = async (req, res) => {
   try {
     const { sectionId, subSectionId, title, description } = req.body
     const subSection = await SubSection.findById(subSectionId)
@@ -279,7 +296,7 @@ exports.updateSubSection = async (req, res) => {
   }
 }
 
-exports.deleteSubSection = async (req, res) => {
+export const deleteSubSection = async (req, res) => {
   try {
     const { subSectionId, sectionId } = req.body
     await Section.findByIdAndUpdate(
