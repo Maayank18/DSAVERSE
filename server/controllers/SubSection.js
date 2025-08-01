@@ -178,68 +178,132 @@ import { toast } from "react-hot-toast";
 import Section from "../models/Section.js";
 import SubSection from "../models/SubSection.js";
 import { uploadImageToCloudinary } from "../utils/imageUploader.js";
+import { getVideoDurationInSeconds } from "get-video-duration" // ✅ Add this import at top
 
 
 
 // Create a new sub-section for a given section
+// export const createSubSection = async (req, res) => {
+//   try {
+//     const { sectionId, title, description } = req.body;
+//     const video = req.files?.video; // ✅ Moved this line above usage
+
+//     // ✅ Log after defining video
+//     console.log("📦 File:", video);
+//     console.log("📨 Body:", req.body);
+
+//     console.log("sectionId:", sectionId);
+//     console.log("title:", title);
+//     console.log("description:", description);
+//     console.log("video:", video);
+
+
+//     // ✅ Validate required fields
+//     if (!sectionId || !title || !description || !video) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Missing fields",
+//       });
+//     }
+
+//     // 1. Upload video to Cloudinary or move it to temp folder
+//     const uploadDetails = await uploadImageToCloudinary(
+//       video,
+//       "course-videos"
+//     );
+
+//     // 2. Create the SubSection
+//     const newSubSection = await SubSection.create({
+//       title,
+//       description,
+//       videoUrl: uploadDetails.secure_url,
+//     });
+
+//     // 3. Update Section with new SubSection
+//     await Section.findByIdAndUpdate(
+//       sectionId,
+//       {
+//         $push: { subSection: newSubSection._id },
+//       },
+//       { new: true }
+//     );
+
+//     res.status(200).json({
+//       success: true,
+//       message: "SubSection created successfully",
+//       data: newSubSection,
+//     });
+//   } catch (err) {
+//     console.error("❌ Error creating subsection:", err);
+//     res.status(500).json({
+//       success: false,
+//       message: "Internal Server Error",
+//     });
+//   }
+// };
+
+
 export const createSubSection = async (req, res) => {
   try {
-    const { sectionId, title, description } = req.body;
-    const video = req.files?.video; // ✅ Moved this line above usage
+    const { sectionId, title, description } = req.body
+    const video = req.files?.video
 
-    // ✅ Log after defining video
-    console.log("📦 File:", video);
-    console.log("📨 Body:", req.body);
-
-    console.log("sectionId:", sectionId);
-    console.log("title:", title);
-    console.log("description:", description);
-    console.log("video:", video);
-
-
-    // ✅ Validate required fields
     if (!sectionId || !title || !description || !video) {
       return res.status(400).json({
         success: false,
         message: "Missing fields",
-      });
+      })
     }
 
-    // 1. Upload video to Cloudinary or move it to temp folder
+    // ✅ Upload video to Cloudinary or wherever you store it
     const uploadDetails = await uploadImageToCloudinary(
       video,
       "course-videos"
-    );
+    )
 
-    // 2. Create the SubSection
+    // ✅ Get duration of video (from tempFilePath)
+    const durationInSeconds = await getVideoDurationInSeconds(video.tempFilePath)
+
+    // ✅ Convert to readable format (e.g., "2:35")
+    const formatDuration = (seconds) => {
+      const mins = Math.floor(seconds / 60)
+      const secs = Math.floor(seconds % 60)
+      return `${mins}:${secs < 10 ? "0" : ""}${secs}`
+    }
+
+    const timeDuration = formatDuration(durationInSeconds)
+
+    // ✅ Create SubSection with timeDuration
     const newSubSection = await SubSection.create({
       title,
       description,
       videoUrl: uploadDetails.secure_url,
-    });
+      timeDuration, // ✅ Required field
+    })
 
-    // 3. Update Section with new SubSection
+    // ✅ Push into Section
     await Section.findByIdAndUpdate(
       sectionId,
       {
         $push: { subSection: newSubSection._id },
       },
       { new: true }
-    );
+    )
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "SubSection created successfully",
       data: newSubSection,
-    });
+    })
   } catch (err) {
-    console.error("❌ Error creating subsection:", err);
-    res.status(500).json({
+    console.error("❌ Error creating subsection:", err)
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-    });
+    })
   }
-};
+}
+
 
 
 
