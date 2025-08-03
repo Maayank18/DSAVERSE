@@ -9,7 +9,7 @@ export default function ConfirmationModal({ modalData }) {
         <p className="confirmation-subtext">{modalData?.text2}</p>
         <div className="confirmation-actions">
           <IconBtn
-            onclick={modalData?.btn1Handler}
+            onClick={modalData?.btn1Handler}
             text={modalData?.btn1Text}
           />
           <button

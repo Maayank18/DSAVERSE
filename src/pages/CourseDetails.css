@@ -1,4 +1,4 @@
-.course-details-wrapper {
+/* .course-details-wrapper {
   background-color: #2c333f;
   width: 100%;
   position: relative;
@@ -209,4 +209,274 @@
   .course-actions-mobile {
     display: none;
   }
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* === Page Wrapper === */
+.course-details-wrapper {
+  background-color: #2c333f;
+  width: 100%;
+  overflow-x: hidden;
 }
+
+/* === Centered Container === */
+.course-details-container {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  position: relative;
+}
+
+/* === Two-Column Layout === */
+.course-details-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+  align-items: start;
+}
+
+/* === Left Column === */
+.course-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* === Thumbnail === */
+.course-thumbnail-mobile {
+  position: relative;
+  width: 100%;
+  max-height: 30rem;
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
+.thumbnail-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0px -64px 36px -28px #161d29;
+}
+.thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0.75rem;
+}
+
+/* === Course Meta === */
+.course-meta {
+  color: #f1f2f4;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+.course-title {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.course-description {
+  color: #cbd5e1;
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+.course-reviews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 1rem;
+  color: #f8fafc;
+}
+.course-reviews span {
+  background-color: #1e293b;
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+}
+.highlight {
+  color: #ffe38e;
+  font-weight: bold;
+}
+.course-meta-info {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  color: #9ca3af;
+}
+.course-meta-info svg {
+  vertical-align: middle;
+  margin-right: 0.25rem;
+}
+
+/* === Right Column (Full Card) === */
+.course-card-desktop {
+  background-color: #1e2531;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 0 0 1px #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: stretch;
+  justify-content: start;
+  position: sticky;
+  top: 4rem;
+}
+
+/* === Course Content Wrapper === */
+.course-content-wrapper {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  color: #f1f2f4;
+}
+
+/* === What You'll Learn === */
+.course-what-you-learn {
+  background-color: #1e2531;
+  border: 1px solid #374151;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.course-what-you-learn .section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #f1f2f4;
+}
+
+.section-body {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #cbd5e1;
+  margin-top: 0.5rem;
+}
+
+/* === Course Content === */
+.course-content {
+  background-color: #1e2531;
+  border: 1px solid #374151;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.course-content-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.course-content-header .section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f1f2f4;
+}
+
+.course-content-summary {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+.btn-collapse {
+  background: none;
+  border: none;
+  color: #ffe38e;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  padding: 0.25rem 0;
+}
+
+/* Accordion Styles */
+.accordion-section {
+  margin-top: 1rem;
+  border-top: 1px solid #374151;
+  padding-top: 1rem;
+}
+
+/* === Author Info === */
+.course-author {
+  background-color: #1e2531;
+  border: 1px solid #374151;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.course-author .section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #f1f2f4;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.author-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.author-info p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #f8fafc;
+}
+
+.author-bio {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+
+/* === Loading === */
+.loading-container {
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 3.5rem);
+}
+
+/* === Responsive tweaks (optional) === */
+@media (max-width: 768px) {
+  .course-content-summary {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+

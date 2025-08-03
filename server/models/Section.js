@@ -8,10 +8,14 @@ const sectionSchema = new mongoose.Schema({
     subSection:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            requed:true,
+            required:true,
             ref:"SubSection",
         }
     ],
+    courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course", // Optional: if you want to track which course the section belongs to
+  },
 });
 
 module.exports = mongoose.model("Section",sectionSchema);

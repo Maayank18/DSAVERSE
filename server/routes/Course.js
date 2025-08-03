@@ -18,7 +18,7 @@ const {
 
 // Categories Controllers Import
 const {
-  showAllcategory,
+  showAllCategories,
   createCategory,
   categoryPageDetails,
 } = require("../controllers/Category")
@@ -35,7 +35,7 @@ const {
   createSubSection,
   updateSubSection,
   deleteSubSection,
-} = require("../controllers/Subsection")
+} = require("../controllers/SubSection")
 
 // Rating Controllers Import
 const {
@@ -80,7 +80,7 @@ router.post("/editCourse", auth, isinstructor, editCourse)
 // Get all Courses Under a Specific Instructor
 router.get("/getInstructorCourses", auth, isinstructor, getInstructorCourses)
 // Delete a Course
-router.delete("/deleteCourse", deleteCourse)
+router.delete("/deleteCourse/:courseId",auth, deleteCourse)
 
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 
@@ -88,7 +88,7 @@ router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 // Category can Only be Created by Admin
 // TODO: Put IsAdmin Middleware here
 router.post("/createCategory", auth, isAdmin, createCategory)
-router.get("/showAllCategories", showAllcategory)
+router.get("/showAllCategories", showAllCategories)
 router.post("/getCategoryPageDetails", categoryPageDetails)
 
 // RATING AND REVIEW ROUTES

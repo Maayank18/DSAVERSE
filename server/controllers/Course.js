@@ -7,6 +7,8 @@ const Course = require("../models/Course");
 const CourseProgress = require("../models/CourseProgress");
 const Category = require("../models/Category");
 const User = require("../models/User");
+const Section = require("../models/Section");
+const SubSection = require("../models/SubSection");
 const {uploadImageToCloudinary} = require("../utils/imageUploader");
 require("dotenv").config();
 
@@ -261,33 +263,62 @@ exports.createCourse = async (req, res) => {
 
 // get all the courses
 
-exports.showAllCourses = async (req,res) => {
-    try{
+// exports.showAllCourses = async (req,res) => {
+//     try{
 
-    //though i dont have any parameter of finding but name and description should be present
-    // reunderstand the makring here 
-    const allCourses = await Tag.find({},{courseName:true,
-                                          thumbNail:true,
-                                          price:true,
-                                          instructor:true,
-                                          ratingAndReviews:true,
-                                          studentEnrolled:true,})
-                                    .populate("instructor").exec();
+//     //though i dont have any parameter of finding but name and description should be present
+//     // reunderstand the makring here 
+//     const allCourses = await Course.find({},{courseName:true,
+//                                           thumbNail:true,
+//                                           price:true,
+//                                           instructor:true,
+//                                           ratingAndReviews:true,
+//                                           studentEnrolled:true,})
+//                                     .populate("instructor").exec();
 
-    // returning the response
-        return res.status(200).json({
-            success:true,
-            message:" All category returned successfully ",
-            data:allCourses,
-        });
+//     // returning the response
+//         return res.status(200).json({
+//             success:true,
+//             message:" All category returned successfully ",
+//             data:allCourses,
+//         });
 
-    }catch(error){
-        return res.status(500).json({
-            success:false,
-            message:"something went wrong , courses cant be fetched"
-        });
-    }
-}
+//     }catch(error){
+//         return res.status(500).json({
+//             success:false,
+//             message:"something went wrong , courses cant be fetched"
+//         });
+//     }
+// }
+
+exports.showAllCourses = async (req, res) => {
+  try {
+    const allCourses = await Course.find({ status: "Published" }, {
+      courseName: true,
+      thumbnail: true,
+      price: true,
+      instructor: true,
+      ratingAndReview: true,
+      studentsEnrolled: true,
+    })
+      .populate("instructor")
+      .exec();
+
+    return res.status(200).json({
+      success: true,
+      message: "All published courses fetched successfully",
+      data: allCourses,
+    });
+
+  } catch (error) {
+    console.error("Error in showAllCourses:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong, courses can't be fetched",
+    });
+  }
+};
+
 
 
 
@@ -329,7 +360,7 @@ exports.getCourseDetails = async (req,res) => {
 
         // return response
         return res.status(200).json({
-                success:false,
+                success:true,
                 message:"course details fetched successfully",
                 courseDetails,
             });
@@ -357,7 +388,9 @@ exports.getCourseDetails = async (req,res) => {
 exports.editCourse = async (req, res) => {
   try {
     const { courseId } = req.body
-    const updates = req.body
+    // const updates = req.body
+    const updates = { ...req.body }
+
     const course = await Course.findById(courseId)
 
     if (!course) {
@@ -377,7 +410,9 @@ exports.editCourse = async (req, res) => {
 
     // Update only the fields that are present in the request body
     for (const key in updates) {
-      if (updates.hasOwnProperty(key)) {
+      // if (updates.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(updates, key)) {
+
         if (key === "tag" || key === "instructions") {
           course[key] = JSON.parse(updates[key])
         } else {
@@ -548,51 +583,48 @@ exports.getInstructorCourses = async (req, res) => {
 // Delete the Course
 exports.deleteCourse = async (req, res) => {
   try {
-    const { courseId } = req.body
+    const { courseId } = req.params; // ✅ use params instead of body
 
     // Find the course
-    const course = await Course.findById(courseId)
+    const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({ message: "Course not found" })
+      return res.status(404).json({ message: "Course not found" });
     }
 
     // Unenroll students from the course
-    const studentsEnrolled = course.studentsEnroled
+    const studentsEnrolled = course.studentsEnrolled || []; // ✅ fixed typo
     for (const studentId of studentsEnrolled) {
       await User.findByIdAndUpdate(studentId, {
         $pull: { courses: courseId },
-      })
+      });
     }
 
     // Delete sections and sub-sections
-    const courseSections = course.courseContent
+    const courseSections = course.courseContent || [];
     for (const sectionId of courseSections) {
-      // Delete sub-sections of the section
-      const section = await Section.findById(sectionId)
+      const section = await Section.findById(sectionId);
       if (section) {
-        const subSections = section.subSection
+        const subSections = section.subSection || [];
         for (const subSectionId of subSections) {
-          await SubSection.findByIdAndDelete(subSectionId)
+          await SubSection.findByIdAndDelete(subSectionId);
         }
       }
-
-      // Delete the section
-      await Section.findByIdAndDelete(sectionId)
+      await Section.findByIdAndDelete(sectionId);
     }
 
     // Delete the course
-    await Course.findByIdAndDelete(courseId)
+    await Course.findByIdAndDelete(courseId);
 
     return res.status(200).json({
       success: true,
       message: "Course deleted successfully",
-    })
+    });
   } catch (error) {
-    console.error(error)
+    console.error("DELETE COURSE ERROR:", error);
     return res.status(500).json({
       success: false,
       message: "Server error",
       error: error.message,
-    })
+    });
   }
-}
+};

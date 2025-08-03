@@ -10,3 +10,8 @@
   font-size: 1.25rem; /* text-xl */
   color: #f9fafb; /* richblack-5 */
 }
+
+.card-img-height {
+  height: 250px;
+  object-fit: cover;
+}

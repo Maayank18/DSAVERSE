@@ -1,5 +1,6 @@
 /* Navbar.css */
 
+/* Wrapper around the navbar */
 .navbar-wrapper {
   height: 56px;
   display: flex;
@@ -9,10 +10,12 @@
   transition: all 0.2s ease-in-out;
 }
 
+/* Colored navbar when not on home */
 .navbar-colored {
   background-color: #1c1f2e; /* richblack-800 */
 }
 
+/* Container inside the navbar */
 .navbar-container {
   width: 91.6667%;
   max-width: 1300px;
@@ -21,13 +24,25 @@
   justify-content: space-between;
 }
 
+/* List of nav links */
 .navbar-links ul {
   display: flex;
   gap: 24px;
   list-style: none;
-  color: #f1f2f7; /* richblack-25 */
 }
 
+/* Nav link text */
+.navbar-links a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Nav link hover */
+.navbar-links a:hover {
+  color: #0fe7ad;
+}
+
+/* Dropdown parent group */
 .dropdown-group {
   position: relative;
   display: flex;
@@ -36,55 +51,68 @@
   cursor: pointer;
 }
 
+/* Highlight active catalog */
 .dropdown-group.active p {
-  color: #ffd60a; /* yellow-25 */
+  color: #ffd60a;
 }
 
+/* Dropdown content box */
 .dropdown-content {
   visibility: hidden;
   opacity: 0;
   position: absolute;
-  top: 140%;
+  top: 120%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
-  background-color: #f1f2f7;
+  background-color: #ffffff; /* white background */
   color: #0f0f0f;
-  width: 300px;
-  padding: 1rem;
+  width: 240px;
+  padding: 0.5rem 0;
   border-radius: 8px;
-  transition: all 0.15s ease-in-out;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.2s ease-in-out;
 }
 
+/* Show dropdown on hover */
 .dropdown-group:hover .dropdown-content {
   visibility: visible;
   opacity: 1;
   transform: translate(-50%, 10%);
 }
 
+/* Dropdown arrow */
 .dropdown-arrow {
   position: absolute;
   top: 0;
   left: 50%;
-  transform: translateX(80%) translateY(-40%) rotate(45deg);
-  width: 24px;
-  height: 24px;
-  background-color: #f1f2f7;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 16px;
+  height: 16px;
+  background-color: #ffffff;
   z-index: -1;
+  box-shadow: -2px -2px 4px rgba(0,0,0,0.05);
   border-radius: 2px;
 }
 
+/* Dropdown items */
 .dropdown-item {
+  display: block;
   padding: 0.75rem 1rem;
-  border-radius: 6px;
   text-decoration: none;
-  color: inherit;
+  color: #0f0f0f;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
 }
 
+/* Item hover */
 .dropdown-item:hover {
-  background-color: #e4e6ed;
+  background-color: #f0f0f0;
+  color: #0f0f0f;
 }
 
+/* Cart and auth styles */
 .navbar-auth {
   display: flex;
   align-items: center;
@@ -93,22 +121,25 @@
 
 .auth-button {
   padding: 8px 12px;
-  background-color: #1c1f2e; /* richblack-800 */
-  border: 1px solid #2c2f41; /* richblack-700 */
+  background-color: #1c1f2e;
+  border: 1px solid #2c2f41;
   border-radius: 8px;
-  color: #d1d5db; /* richblack-100 */
+  color: #d1d5db;
   cursor: pointer;
 }
 
+/* Cart icon */
 .cart-icon {
   position: relative;
 }
 
+/* Icon size */
 .icon {
   font-size: 24px;
   color: #d1d5db;
 }
 
+/* Cart count badge */
 .cart-count {
   position: absolute;
   bottom: -8px;
@@ -124,12 +155,22 @@
   border-radius: 50%;
 }
 
+/* Menu icon for mobile */
 .menu-icon {
   display: none;
   background: none;
   border: none;
 }
 
+/* Logo sizing */
+.navbar-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Responsive: hide links, show menu on mobile */
 @media screen and (max-width: 768px) {
   .navbar-links {
     display: none;
@@ -138,32 +179,4 @@
     display: block;
     margin-right: 1rem;
   }
-}
-
-
-.navbar-logo {
-  height: 170px;       /* Matches navbar height */
-  width: auto;
-  object-fit: contain;
-  display: block;
-  padding: 4px 0;     /* Optional: for visual breathing room */
-}
-
-/* Remove underline and apply white color to regular nav links */
-.navbar-links a {
-  color: #ffffff;
-  text-decoration: none;
-}
-
-/* Remove underline and apply styling to dropdown links */
-.dropdown-item {
-  color: #0f0f0f;
-  text-decoration: none;
-}
-
-/* Optional: Add hover styling to nav links */
-.navbar-links a:hover,
-.dropdown-item:hover {
-  color: #0fe7ad; /* yellow tone for hover effect */
-  background-color: transparent; /* Keep it clean */
 }

@@ -75,7 +75,8 @@ export default function CourseInformationForm() {
       currentValues.coursePrice !== course.price ||
       currentValues.courseTags.toString() !== course.tag.toString() ||
       currentValues.courseBenefits !== course.whatYouWillLearn ||
-      currentValues.courseCategory._id !== course.category._id ||
+      // currentValues.courseCategory._id !== course.category._id
+      currentValues.courseCategory !== course.category._id ||
       currentValues.courseRequirements.toString() !== course.instructions.toString() ||
       currentValues.courseImage !== course.thumbnail
     ) {
@@ -105,9 +106,13 @@ export default function CourseInformationForm() {
         if (currentValues.courseBenefits !== course.whatYouWillLearn) {
           formData.append("whatYouWillLearn", data.courseBenefits)
         }
-        if (currentValues.courseCategory._id !== course.category._id) {
+        // if (currentValues.courseCategory._id !== course.category._id) {
+        //   formData.append("category", data.courseCategory)
+        // }
+        if (currentValues.courseCategory !== course.category._id) {
           formData.append("category", data.courseCategory)
         }
+
         if (
           currentValues.courseRequirements.toString() !==
           course.instructions.toString()

@@ -31,35 +31,123 @@ export default function CourseBuilderForm() {
   const [editSectionName, setEditSectionName] = useState(null)
   const dispatch = useDispatch()
 
-  const onSubmit = async (data) => {
-    setLoading(true)
-    let result
+  // const onSubmit = async (data) => {
+  //   setLoading(true)
+  //   let result
 
-    if (editSectionName) {
-      result = await updateSection(
-        {
-          sectionName: data.sectionName,
-          sectionId: editSectionName,
-          courseId: course._id,
-        },
-        token
-      )
-    } else {
-      result = await createSection(
-        {
-          sectionName: data.sectionName,
-          courseId: course._id,
-        },
-        token
-      )
-    }
-    if (result) {
-      dispatch(setCourse(result))
-      setEditSectionName(null)
-      setValue("sectionName", "")
-    }
-    setLoading(false)
+  //   if (editSectionName) {
+  //     result = await updateSection(
+  //       {
+  //         sectionName: data.sectionName,
+  //         sectionId: editSectionName,
+  //         courseId: course._id,
+  //       },
+  //       token
+  //     )
+  //     console.log("API result from createSection:", result)
+
+  //   } else {
+  //     result = await createSection(
+  //       {
+  //         sectionName: data.sectionName,
+  //         courseId: course._id,
+  //       },
+  //       token
+  //     )
+  //   }
+  //   if (result) {
+  //     dispatch(setCourse(result))
+  //     setEditSectionName(null)
+  //     setValue("sectionName", "")
+  //   }
+  //   setLoading(false)
+  // }
+
+//   const onSubmit = async (data) => {
+//   setLoading(true)
+//   let result
+
+//   if (editSectionName) {
+//     result = await updateSection(
+//       {
+//         sectionName: data.sectionName,
+//         sectionId: editSectionName,
+//         courseId: course._id,
+//       },
+//       token
+//     )
+//   } else {
+//     result = await createSection(
+//       {
+//         sectionName: data.sectionName,
+//         courseId: course._id,
+//       },
+//       token
+//     )
+//   }
+
+//   if (result) {
+//     // ✅ Safely merge result (updated section) into the course
+//     const updatedCourseContent = course.courseContent.map((section) =>
+//       section._id === result._id ? result : section
+//     )
+
+//     // If this is a new section, it won't exist yet, so add it
+//     const isNewSection = !course.courseContent.find(
+//       (section) => section._id === result._id
+//     )
+
+//     const finalCourseContent = isNewSection
+//       ? [...course.courseContent, result]
+//       : updatedCourseContent
+
+//     dispatch(setCourse({
+//       ...course,
+//       courseContent: finalCourseContent,
+//     }))
+
+//     setEditSectionName(null)
+//     setValue("sectionName", "")
+//   }
+
+//   setLoading(false)
+// }
+
+const onSubmit = async (data) => {
+  setLoading(true);
+  let result;
+
+  if (editSectionName) {
+    result = await updateSection(
+      {
+        sectionName: data.sectionName,
+        sectionId: editSectionName,
+        courseId: course._id,
+      },
+      token
+    );
+  } else {
+    result = await createSection(
+      {
+        sectionName: data.sectionName,
+        courseId: course._id,
+      },
+      token
+    );
   }
+
+  // ✅ Now we assume the backend is returning the full updated course object
+  if (result) {
+    console.log("✅ Updated Course From Backend:", result);
+    dispatch(setCourse(result));
+    setEditSectionName(null);
+    setValue("sectionName", "");
+  }
+
+  setLoading(false);
+};
+
+
 
   const cancelEdit = () => {
     setEditSectionName(null)
@@ -78,17 +166,28 @@ export default function CourseBuilderForm() {
   console.log("Course Content:", course.courseContent)
 
   const goToNext = () => {
-     console.log("Next button clicked") // Add this
+    console.log("✅ Next button clicked")
+
+    // ✅ Check if any section exists
     if (course.courseContent.length === 0) {
       toast.error("Please add atleast one section")
       return
     }
-    if (
-      course.courseContent.some((section) => section.subSection.length === 0)
-    ) {
+
+    // ✅ Check if each section has at least one sub-section
+    const hasEmptySubSection = course.courseContent.some(
+      (section) =>
+        !section.subSection || // section.subSection is undefined
+        !Array.isArray(section.subSection) || // not an array
+        section.subSection.length === 0 // empty array
+    )
+
+    if (hasEmptySubSection) {
       toast.error("Please add atleast one lecture in each section")
       return
     }
+
+    // ✅ All good - proceed
     dispatch(setStep(3))
   }
 
@@ -132,9 +231,12 @@ export default function CourseBuilderForm() {
           )}
         </div>
       </form>
+
+      {/* ✅ Render sections only if present */}
       {course.courseContent.length > 0 && (
         <NestedView handleChangeEditSectionName={handleChangeEditSectionName} />
       )}
+
       <div className="navigation-buttons">
         <button onClick={goBack} className="back-button">
           Back

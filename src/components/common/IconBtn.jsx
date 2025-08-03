@@ -3,7 +3,7 @@ import "./IconBtn.css"
 
 export default function IconBtn({
   text,
-  onclick,
+  onClick,  // debug change 
   children,
   disabled,
   outline = false,
@@ -13,7 +13,7 @@ export default function IconBtn({
   return (
     <button
       disabled={disabled}
-      onClick={onclick}
+      onClick={onClick}
       type={type}
       className={`icon-btn ${outline ? "icon-btn-outline" : "icon-btn-filled"} ${customClasses}`}
     >

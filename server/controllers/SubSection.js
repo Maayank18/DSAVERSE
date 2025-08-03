@@ -243,66 +243,132 @@ import { getVideoDurationInSeconds } from "get-video-duration" // ✅ Add this i
 // };
 
 
+// export const createSubSection = async (req, res) => {
+//   try {
+//     const { sectionId, title, description } = req.body
+//     const video = req.files?.video
+
+//     if (!sectionId || !title || !description || !video) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Missing fields",
+//       })
+//     }
+
+//     // ✅ Upload video to Cloudinary or wherever you store it
+//     const uploadDetails = await uploadImageToCloudinary(
+//       video,
+//       "course-videos"
+//     )
+
+//     // ✅ Get duration of video (from tempFilePath)
+//     const durationInSeconds = await getVideoDurationInSeconds(video.tempFilePath)
+
+//     // ✅ Convert to readable format (e.g., "2:35")
+//     const formatDuration = (seconds) => {
+//       const mins = Math.floor(seconds / 60)
+//       const secs = Math.floor(seconds % 60)
+//       return `${mins}:${secs < 10 ? "0" : ""}${secs}`
+//     }
+
+//     const timeDuration = formatDuration(durationInSeconds)
+
+//     // ✅ Create SubSection with timeDuration
+//     const newSubSection = await SubSection.create({
+//       title,
+//       description,
+//       videoUrl: uploadDetails.secure_url,
+//       timeDuration, // ✅ Required field
+//     })
+
+//     // ✅ Push into Section
+//     await Section.findByIdAndUpdate(
+//       sectionId,
+//       {
+//         $push: { subSection: newSubSection._id },
+//       },
+//       { new: true }
+//     )
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "SubSection created successfully",
+//       data: updatedCourse,
+//     })
+//   } catch (err) {
+//     console.error("❌ Error creating subsection:", err)
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal Server Error",
+//     })
+//   }
+// }
+
 export const createSubSection = async (req, res) => {
   try {
-    const { sectionId, title, description } = req.body
-    const video = req.files?.video
+    const { sectionId, title, description } = req.body;
+    const video = req.files?.video;
 
     if (!sectionId || !title || !description || !video) {
       return res.status(400).json({
         success: false,
         message: "Missing fields",
-      })
+      });
     }
 
-    // ✅ Upload video to Cloudinary or wherever you store it
-    const uploadDetails = await uploadImageToCloudinary(
-      video,
-      "course-videos"
-    )
+    const uploadDetails = await uploadImageToCloudinary(video, "course-videos");
+    const durationInSeconds = await getVideoDurationInSeconds(video.tempFilePath);
 
-    // ✅ Get duration of video (from tempFilePath)
-    const durationInSeconds = await getVideoDurationInSeconds(video.tempFilePath)
-
-    // ✅ Convert to readable format (e.g., "2:35")
     const formatDuration = (seconds) => {
-      const mins = Math.floor(seconds / 60)
-      const secs = Math.floor(seconds % 60)
-      return `${mins}:${secs < 10 ? "0" : ""}${secs}`
-    }
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+    };
 
-    const timeDuration = formatDuration(durationInSeconds)
+    const timeDuration = formatDuration(durationInSeconds);
 
-    // ✅ Create SubSection with timeDuration
     const newSubSection = await SubSection.create({
       title,
       description,
       videoUrl: uploadDetails.secure_url,
-      timeDuration, // ✅ Required field
-    })
+      timeDuration,
+    });
 
-    // ✅ Push into Section
     await Section.findByIdAndUpdate(
       sectionId,
       {
         $push: { subSection: newSubSection._id },
       },
       { new: true }
-    )
+    );
+
+    // ✅ ✅ ✅ FIX: Return the full updated course with populated subSections
+    // You need courseId for this — fetch it using the section
+    const section = await Section.findById(sectionId);
+    const courseId = section?.course; // only works if section has course ref, else pass courseId from frontend
+
+    const updatedCourse = await Course.findById(courseId)
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      })
+      .exec();
 
     return res.status(200).json({
       success: true,
       message: "SubSection created successfully",
-      data: newSubSection,
-    })
+      data: updatedCourse, // ✅ return full updated course
+    });
   } catch (err) {
-    console.error("❌ Error creating subsection:", err)
+    console.error("❌ Error creating subsection:", err);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-    })
+    });
   }
-}
+};
 
 
 

@@ -150,33 +150,64 @@ exports.getAllUserDetail = async (req,res) => {
 
 
 // INstructor dashboard
+// exports.instructorDashboard = async (req, res) => {
+//   try {
+//     const courseDetails = await Course.find({ instructor: req.user.id })
+
+//     const courseData = courseDetails.map((course) => {
+//       const totalStudentsEnrolled = course.studentsEnrolled.length
+//       const totalAmountGenerated = totalStudentsEnrolled * course.price
+
+//       // Create a new object with the additional fields
+//       const courseDataWithStats = {
+//         _id: course._id,
+//         courseName: course.courseName,
+//         courseDescription: course.courseDescription,
+//         // Include other course properties as needed
+//         totalStudentsEnrolled,
+//         totalAmountGenerated,
+//       }
+
+//       return courseDataWithStats
+//     })
+
+//     res.status(200).json({ courses: courseData })
+//   } catch (error) {
+//     console.error(error)
+//     res.status(500).json({ message: "Server Error" })
+//   }
+// }
+
 exports.instructorDashboard = async (req, res) => {
   try {
-    const courseDetails = await Course.find({ instructor: req.user.id })
+    // Fetch all courses by instructor
+    const courseDetails = await Course.find({ instructor: req.user.id });
 
     const courseData = courseDetails.map((course) => {
-      const totalStudentsEnrolled = course.studentsEnroled.length
-      const totalAmountGenerated = totalStudentsEnrolled * course.price
+      // ✅ Handle missing or undefined studentsEnrolled array
+      const totalStudentsEnrolled = Array.isArray(course.studentsEnrolled)
+        ? course.studentsEnrolled.length
+        : 0;
 
-      // Create a new object with the additional fields
-      const courseDataWithStats = {
+      // ✅ Ensure price is a number (handle string or undefined cases)
+      const price = typeof course.price === "number" ? course.price : 0;
+      const totalAmountGenerated = totalStudentsEnrolled * price;
+
+      return {
         _id: course._id,
         courseName: course.courseName,
         courseDescription: course.courseDescription,
-        // Include other course properties as needed
         totalStudentsEnrolled,
         totalAmountGenerated,
-      }
+      };
+    });
 
-      return courseDataWithStats
-    })
-
-    res.status(200).json({ courses: courseData })
+    res.status(200).json({ courses: courseData });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Server Error" })
+    console.error("Error in instructorDashboard:", error);
+    res.status(500).json({ message: "Could not fetch instructor dashboard data" });
   }
-}
+};
 
 
 
