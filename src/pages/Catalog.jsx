@@ -1,59 +1,59 @@
-import React, { useEffect, useState } from 'react'
-import Footer from '../components/common/Footer'
-import { useParams } from 'react-router-dom'
-import { apiConnector } from '../services/apiconnector';
-import { categories } from '../services/apis';
-import { getCatalogaPageData } from '../services/operations/pageAndComponentData';
-import Course_Card from '../components/core/Catalog/Course_card';
-import CourseSlider from '../components/core/Catalog/CourseSlider';
-import { useSelector } from "react-redux"
-import Error from "./Error"
-import "./Catalog.css"
+import React, { useEffect, useState } from "react";
+import Footer from "../components/common/Footer";
+import { useParams } from "react-router-dom";
+import { apiConnector } from "../services/apiconnector";
+import { categories } from "../services/apis";
+import { getCatalogaPageData } from "../services/operations/pageAndComponentData";
+import Course_Card from "../components/core/Catalog/Course_card";
+import CourseSlider from "../components/core/Catalog/CourseSlider";
+import { useSelector } from "react-redux";
+import Error from "./Error";
+import "./Catalog.css";
 
 const Catalog = () => {
-  const { loading } = useSelector((state) => state.profile)
-  const { catalogName } = useParams()
-  const [active, setActive] = useState(1)
-  const [catalogPageData, setCatalogPageData] = useState(null)
-  const [categoryId, setCategoryId] = useState("")
+  const { loading } = useSelector((state) => state.profile);
+  const { catalogName } = useParams();
+  const [active, setActive] = useState(1);
+  const [catalogPageData, setCatalogPageData] = useState(null);
+  const [categoryId, setCategoryId] = useState("");
 
   useEffect(() => {
     const getCategories = async () => {
-      const res = await apiConnector("GET", categories.CATEGORIES_API)
+      const res = await apiConnector("GET", categories.CATEGORIES_API);
       const category_id = res?.data?.data?.find(
         (ct) =>
           ct.name.trim().toLowerCase().split(" ").join("-") ===
           catalogName.trim().toLowerCase()
-      )?._id
-      setCategoryId(category_id)
-    }
-    getCategories()
-  }, [catalogName])
+      )?._id;
+      setCategoryId(category_id);
+    };
+    getCategories();
+  }, [catalogName]);
 
   useEffect(() => {
     const getCategoryDetails = async () => {
       try {
-        const res = await getCatalogaPageData(categoryId)
-        setCatalogPageData(res)
+        const res = await getCatalogaPageData(categoryId);
+        setCatalogPageData(res);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    };
     if (categoryId) {
-      getCategoryDetails()
+      getCategoryDetails();
     }
-  }, [categoryId])
+  }, [categoryId]);
 
   if (loading || !catalogPageData) {
     return (
       <div className="catalog-loading">
         <div className="spinner"></div>
       </div>
-    )
+    );
   }
 
   if (!loading && !catalogPageData.success) {
-    return <Error />
+    return <Error />;
   }
 
   return (
@@ -117,14 +117,14 @@ const Catalog = () => {
           {catalogPageData?.data?.mostSellingCourses
             ?.slice(0, 4)
             .map((course, i) => (
-              <Course_Card course={course} key={i} Height={"h-[400px]"} />
+              <Course_Card course={course} key={i} Height="h-[400px]" />
             ))}
         </div>
       </div>
 
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Catalog
+export default Catalog;

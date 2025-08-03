@@ -1,5 +1,6 @@
 .course-slider-wrapper {
   width: 100%;
+  padding: 1rem 0;
 }
 
 .course-slider {
@@ -7,11 +8,13 @@
 }
 
 .no-course-text {
-  font-size: 1.25rem; /* text-xl */
-  color: #f9fafb; /* richblack-5 */
+  font-size: 1.25rem;
+  color: #f9fafb;
+  text-align: center;
+  margin-top: 2rem;
 }
 
-.card-img-height {
-  height: 250px;
-  object-fit: cover;
+/* Optional: make sure Swiper slides have same height */
+.swiper-slide {
+  display: flex;
 }

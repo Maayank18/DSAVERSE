@@ -1,52 +1,91 @@
-.course-card {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+* {
+  box-sizing: border-box;
 }
 
-.course-card-img-container {
-  border-radius: 0.5rem;
+
+.course-card-link {
+  text-decoration: none;
+  display: inline-block;
+  width: 250px;
+  transition: transform 0.2s ease;
+}
+
+
+.course-card-link:hover {
+  transform: translateY(-4px);
+}
+
+.course-card {
+  width: 100%;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  background-color: #111827; /* Dark card background */
+  border: 1px solid #2c2c2c;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+  flex-shrink: 0; /* Prevent shrinking in flex/grid containers */
+}
+
+.course-card:hover {
+  box-shadow: 0 0 0 2px #3b82f6; /* Subtle blue border on hover */
+}
+
+ .thumbnail-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect ratio fallback */
+  background-color: #222;
   overflow: hidden;
 }
 
-.course-card-img {
+.thumbnail-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 0.75rem;
-}
+  display: block;
+} 
 
 .course-card-info {
   display: flex;
   flex-direction: column;
+  padding: 1rem;
   gap: 0.5rem;
-  padding: 0.75rem 0.25rem;
 }
 
 .course-card-title {
-  font-size: 1.25rem;
-  color: #f1f1f1; /* richblack-5 */
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f3f4f6;
 }
 
 .course-card-instructor {
-  font-size: 0.875rem;
-  color: #a3a3a3; /* richblack-50 */
+  font-size: 0.9rem;
+  color: #9ca3af;
 }
 
 .course-card-rating-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .course-card-rating-count {
-  color: #ffd60a; /* yellow-5 */
+  font-weight: 500;
+  color: #facc15; /* Yellow */
 }
 
 .course-card-rating-label {
-  color: #6b7280; /* richblack-400 */
+  font-size: 0.85rem;
+  color: #9ca3af;
 }
 
 .course-card-price {
-  font-size: 1.25rem;
-  color: #f1f1f1; /* richblack-5 */
+  font-size: 1rem;
+  font-weight: 500;
+  color: #f3f4f6;
 }

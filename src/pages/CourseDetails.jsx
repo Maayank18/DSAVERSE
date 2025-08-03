@@ -519,91 +519,92 @@
 
 
 
-import React, { useEffect, useState } from "react"
-import { BiInfoCircle } from "react-icons/bi"
-import { HiOutlineGlobeAlt } from "react-icons/hi"
-import ReactMarkdown from "react-markdown"
-import { useDispatch, useSelector } from "react-redux"
-import { useNavigate, useParams } from "react-router-dom"
+import React, { useEffect, useState } from "react";
+import { BiInfoCircle } from "react-icons/bi";
+import { HiOutlineGlobeAlt } from "react-icons/hi";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"; // NEW
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
-import ConfirmationModal from "../components/common/ConfirmationModal"
-import Footer from "../components/common/Footer"
-import RatingStars from "../components/common/RatingStars"
-import CourseAccordionBar from "../components/core/Course/CourseAccordionBar"
-import CourseDetailsCard from "../components/core/Course/CourseDetailsCard"
-import { formatDate } from "../services/formatDate"
-import { fetchCourseDetails } from "../services/operations/courseDetailsAPI"
-import { buyCourse } from "../services/operations/studentFeaturesAPI"
-import GetAvgRating from "../utils/avgRating"
-import Error from "./Error"
+import ConfirmationModal from "../components/common/ConfirmationModal";
+import Footer from "../components/common/Footer";
+import RatingStars from "../components/common/RatingStars";
+import CourseAccordionBar from "../components/core/Course/CourseAccordionBar";
+import CourseDetailsCard from "../components/core/Course/CourseDetailsCard";
+import { formatDate } from "../services/formatDate";
+import { fetchCourseDetails } from "../services/operations/courseDetailsAPI";
+import { buyCourse } from "../services/operations/studentFeaturesAPI";
+import GetAvgRating from "../utils/avgRating";
+import Error from "./Error";
 
-import "./CourseDetails.css"
+import "./CourseDetails.css";
 
 function CourseDetails() {
-  const { user } = useSelector((state) => state.profile)
-  const { token } = useSelector((state) => state.auth)
-  const { loading } = useSelector((state) => state.profile)
-  const { paymentLoading } = useSelector((state) => state.course)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const { courseId } = useParams()
+  const { user } = useSelector((state) => state.profile);
+  const { token } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.profile);
+  const { paymentLoading } = useSelector((state) => state.course);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { courseId } = useParams();
 
-  const [response, setResponse] = useState(null)
-  const [confirmationModal, setConfirmationModal] = useState(null)
+  const [response, setResponse] = useState(null);
+  const [confirmationModal, setConfirmationModal] = useState(null);
 
   useEffect(() => {
-    if (!courseId) return
+    if (!courseId) return;
 
     const fetch = async () => {
       try {
-        const res = await fetchCourseDetails(courseId)
+        const res = await fetchCourseDetails(courseId);
         if (res?.courseDetails) {
-          setResponse(res)
+          setResponse(res);
         } else {
-          setResponse({ success: false })
+          setResponse({ success: false });
         }
       } catch (error) {
-        setResponse({ success: false })
+        setResponse({ success: false });
       }
-    }
+    };
 
-    fetch()
-  }, [courseId])
+    fetch();
+  }, [courseId]);
 
-  const [avgReviewCount, setAvgReviewCount] = useState(0)
+  const [avgReviewCount, setAvgReviewCount] = useState(0);
   useEffect(() => {
-    const count = GetAvgRating(response?.courseDetails?.ratingAndReviews)
-    setAvgReviewCount(count)
-  }, [response])
+    const count = GetAvgRating(response?.courseDetails?.ratingAndReviews);
+    setAvgReviewCount(count);
+  }, [response]);
 
-  const [isActive, setIsActive] = useState([])
+  const [isActive, setIsActive] = useState([]);
   const handleActive = (id) => {
     setIsActive(
       !isActive.includes(id)
         ? isActive.concat([id])
         : isActive.filter((e) => e !== id)
-    )
-  }
+    );
+  };
 
-  const [totalNoOfLectures, setTotalNoOfLectures] = useState(0)
+  const [totalNoOfLectures, setTotalNoOfLectures] = useState(0);
   useEffect(() => {
-    let lectures = 0
+    let lectures = 0;
     response?.courseDetails?.courseContent?.forEach((sec) => {
-      lectures += Array.isArray(sec.subSection) ? sec.subSection.length : 0
-    })
-    setTotalNoOfLectures(lectures)
-  }, [response])
+      lectures += Array.isArray(sec.subSection) ? sec.subSection.length : 0;
+    });
+    setTotalNoOfLectures(lectures);
+  }, [response]);
 
   if (loading || !response) {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
       </div>
-    )
+    );
   }
 
   if (!response.success || !response.courseDetails) {
-    return <Error />
+    return <Error />;
   }
 
   const {
@@ -618,12 +619,12 @@ function CourseDetails() {
     instructor,
     studentsEnrolled,
     createdAt,
-  } = response.courseDetails
+  } = response.courseDetails;
 
   const handleBuyCourse = () => {
     if (token) {
-      buyCourse(token, [course_Id], user, navigate, dispatch)
-      return
+      buyCourse(token, [course_Id], user, navigate, dispatch);
+      return;
     }
     setConfirmationModal({
       text1: "You are not logged in!",
@@ -632,15 +633,15 @@ function CourseDetails() {
       btn2Text: "Cancel",
       btn1Handler: () => navigate("/login"),
       btn2Handler: () => setConfirmationModal(null),
-    })
-  }
+    });
+  };
 
   if (paymentLoading) {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -681,7 +682,7 @@ function CourseDetails() {
               </div>
             </div>
 
-            {/* Right Column (Full Course Card) */}
+            {/* Right Column */}
             <div className="course-card-desktop">
               <CourseDetailsCard
                 course={response?.courseDetails}
@@ -697,7 +698,9 @@ function CourseDetails() {
         <div className="course-what-you-learn">
           <p className="section-title">What you'll learn</p>
           <div className="section-body">
-            <ReactMarkdown>{whatYouWillLearn}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {whatYouWillLearn}
+            </ReactMarkdown>
           </div>
         </div>
 
@@ -716,12 +719,23 @@ function CourseDetails() {
 
           <div className="accordion-section">
             {courseContent?.map((course, index) => (
-              <CourseAccordionBar
-                course={course}
-                key={index}
-                isActive={isActive}
-                handleActive={handleActive}
-              />
+              <div key={index} className="accordion-item">
+                <CourseAccordionBar
+                  course={course}
+                  isActive={isActive}
+                  handleActive={handleActive}
+                />
+                {isActive.includes(course._id) && (
+                  <div className="lecture-list">
+                    {course.subSection?.map((lecture, idx) => (
+                      <div className="lecture-item" key={idx}>
+                        <span>{lecture.title}</span>
+                        <span>{lecture.duration}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
@@ -749,8 +763,9 @@ function CourseDetails() {
       <Footer />
       {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
     </>
-  )
+  );
 }
 
-export default CourseDetails
+export default CourseDetails;
+
 

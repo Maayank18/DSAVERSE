@@ -1,11 +1,9 @@
 import React from "react"
-
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import "swiper/css/free-mode"
 import "swiper/css/pagination"
-import { FreeMode, Pagination } from 'swiper/modules';
-
+import { FreeMode, Pagination } from "swiper/modules"
 
 import Course_Card from "./Course_card"
 import "./CourseSlider.css"
@@ -20,15 +18,18 @@ const CourseSlider = ({ Courses }) => {
           loop={true}
           modules={[FreeMode, Pagination]}
           breakpoints={{
+            768: {
+              slidesPerView: 2,
+            },
             1024: {
               slidesPerView: 3,
             },
           }}
           className="course-slider"
         >
-          {Courses?.map((course, i) => (
+          {Courses.map((course, i) => (
             <SwiperSlide key={i}>
-              <Course_Card course={course} Height="card-img-height" />
+              <Course_Card course={course} />
             </SwiperSlide>
           ))}
         </Swiper>

@@ -327,7 +327,7 @@
   margin-right: 0.25rem;
 }
 
-/* === Right Column (Full Card) === */
+/* === Right Column (Card) === */
 .course-card-desktop {
   background-color: #1e2531;
   border-radius: 0.75rem;
@@ -414,7 +414,7 @@
   padding: 0.25rem 0;
 }
 
-/* Accordion Styles */
+/* === Accordion Styles === */
 .accordion-section {
   margin-top: 1rem;
   border-top: 1px solid #374151;
@@ -468,15 +468,20 @@
 .loading-container {
   display: grid;
   place-items: center;
-  min-height: calc(100vh - 3.5rem);
+  min-height: 100vh;
 }
 
-/* === Responsive tweaks (optional) === */
+/* === Responsive tweaks === */
 @media (max-width: 768px) {
+  .course-details-main {
+    grid-template-columns: 1fr;
+  }
+
   .course-content-summary {
     flex-direction: column;
     gap: 0.5rem;
   }
 }
+
 
 

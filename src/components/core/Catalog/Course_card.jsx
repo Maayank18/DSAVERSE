@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from "react"
-import RatingStars from "../../common/RatingStars"
-import GetAvgRating from "../../../utils/avgRating"
-import { Link } from "react-router-dom"
-import "./Course_Card.css"
+import React, { useEffect, useState } from "react";
+import RatingStars from "../../common/RatingStars";
+import GetAvgRating from "../../../utils/avgRating";
+import { Link } from "react-router-dom";
+import "./Course_Card.css";
 
-const Course_Card = ({ course, Height }) => {
-  const [avgReviewCount, setAvgReviewCount] = useState(0)
+const Course_Card = ({ course }) => {
+  const [avgReviewCount, setAvgReviewCount] = useState(0);
 
   useEffect(() => {
-    const count = GetAvgRating(course.ratingAndReviews)
-    setAvgReviewCount(count)
-  }, [course])
+    const count = GetAvgRating(course.ratingAndReviews);
+    setAvgReviewCount(count);
+  }, [course]);
+
+
+  console.log("Course Card Data:", course);
 
   return (
-    <Link to={`/courses/${course._id}`}>
+    <Link to={`/courses/${course._id}`} className="course-card-link">
       <div className="course-card">
-        <div className="course-card-img-container">
+        <div className="thumbnail-container">
           <img
             src={course?.thumbnail}
-            alt="course thumbnail"
-            className={`course-card-img ${Height}`}
+            alt="Course Thumbnail"
+            className="thumbnail-img"
           />
         </div>
         <div className="course-card-info">
@@ -28,22 +31,23 @@ const Course_Card = ({ course, Height }) => {
             {course?.instructor?.firstName} {course?.instructor?.lastName}
           </p>
           <div className="course-card-rating-row">
-            <span className="course-card-rating-count">
-              {avgReviewCount || 0}
-            </span>
+            <span className="course-card-rating-count">{avgReviewCount || 0}</span>
             <RatingStars Review_Count={avgReviewCount} />
             <span className="course-card-rating-label">
-              {course?.ratingAndReviews?.length} Ratings
+              ({course?.ratingAndReviews?.length} Ratings)
             </span>
           </div>
           <p className="course-card-price">Rs. {course?.price}</p>
         </div>
       </div>
     </Link>
-  )
-}
+  );
+};
 
-export default Course_Card
+export default Course_Card;
+
+
+
 
 // import React, { useEffect, useState } from "react"
 // import RatingStars from "../../common/RatingStars"
@@ -55,8 +59,7 @@ export default Course_Card
 //   const [avgReviewCount, setAvgReviewCount] = useState(0)
 
 //   useEffect(() => {
-//     // ✅ Fix: Prevent undefined ratingAndReviews
-//     const count = GetAvgRating(course?.ratingAndReviews || [])
+//     const count = GetAvgRating(course.ratingAndReviews)
 //     setAvgReviewCount(count)
 //   }, [course])
 
@@ -65,7 +68,7 @@ export default Course_Card
 //       <div className="course-card">
 //         <div className="course-card-img-container">
 //           <img
-//             src={course?.thumbnail || "/default-thumbnail.jpg"} // ✅ Optional fallback
+//             src={course?.thumbnail}
 //             alt="course thumbnail"
 //             className={`course-card-img ${Height}`}
 //           />
@@ -73,8 +76,7 @@ export default Course_Card
 //         <div className="course-card-info">
 //           <p className="course-card-title">{course?.courseName}</p>
 //           <p className="course-card-instructor">
-//             {course?.instructor?.firstName || "Unknown"}{" "}
-//             {course?.instructor?.lastName || ""}
+//             {course?.instructor?.firstName} {course?.instructor?.lastName}
 //           </p>
 //           <div className="course-card-rating-row">
 //             <span className="course-card-rating-count">
@@ -82,7 +84,7 @@ export default Course_Card
 //             </span>
 //             <RatingStars Review_Count={avgReviewCount} />
 //             <span className="course-card-rating-label">
-//               {course?.ratingAndReviews?.length || 0} Ratings
+//               {course?.ratingAndReviews?.length} Ratings
 //             </span>
 //           </div>
 //           <p className="course-card-price">Rs. {course?.price}</p>
@@ -93,3 +95,4 @@ export default Course_Card
 // }
 
 // export default Course_Card
+
