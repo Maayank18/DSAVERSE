@@ -107,3 +107,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.heigh-course-Card{
+  height: 450px;
+}

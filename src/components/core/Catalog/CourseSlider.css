@@ -1,20 +1,22 @@
+/* CourseSlider.css */
+
+/* Center the slider on the page */
 .course-slider-wrapper {
-  width: 100%;
-  padding: 1rem 0;
-}
-
-.course-slider {
-  max-height: 30rem;
-}
-
-.no-course-text {
-  font-size: 1.25rem;
-  color: #f9fafb;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-/* Optional: make sure Swiper slides have same height */
-.swiper-slide {
+  padding: 1rem;
   display: flex;
+  justify-content: center;
+}
+
+/* Horizontal row of cards, wrapping as needed */
+.course-slider {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+/* Each “slide” is a fixed 280px column */
+.course-slide-content {
+  flex: 0 0 300px !important;    /* stops it shrinking to 110px */
+  width: 300px !important;       /* explicit width in case */
+  box-sizing: border-box;
 }

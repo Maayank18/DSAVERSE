@@ -16,31 +16,34 @@ const Course_Card = ({ course }) => {
   console.log("Course Card Data:", course);
 
   return (
-    <Link to={`/courses/${course._id}`} className="course-card-link">
-      <div className="course-card">
-        <div className="thumbnail-container">
-          <img
-            src={course?.thumbnail}
-            alt="Course Thumbnail"
-            className="thumbnail-img"
-          />
-        </div>
-        <div className="course-card-info">
-          <p className="course-card-title">{course?.courseName}</p>
-          <p className="course-card-instructor">
-            {course?.instructor?.firstName} {course?.instructor?.lastName}
-          </p>
-          <div className="course-card-rating-row">
-            <span className="course-card-rating-count">{avgReviewCount || 0}</span>
-            <RatingStars Review_Count={avgReviewCount} />
-            <span className="course-card-rating-label">
-              ({course?.ratingAndReviews?.length} Ratings)
-            </span>
+    <div className="course-card-link">
+      <Link to={`/courses/${course._id}`}>
+        <div className="course-card">
+          <div className="thumbnail-container">
+            <div className="thumbnail-img">
+              <img
+                src={course?.thumbnail}
+                alt="Course Thumbnail"
+              />
+            </div>
           </div>
-          <p className="course-card-price">Rs. {course?.price}</p>
+          <div className="course-card-info">
+            <p className="course-card-title">{course?.courseName}</p>
+            <p className="course-card-instructor">
+              {course?.instructor?.firstName} {course?.instructor?.lastName}
+            </p>
+            <div className="course-card-rating-row">
+              <span className="course-card-rating-count">{avgReviewCount || 0}</span>
+              <RatingStars Review_Count={avgReviewCount} />
+              <span className="course-card-rating-label">
+                ({course?.ratingAndReviews?.length} Ratings)
+              </span>
+            </div>
+            <p className="course-card-price">Rs. {course?.price}</p>
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 
