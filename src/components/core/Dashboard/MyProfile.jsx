@@ -30,7 +30,7 @@ export default function MyProfile() {
         </div>
         <IconBtn
           text="Edit"
-          onclick={() => {
+          onClick={() => {  // debug change
             navigate("/dashboard/settings")
           }}
         >
@@ -43,7 +43,7 @@ export default function MyProfile() {
           <p className="profile-box-title">About</p>
           <IconBtn
             text="Edit"
-            onclick={() => {
+            onClick={() => {
               navigate("/dashboard/settings")
             }}
           >
@@ -66,7 +66,7 @@ export default function MyProfile() {
           <p className="profile-box-title">Personal Details</p>
           <IconBtn
             text="Edit"
-            onclick={() => {
+            onClick={() => {
               navigate("/dashboard/settings")
             }}
           >

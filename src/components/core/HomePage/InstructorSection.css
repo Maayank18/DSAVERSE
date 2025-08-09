@@ -4,11 +4,17 @@
 
 .instructor-container {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 80px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* prevents unintentional stacking */
 }
+
+.instructor-image,
+.instructor-content {
+  flex: 1;
+  max-width: 50%;
+}
+
 
 .instructor-image {
   width: 100%;

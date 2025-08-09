@@ -331,8 +331,7 @@ exports.getCourseDetails = async (req,res) => {
         const {courseId} = req.body;
 
         // find course detail
-        const courseDetails = await Course.findById(
-                                            {_id:courseId})
+        const courseDetails = await Course.findById(courseId)
                                             .populate(
                                                 {
                                                     path:"instructor",
@@ -352,7 +351,7 @@ exports.getCourseDetails = async (req,res) => {
 
         // validation
         if(!courseDetails){
-            return res.status(500).json({
+            return res.status(404).json({
                 success:false,
                 message:`could not find the course with given ${courseId}`
             });
@@ -460,13 +459,97 @@ exports.editCourse = async (req, res) => {
 
 
 
+// exports.getFullCourseDetails = async (req, res) => {
+//   try {
+//     const { courseId } = req.body
+//     const userId = req.user.id
+//     const courseDetails = await Course.findOne({
+//       _id: courseId,
+//     })
+//       .populate({
+//         path: "instructor",
+//         populate: {
+//           path: "additionalDetails",
+//         },
+//       })
+//       .populate("category")
+//       //("ratingAndReviews")
+//       .populate({
+//         path: "courseContent",
+//         populate: {
+//           path: "subSection",
+//         },
+//       })
+//       .exec()
+
+//     let courseProgressCount = await CourseProgress.findOne({
+//       courseID: courseId,
+//       userId: userId,
+//     })
+
+//     console.log("courseProgressCount : ", courseProgressCount)
+
+//     if (!courseDetails) {
+//       return res.status(400).json({
+//         success: false,
+//         message: `Could not find course with id: ${courseId}`,
+//       })
+//     }
+
+//    const totalDuration = calculateCourseDuration(courseDetails.courseContent)
+
+//     // testing changes
+//     function calculateCourseDuration(courseContent) {
+//       const totalSeconds = courseContent.reduce((total, content) => {
+//         const sectionSeconds = content.subSection.reduce((sum, sub) => {
+//           const time = parseInt(sub.timeDuration || "0", 10);
+//           return sum + (isNaN(time) ? 0 : time);
+//         }, 0);
+//         return total + sectionSeconds;
+//       }, 0);
+
+//       return convertSecondsToDuration(totalSeconds);
+//     }
+
+
+//     return res.status(200).json({
+//       success: true,
+//       data: {
+//         courseDetails,
+//         totalDuration,
+//         completedVideos: courseProgressCount?.completedVideos
+//           ? courseProgressCount?.completedVideos
+//           : [],
+//       },
+//     })
+//   } catch (error) {
+//     console.log("possible error while fetching all the details of course", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     })
+//   }
+// }
+// controllers/Course.js
+
 exports.getFullCourseDetails = async (req, res) => {
   try {
-    const { courseId } = req.body
-    const userId = req.user.id
-    const courseDetails = await Course.findOne({
-      _id: courseId,
-    })
+    const { courseId } = req.body;
+    const userId = req.user.id;
+
+    console.log(">>> getFullCourseDetails called");
+    console.log("Course ID:", courseId);
+    console.log("User ID:", userId);
+
+    if (!courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "Course ID is required",
+      });
+    }
+
+    // Populate everything deeply so subSection has videoUrl & timeDuration
+    const courseDetails = await Course.findById(courseId)
       .populate({
         path: "instructor",
         populate: {
@@ -474,84 +557,96 @@ exports.getFullCourseDetails = async (req, res) => {
         },
       })
       .populate("category")
-      //("ratingAndReviews")
+      .populate("ratingAndReviews")
       .populate({
         path: "courseContent",
         populate: {
           path: "subSection",
+          select: "title description videoUrl timeDuration", // ✅ Only the fields we need
         },
       })
-      .exec()
-
-    let courseProgressCount = await CourseProgress.findOne({
-      courseID: courseId,
-      userId: userId,
-    })
-
-    console.log("courseProgressCount : ", courseProgressCount)
+      .exec();
 
     if (!courseDetails) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
-        message: `Could not find course with id: ${courseId}`,
+        message: "Course not found",
+      });
+    }
+
+    console.log("Course details fetched successfully");
+    console.log(
+      "First section video sample:",
+      courseDetails.courseContent?.[0]?.subSection?.[0]?.videoUrl || "No video"
+    );
+
+    // Get completed lectures for this user in this course
+    const enrolledStudent = await User.findById(userId)
+      .select("courses coursesProgress")
+      .populate({
+        path: "coursesProgress",
+        match: { courseId },
+        select: "completedVideos",
       })
+      .exec();
+
+    let completedVideos = [];
+    if (
+      enrolledStudent &&
+      enrolledStudent.coursesProgress &&
+      enrolledStudent.coursesProgress.length > 0
+    ) {
+      completedVideos = enrolledStudent.courseProgress[0].completedVideos || [];
     }
 
-    // if (courseDetails.status === "Draft") {
-    //   return res.status(403).json({
-    //     success: false,
-    //     message: `Accessing a draft course is forbidden`,
-    //   });
-    // }
+    console.log("Completed videos:", completedVideos);
 
-    // testing change 
-    // const totalDurationInSeconds = courseDetails.courseContent.reduce(
-    //   (total, content) => {
-    //     const subTotal = content.subSection.reduce((sum, sub) => {
-    //       const time = parseInt(sub.timeDuration || "0", 10);
-    //       return sum + (isNaN(time) ? 0 : time);
-    //     }, 0);
-    //     return total + subTotal;
-    //   },
-    //   0
-    // );
+    // Calculate total duration
+    let totalDurationInSeconds = 0;
+    courseDetails.courseContent.forEach((section) => {
+      section.subSection.forEach((subSec) => {
+        if (subSec.timeDuration) {
+          // If already in seconds (number), use it directly
+          if (!isNaN(subSec.timeDuration)) {
+            totalDurationInSeconds += Number(subSec.timeDuration);
+          } else if (typeof subSec.timeDuration === "string") {
+            // If in mm:ss format, convert
+            const parts = subSec.timeDuration.split(":").map(Number);
+            if (parts.length === 2) {
+              totalDurationInSeconds += parts[0] * 60 + parts[1];
+            }
+          }
+        }
+      });
+    });
 
-   const totalDuration = calculateCourseDuration(courseDetails.courseContent)
-
-    // testing changes
-    function calculateCourseDuration(courseContent) {
-      const totalSeconds = courseContent.reduce((total, content) => {
-        const sectionSeconds = content.subSection.reduce((sum, sub) => {
-          const time = parseInt(sub.timeDuration || "0", 10);
-          return sum + (isNaN(time) ? 0 : time);
-        }, 0);
-        return total + sectionSeconds;
-      }, 0);
-
-      return convertSecondsToDuration(totalSeconds);
-    }
-
-
-    
+    console.log("Total Duration (seconds):", totalDurationInSeconds);
 
     return res.status(200).json({
       success: true,
+      message: "Full course details fetched successfully",
       data: {
         courseDetails,
-        totalDuration,
-        completedVideos: courseProgressCount?.completedVideos
-          ? courseProgressCount?.completedVideos
-          : [],
+        completedVideos,
+        totalDuration: totalDurationInSeconds,
       },
-    })
+    });
   } catch (error) {
-    console.log("possible error while fetching all the details of course", error);
+    console.error("Error in getFullCourseDetails:", error);
     return res.status(500).json({
       success: false,
-      message: error.message,
-    })
+      message: "Error fetching full course details",
+      error: error.message,
+    });
   }
-}
+};
+
+
+
+
+
+
+
 
 
 
@@ -580,6 +675,15 @@ exports.getInstructorCourses = async (req, res) => {
     })
   }
 }
+
+
+
+
+
+
+
+
+
 // Delete the Course
 exports.deleteCourse = async (req, res) => {
   try {

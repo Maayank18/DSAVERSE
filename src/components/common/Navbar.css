@@ -163,12 +163,21 @@
 }
 
 /* Logo sizing */
-.navbar-logo {
+/* .navbar-logo {
   height: 40px;
   width: auto;
   object-fit: contain;
   display: block;
+} */
+
+.navbar-logo {
+  height: 190px;        /* Inherits container’s height */
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
+
+
 
 /* Responsive: hide links, show menu on mobile */
 @media screen and (max-width: 768px) {

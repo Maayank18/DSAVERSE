@@ -2,6 +2,9 @@
 const express = require("express");
 const app = express();
 
+// middlewares
+app.use(express.json());
+
 // fetchin all our routes
 const userRoutes = require("./routes/User");
 const profileRoutes = require("./routes/Profile");
@@ -21,8 +24,7 @@ const PORT = process.env.PORT || 4000;
 // database connect
 database.dbConnect();
 
-// middlewares
-app.use(express.json());
+
 app.use(cookieParser());
 app.use(
     cors({

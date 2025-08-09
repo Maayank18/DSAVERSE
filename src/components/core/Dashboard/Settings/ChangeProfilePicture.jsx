@@ -83,7 +83,7 @@ export default function ChangeProfilePicture() {
             </button>
             <IconBtn
               text={loading ? "Uploading..." : "Upload"}
-              onclick={handleFileUpload}
+              onClick={handleFileUpload}
             >
               {!loading && (
                 <FiUpload className="upload-icon" />

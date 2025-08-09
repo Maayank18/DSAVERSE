@@ -6,6 +6,7 @@ import { setPaymentLoading } from "../../slices/courseSlice";
 import { resetCart } from "../../slices/cartSlice";
 
 
+
 const {COURSE_PAYMENT_API, COURSE_VERIFY_API, SEND_PAYMENT_SUCCESS_EMAIL_API} = studentEndpoints;
 
 function loadScript(src) {
@@ -48,7 +49,7 @@ export async function buyCourse(token, courses, userDetails, navigate, dispatch)
         console.log("PRINTING orderResponse", orderResponse);
         //options
         const options = {
-            key: process.env.RAZORPAY_KEY,
+            key: process.env.REACT_APP_RAZORPAY_KEY,
             currency: orderResponse.data.message.currency,
             amount: `${orderResponse.data.message.amount}`,
             order_id:orderResponse.data.message.id,
@@ -104,6 +105,7 @@ async function verifyPayment(bodyData, token, navigate, dispatch) {
     try{
         const response  = await apiConnector("POST", COURSE_VERIFY_API, bodyData, {
             Authorization:`Bearer ${token}`,
+            "Content-Type": "application/json", 
         })
 
         if(!response.data.success) {

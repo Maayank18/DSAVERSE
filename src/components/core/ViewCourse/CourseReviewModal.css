@@ -2,14 +2,13 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  margin-top: 0;
   height: 100vh;
   width: 100vw;
   display: grid;
   place-items: center;
-  overflow: auto;
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
+  overflow: auto;
 }
 
 .review-modal-wrapper {
@@ -19,7 +18,7 @@
   background-color: #1c1f25;
   border: 1px solid #4b5563;
   border-radius: 8px;
-  color: white;
+  color: #ffffff;
 }
 
 .review-modal-header {
@@ -39,7 +38,7 @@
 
 .close-icon {
   font-size: 1.5rem;
-  color: white;
+  color: #ffffff;
   cursor: pointer;
 }
 
@@ -56,7 +55,7 @@
 .user-avatar {
   width: 50px;
   aspect-ratio: 1;
-  border-radius: 9999px;
+  border-radius: 50%;
   object-fit: cover;
 }
 
@@ -66,7 +65,10 @@
 
 .posting-publicly {
   font-size: 0.875rem;
+  color: #9ca3af;
 }
+
+/* Form */
 
 .review-form {
   margin-top: 1.5rem;
@@ -91,25 +93,61 @@
   color: #fda4af;
 }
 
+/* Star Rating Group */
+.rating-group {
+  /* same width & spacing as other fields */
+  display: flex;
+  flex-direction: column;
+  width: 91.66%;
+  margin-top: 1rem;
+}
+
+.rating-group .react-stars {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.rating-group .react-stars svg {
+  width: 24px;
+  height: 24px;
+  color: #4b5563;
+  transition: color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.rating-group .react-stars .react-stars-selected svg,
+.rating-group .react-stars .react-stars-active svg {
+  color: #ffd700;
+}
+
+.rating-group .error-text {
+  margin-top: 0.25rem;
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: #fda4af;
+}
+
+/* Textarea */
 .review-textarea {
-  min-height: 130px;
   width: 100%;
+  min-height: 130px;
   padding: 0.75rem;
   background-color: #2d2f36;
   border: 1px solid #4b5563;
   border-radius: 4px;
-  color: white;
+  color: #ffffff;
   resize: none;
   font-family: inherit;
 }
 
 .error-text {
+  margin-top: 0.25rem;
   margin-left: 0.5rem;
   font-size: 0.75rem;
   color: #fda4af;
-  margin-top: 0.25rem;
 }
 
+/* Actions */
 .form-actions {
   margin-top: 1.5rem;
   display: flex;

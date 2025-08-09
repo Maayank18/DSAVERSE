@@ -77,6 +77,14 @@
   display: block;
 }
 
+.homepage-bg.dark-buttons {
+  background-color:	#0A0F2C;
+  height: 100px; /* ⬆️ Increased from 310px to give more visual space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 
 /* Code Headings */
@@ -130,24 +138,28 @@
   color: #333;
 }
 
-.homepage-bg {
+/* .homepage-bg {
   background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
   height: 310px;
-}
+} */
 
-.section-two-inner {
+/* Adjusted layout to center buttons vertically */
+.section-two-inner.adjusted {
   max-width: 1300px;
   margin: 0 auto;
   padding: 0 16px;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  height: 310px; /* Matches gradient height */
+  flex-direction: column;
 }
 
 .spacer {
-  height: 140px;
+  display: none;
 }
 
+/* Button styling inside gradient */
 .cta-group {
   display: flex;
   gap: 24px;
@@ -170,12 +182,23 @@
   gap: 32px;
 }
 
-.skills-section {
+/* .skills-section {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   gap: 32px;
   margin-top: 120px;
+} */
+ .skills-section {
+  margin-top: 80px; /* reduced from 120px */
+  gap: 24px;
+}
+
+.section-two-inner.buttons-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .skills-heading {
@@ -215,6 +238,11 @@
   margin-top: 40px;
 }
 
+.section-two-content.compact-white {
+  padding: 24px 16px;
+  gap: 24px;
+}
+
 /* Media Queries */
 @media screen and (max-width: 768px) {
   .skills-section {
@@ -237,3 +265,4 @@
     font-size: 24px;
   }
 }
+

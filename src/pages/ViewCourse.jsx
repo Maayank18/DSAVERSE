@@ -4,7 +4,7 @@ import { Outlet, useParams } from "react-router-dom"
 
 import CourseReviewModal from "../components/core/ViewCourse/CourseReviewModal"
 import VideoDetailsSidebar from "../components/core/ViewCourse/VideoDetailsSidebar"
-import { getFullDetailsOfCourse } from "../services/operations/courseDetailsAPI"
+import { fetchCourseDetails } from "../services/operations/courseDetailsAPI"
 import {
   setCompletedLectures,
   setCourseSectionData,
@@ -21,20 +21,29 @@ export default function ViewCourse() {
   const [reviewModal, setReviewModal] = useState(false)
 
   useEffect(() => {
-    ;(async () => {
-      const courseData = await getFullDetailsOfCourse(courseId, token)
+  (async () => {
+    const courseData = await fetchCourseDetails(courseId, token)
+    
+    if (
+      courseData &&
+      courseData.courseDetails &&
+      Array.isArray(courseData.courseDetails.courseContent)
+    ) {
       dispatch(setCourseSectionData(courseData.courseDetails.courseContent))
       dispatch(setEntireCourseData(courseData.courseDetails))
       dispatch(setCompletedLectures(courseData.completedVideos))
 
       let lectures = 0
-      courseData?.courseDetails?.courseContent?.forEach((sec) => {
+      courseData.courseDetails.courseContent.forEach((sec) => {
         lectures += sec.subSection.length
       })
       dispatch(setTotalNoOfLectures(lectures))
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    } else {
+      console.error("Course data incomplete or malformed", courseData)
+    }
+  })()
+}, [courseId, token, dispatch])
+
 
   return (
     <>

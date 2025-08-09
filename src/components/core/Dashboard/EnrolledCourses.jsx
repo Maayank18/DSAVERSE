@@ -12,17 +12,17 @@ export default function EnrolledCourses() {
 
   const [enrolledCourses, setEnrolledCourses] = useState(null)
 
-  const getEnrolledCourses = async () => {
+  const getEnrolledCoursesHandler = async () => {
     try {
       const res = await getUserEnrolledCourses(token)
       setEnrolledCourses(res)
     } catch (error) {
-      console.log("Could not fetch enrolled courses.")
+      console.log("Could not fetch enrolled courses.", error)
     }
   }
 
   useEffect(() => {
-    getEnrolledCourses()
+    getEnrolledCoursesHandler()
   }, [])
 
   return (
@@ -46,15 +46,23 @@ export default function EnrolledCourses() {
           {enrolledCourses.map((course, i, arr) => (
             <div
               className={`enrolled-row ${i === arr.length - 1 ? "last-row" : ""}`}
-              key={i}
+              key={course._id}
             >
               <div
                 className="col-name enrolled-course"
-                onClick={() =>
+                onClick={() => {
+                  const firstSection = course.courseContent?.[0]
+                  const firstSubSection = firstSection?.subSection?.[0]
+
+                  if (!firstSection || !firstSubSection) {
+                    alert("This course has no sections or subsections yet.")
+                    return
+                  }
+
                   navigate(
-                    `/view-course/${course?._id}/section/${course.courseContent?.[0]?._id}/sub-section/${course.courseContent?.[0]?.subSection?.[0]?._id}`
+                    `/view-course/${course._id}/section/${firstSection._id}/sub-section/${firstSubSection._id}`
                   )
-                }
+                }}
               >
                 <img
                   src={course.thumbnail}
@@ -64,13 +72,13 @@ export default function EnrolledCourses() {
                 <div className="course-info">
                   <p className="course-title">{course.courseName}</p>
                   <p className="course-desc">
-                    {course.courseDescription.length > 50
+                    {course.courseDescription?.length > 50
                       ? `${course.courseDescription.slice(0, 50)}...`
                       : course.courseDescription}
                   </p>
                 </div>
               </div>
-              <div className="col-duration">{course?.totalDuration}</div>
+              <div className="col-duration">{course?.totalDuration || "N/A"}</div>
               <div className="col-progress progress-box">
                 <p>Progress: {course.progressPercentage || 0}%</p>
                 <ProgressBar

@@ -1,29 +1,33 @@
 .course-card {
-  width: 360px;
+  width: 320px;
   max-width: 100%;
   background-color: #1e1e1e;
   color: #f5f5f5;
-  height: 300px;
+  border-radius: 6px;
   box-sizing: border-box;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  margin: 0 8px; /* Add side margin so cards don’t stick together */
 }
 
 @media screen and (min-width: 1024px) {
   .course-card {
-    width: 30%;
+    width: 320px;
+    margin: 0 12px; /* Slightly more margin on big screens */
   }
 }
 
 .course-card.active {
-  background-color: #fff;
-  box-shadow: 12px 12px 0 0 #fde047; /* shadow-yellow-50 */
+  background-color: #ffffff;
   color: #1e1e1e;
+  box-shadow: 12px 12px 0 0 #fde047;
 }
 
 .card-top {
-  border-bottom: 2px dashed #666;
-  height: 80%;
+  flex: 1;
+  border-bottom: 1px dashed #666;
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -41,24 +45,27 @@
 
 .card-description {
   color: #aaa;
+  font-size: 15px;
+  line-height: 1.4;
 }
 
-/* Bottom Section */
 .card-bottom {
   display: flex;
   justify-content: space-between;
-  padding: 12px 24px;
+  align-items: center;
+  padding: 16px 24px;
   font-weight: 500;
   color: #999;
+  font-size: 15px;
 }
 
 .card-bottom.active-bottom {
-  color: #60a5fa; /* text-blue-300 */
+  color: #60a5fa;
 }
 
 .card-info {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 16px;
+  gap: 6px;
+  font-size: 15px;
 }

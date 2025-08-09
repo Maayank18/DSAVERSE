@@ -1,0 +1,99 @@
+/* EditProfile.css */
+
+.profile-form {
+  margin: 40px auto;
+  padding: 36px;
+  max-width: 770px; /* Wide enough to feel spacious */
+  background-color: #1f2128;
+  border: 1px solid #3d4048;
+  border-radius: 14px;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.4);
+}
+
+.form-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 28px;
+  text-align: left; /* Move to top left corner */
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.form-grid .full-width {
+  grid-column: span 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Ensures it takes full grid cell width */
+}
+
+.label {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #dddddd;
+}
+
+.input {
+  width: 100%; /* Make inputs stretch fully */
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #2b2d35;
+  color: #eaeaea;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #ffe400;
+  background-color: #353843;
+}
+
+.input.textarea {
+  resize: vertical;
+  min-height: 140px;
+  line-height: 1.5;
+}
+
+.error-text {
+  font-size: 12px;
+  margin-top: 4px;
+  color: #ffe400;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.btn,
+.IconBtn button {
+  padding: 12px 24px;
+  font-weight: 600;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.cancel-btn {
+  background-color: #3d4048;
+  color: #f5f5f5;
+}
+
+.cancel-btn:hover {
+  background-color: #50535c;
+}

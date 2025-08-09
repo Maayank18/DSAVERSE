@@ -14,7 +14,13 @@ exports.uploadImageToCloudinary = async (file,folder,height,quality) => {
         options.quality = quality;
     }
 
-    options.resource_type = "auto";
+    // options.resource_type = "auto";
+    if (file.mimetype.startsWith("video")) {
+    options.resource_type = "video";
+} else {
+    options.resource_type = "image";
+}
+
 
     return await cloudinary.uploader.upload(file.tempFilePath, options);
 }

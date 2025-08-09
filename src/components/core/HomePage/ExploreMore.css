@@ -3,6 +3,7 @@
   width: 100%;
 }
 
+/* Heading */
 .explore-heading {
   font-size: 32px;
   font-weight: 600;
@@ -51,40 +52,30 @@
   font-weight: 500;
 }
 
-/* Spacer */
-.explore-spacer {
-  display: none;
-  height: 200px;
-}
-
 /* Cards container */
 .explore-cards {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 40px;
+  gap: 32px;
+  margin-top: 32px;          /* reduced spacing above cards */
   margin-bottom: 28px;
-  padding: 0 12px;
-  color: #000;
+  padding: 0 16px;           /* side padding so cards don't touch edge */
+  position: relative;
 }
 
-/* Responsive */
 @media screen and (min-width: 1024px) {
   .explore-tabs {
     display: flex;
-  }
-
-  .explore-spacer {
-    display: block;
+    margin-top: 20px;        /* reduce space between heading and tabs */
+    margin-bottom: 20px;     /* reduce space between tabs and cards */
   }
 
   .explore-cards {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(50%);
-    gap: 0;
     justify-content: space-between;
-    padding: 0;
+    flex-wrap: nowrap;
+    gap: 24px;
+    margin-top: 40px;        /* less vertical space above cards */
+    padding: 0 24px;         /* more side padding on large screens */
   }
 }

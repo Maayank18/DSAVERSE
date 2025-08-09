@@ -112,9 +112,8 @@ const Home = () => {
 
       {/* Section Two */}
       <div className="section-two">
-        <div className="homepage-bg">
-          <div className="section-two-inner">
-            <div className="spacer"></div>
+        <div className="homepage-bg dark-buttons">
+          <div className="section-two-inner buttons-centered">
             <div className="cta-group">
               <CTAButton active={true} linkto={"/signup"}>
                 <div className="cta-link">
@@ -129,7 +128,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="section-two-content">
+        <div className="section-two-content compact-white">
           <div className="skills-section">
             <div className="skills-heading">
               Get the skills u need for a
@@ -149,6 +148,7 @@ const Home = () => {
           <LearningLanguageSection />
         </div>
       </div>
+
 
       {/* Section Three */}
       <div className="section-three">

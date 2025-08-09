@@ -74,7 +74,7 @@ router.get("/getAllCourses", showAllCourses)
 // Get Details for a Specific Courses cheking testing change
 router.post("/getCourseDetails", getCourseDetails)
 // Get Details for a Specific Courses
-router.get("/getFullCourseDetails", auth, getFullCourseDetails)
+router.post("/getFullCourseDetails", auth, getFullCourseDetails)
 // Edit Course routes
 router.post("/editCourse", auth, isinstructor, editCourse)
 // Get all Courses Under a Specific Instructor

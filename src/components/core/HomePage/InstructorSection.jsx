@@ -1,5 +1,5 @@
 import React from 'react';
-import Instructor from '../../../assets/Images/Instructor.png';
+import Instructor from '../../../assets/Images/InstructorImage.png';
 import CTAButton from '../HomePage/Button';
 import HighlightText from '../HomePage/HighlightText';
 import { FaArrowRight } from 'react-icons/fa';
@@ -17,8 +17,7 @@ const InstructorSection = () => {
             Become an <HighlightText text="Instructor" />
           </div>
           <p className="instructor-text">
-            Instructor from round the corner are here to shoe case 
-            there talent and the learning skils
+            " Instructors from around the corner have arrived to showcase their talents and share their remarkable learning journeys. With dedication and expertise, they bring forth a vibrant display of skills honed through years of experience and passion. "
           </p>
           <div className="instructor-button">
             <CTAButton active={true} linkto="/signup">
