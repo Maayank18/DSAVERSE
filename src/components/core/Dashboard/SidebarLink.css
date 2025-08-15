@@ -2,37 +2,39 @@
 .sidebar-link {
   position: relative;
   display: block;
-  padding: 0.5rem 2rem;
-  font-size: 0.875rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  color: #d1d5db; /* richblack-300 */
+  color: #d1d5db;
   background-color: transparent;
   text-decoration: none;
+  border-radius: 0.375rem;
   transition: background-color 0.2s ease, color 0.2s ease;
-  border-left: 4px solid transparent; /* placeholder for active bar */
+  border-left: 4px solid transparent;
 }
 
 /* Active link styling */
 .sidebar-link.active {
-  background-color: #854d0e;  /* yellow-800 */
-  color: #fefce8;             /* yellow-50 */
-  border-left: 4px solid #fefce8;  /* left accent bar */
+  background-color: #2c2f36;
+  color: #ffffff;
+  border-left: 4px solid #7c3aed;
 }
 
-/* Optional highlight bar (used if you want a smooth fade-in bar) */
+/* Highlight bar (optional visual accent) */
 .sidebar-highlight {
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
-  width: 0.25rem;
-  background-color: #fefce8; /* yellow-50 */
+  width: 4px;
+  background-color: #7c3aed;
+  border-radius: 0 4px 4px 0;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
 
-/* Show highlight */
-.sidebar-highlight.show {
+.sidebar-link.active .sidebar-highlight {
   opacity: 1;
 }
 
@@ -40,10 +42,19 @@
 .sidebar-link-content {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
 /* Icon styling */
 .sidebar-icon {
   font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+/* Text styling */
+.sidebar-link-text {
+  flex-grow: 1;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
 }

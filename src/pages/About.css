@@ -1,102 +1,163 @@
+/* ABOUT PAGE - NO OVERLAP VERSION (NO -webkit- PREFIXES) */
+
+/* base hero background */
 .about-hero {
-  background-color: #2c2f36;
+  background-color: #0b0f13;
+  position: relative;
+  overflow: visible;
 }
 
+/* tighter container padding so hero is less tall */
 .about-hero-container {
-  position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 5rem 2rem;
+  padding: 2.25rem 1.5rem 1.25rem; /* less bottom padding to keep compact */
   text-align: center;
   color: white;
 }
 
+/* header sits above images; keep high stacking but images are now separate */
 .about-header {
-  font-size: 2.5rem;
-  font-weight: 600;
-  margin: 0 auto;
-  max-width: 70%;
+  position: relative;
+  z-index: 4;
+  font-size: 3rem;
+  line-height: 1.02;
+  font-weight: 700;
+  margin: 0 auto 0.6rem;
+  max-width: 80%;
+  letter-spacing: -0.5px;
 }
 
+/* subtext slightly closer */
 .about-subtext {
-  margin-top: 1rem;
+  margin-top: 0.6rem;
   font-size: 1rem;
   font-weight: 500;
   color: #a1a1aa;
-  max-width: 95%;
+  max-width: 85%;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.55;
 }
 
+/* small spacer inside hero for breathing room */
 .hero-spacer {
-  height: 150px;
+  height: 18px; /* small spacer; images live below hero now */
 }
 
+/* ===================== BANNER WRAPPER (NEW) =====================
+   Images are placed in their own section AFTER the hero to guarantee
+   they never cover the hero heading. We keep the layout compact by
+   pulling them just slightly upward if desired, but default is
+   to sit below the hero (no covering).
+   ================================================================= */
+.about-banner-wrapper {
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem; /* horizontal padding */
+  margin-top: 0; /* images sit directly after hero; no overlap */
+  z-index: 2;
+}
+
+/* images grid */
 .about-banner-images {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 30%);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 1rem;
+  width: 84%;
+  max-width: 1000px;
+  align-items: start;
+  pointer-events: none; /* decorative */
+}
+
+/* banner images styling */
+.about-banner-images img {
   width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
+  transform-origin: center;
 }
 
+/* subtle divider style */
 .about-quote-section {
-  border-bottom: 1px solid #2c2f36;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
 }
 
+/* quote container reduced padding */
 .about-quote-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 4rem 2rem;
+  padding: 2rem 1.5rem;
   color: #a1a1aa;
 }
 
+/* smaller spacer so the next section sits close but not colliding */
 .quote-spacer {
-  height: 100px;
+  height: 40px;
 }
 
+/* MAIN ABOUT SECTION - compact and keeps clear distance from images */
 .about-section {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 4rem 2rem;
+  margin: 0 auto; /* no negative margin so it won't climb into images */
+  padding: 2rem 2rem;
   color: #a1a1aa;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.75rem;
+  position: relative;
+  z-index: 1;
 }
 
+/* STORY block - stacked on small screens, side-by-side on large screens */
 .about-story {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
+/* left text column within story */
 .about-story-text {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-top: 6rem;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 .about-story-text p {
   font-size: 1rem;
   font-weight: 500;
+  line-height: 1.6;
+  color: #a8b0b6;
 }
 
+/* wrapper for image so we can control alignment on larger screens */
+.about-story-image-wrap {
+  display: block;
+  align-self: center;
+}
+
+/* image style: keep shadow but compact */
 .founding-image {
-  box-shadow: 0 0 20px #FC6767;
+  box-shadow: 0 0 26px rgba(252,103,103,0.18);
   max-width: 100%;
   height: auto;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  display: block;
 }
 
+/* VISION + MISSION stacked on small screens, row on large */
 .about-vision-mission {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 2rem;
+  margin-top: 0.5rem;
 }
 
 .about-vision,
@@ -104,40 +165,46 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-top: 6rem;
+  gap: 1rem;
 }
 
-.about-vision p,
-.about-mission p {
-  font-size: 1rem;
-  font-weight: 500;
-}
-
+/* GRADIENT TEXT (no vendor prefixes) */
 .gradient-text-1 {
-  background: linear-gradient(to bottom right, #833AB4, #FD1D1D, #FCB045);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-size: 2.5rem;
-  font-weight: 600;
+  background-image: linear-gradient(45deg, #833AB4 0%, #FD1D1D 50%, #FCB045 100%);
+  background-size: 200% 200%;
+  font-size: 3rem;
+  line-height: 1.02;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  background-clip: text;
+  color: transparent;
+  color: #ffb347; /* fallback */
+  text-shadow: 0 1px 0 rgba(0,0,0,0.45);
 }
 
 .gradient-text-2 {
-  background: linear-gradient(to bottom, #FF512F, #F09819);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-size: 2.5rem;
-  font-weight: 600;
+  background-image: linear-gradient(180deg, #FF512F 0%, #F09819 100%);
+  background-size: 200% 200%;
+  font-size: 2.25rem;
+  font-weight: 700;
+  background-clip: text;
+  color: transparent;
+  color: #ff8a50; /* fallback */
+  text-shadow: 0 1px 0 rgba(0,0,0,0.35);
 }
 
 .gradient-text-3 {
-  background: linear-gradient(to bottom, #1FA2FF, #12D8FA, #A6FFCB);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-size: 2.5rem;
-  font-weight: 600;
+  background-image: linear-gradient(180deg, #1FA2FF 0%, #12D8FA 60%, #A6FFCB 100%);
+  background-size: 200% 200%;
+  font-size: 2.25rem;
+  font-weight: 700;
+  background-clip: text;
+  color: transparent;
+  color: #7fdcf2; /* fallback */
+  text-shadow: 0 1px 0 rgba(0,0,0,0.35);
 }
 
+/* learning/contact spacing */
 .about-learning-contact {
   max-width: 1200px;
   margin: 5rem auto;
@@ -148,6 +215,7 @@
   gap: 2.5rem;
 }
 
+/* reviews block */
 .about-reviews {
   max-width: 1200px;
   margin: 5rem auto;
@@ -161,4 +229,85 @@
   font-size: 2.5rem;
   font-weight: 600;
   margin-bottom: 2rem;
+}
+
+/* ---------- RESPONSIVE / LARGER SCREEN LAYOUT ---------- */
+@media (min-width: 900px) {
+  .about-header {
+    font-size: 3.25rem;
+    max-width: 70%;
+  }
+
+  .about-story {
+    flex-direction: row;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .about-story-text {
+    margin-top: 0;
+    padding-right: 1rem;
+  }
+
+  .about-story-image-wrap {
+    flex: 0 0 470px;
+    display: block;
+    text-align: right;
+  }
+
+  .founding-image {
+    max-width: 420px;
+  }
+
+  .about-vision-mission {
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+/* small screens: stack images and content */
+@media (max-width: 900px) {
+  .about-header {
+    font-size: 1.9rem;
+    max-width: 95%;
+  }
+
+  .about-banner-images {
+    width: 92%;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 0.75rem;
+  }
+
+  .about-section {
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  .gradient-text-1 {
+    font-size: 2rem;
+  }
+
+  .founding-image {
+    max-width: 100%;
+  }
+}
+
+/* Very small devices: single-column banners */
+@media (max-width: 480px) {
+  .about-hero-container {
+    padding: 1.2rem;
+  }
+  .hero-spacer {
+    height: 12px;
+  }
+  .about-header {
+    font-size: 1.6rem;
+  }
+  .about-quote-container {
+    padding: 1rem;
+  }
+  .about-banner-images {
+    grid-template-columns: repeat(1, 1fr);
+    width: 94%;
+  }
 }

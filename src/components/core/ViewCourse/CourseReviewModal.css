@@ -6,7 +6,7 @@
   width: 100vw;
   display: grid;
   place-items: center;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.45); /* darker backdrop for contrast */
   backdrop-filter: blur(5px);
   overflow: auto;
 }
@@ -19,6 +19,7 @@
   border: 1px solid #4b5563;
   border-radius: 8px;
   color: #ffffff;
+  position: relative;
 }
 
 .review-modal-header {
@@ -57,6 +58,7 @@
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
+  background: #111; /* fallback */
 }
 
 .user-name {
@@ -93,33 +95,48 @@
   color: #fda4af;
 }
 
-/* Star Rating Group */
+/* --- Star Rating Group --- */
 .rating-group {
-  /* same width & spacing as other fields */
   display: flex;
   flex-direction: column;
   width: 91.66%;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  position: relative;
+  z-index: 2000; /* ensure it's above backdrop/overlays */
 }
 
-.rating-group .react-stars {
-  display: flex;
-  gap: 0.25rem;
+/* React-rating-stars-component structure: .react-stars > svg */
+.rating-group .react-stars,
+.rating-group .react-stars * {
+  pointer-events: auto !important;
 }
 
-.rating-group .react-stars svg {
-  width: 24px;
-  height: 24px;
-  color: #4b5563;
-  transition: color 0.2s ease-in-out;
-  cursor: pointer;
+/* Ensure SVG shapes are visible by setting fill and color */
+.rating-group .react-stars svg,
+.rating-group .react-stars svg path,
+.rating-group .react-stars svg g {
+  fill: #4b5563 !important;   /* inactive star color */
+  color: #4b5563 !important;
+  stroke: none !important;
+  opacity: 1 !important;
+  display: inline-block !important;
 }
 
+/* Active / selected star color */
+.rating-group .react-stars .react-stars-selected svg path,
+.rating-group .react-stars .react-stars-active svg path,
 .rating-group .react-stars .react-stars-selected svg,
 .rating-group .react-stars .react-stars-active svg {
-  color: #ffd700;
+  fill: #ffd700 !important;   /* gold for active stars */
+  color: #ffd700 !important;
 }
 
+/* Fallback selectors (some versions use different classnames) */
+.rating-group svg[fill] {
+  fill: inherit !important;
+}
+
+/* error text */
 .rating-group .error-text {
   margin-top: 0.25rem;
   margin-left: 0.5rem;

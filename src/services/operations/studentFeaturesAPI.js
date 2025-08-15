@@ -100,25 +100,36 @@ async function sendPaymentSuccessEmail(response, amount, token) {
 
 //verify payment
 async function verifyPayment(bodyData, token, navigate, dispatch) {
-    const toastId = toast.loading("Verifying Payment....");
-    dispatch(setPaymentLoading(true));
-    try{
-        const response  = await apiConnector("POST", COURSE_VERIFY_API, bodyData, {
-            Authorization:`Bearer ${token}`,
-            "Content-Type": "application/json", 
-        })
+  const toastId = toast.loading("Verifying Payment...");
+  dispatch(setPaymentLoading(true));
 
-        if(!response.data.success) {
-            throw new Error(response.data.message);
-        }
-        toast.success("payment Successful, ypou are addded to the course");
-        navigate("/dashboard/enrolled-courses");
-        dispatch(resetCart());
-    }   
-    catch(error) {
-        console.log("PAYMENT VERIFY ERROR....", error);
-        toast.error("Could not verify Payment");
+  try {
+    const response = await apiConnector(
+      "POST",
+      COURSE_VERIFY_API,
+      bodyData,
+      {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    );
+
+    console.log("VERIFY PAYMENT RESPONSE:", response.data);
+
+    if (!response.data.success) {
+      toast.error(response.data.message || "Payment verification failed");
+      return; // Stop further execution
     }
+
+    toast.success("Payment successful! You are added to the course.");
+    dispatch(resetCart());
+    navigate("/dashboard/enrolled-courses");
+
+  } catch (error) {
+    console.error("PAYMENT VERIFY ERROR:", error);
+    toast.error(error.response?.data?.message || "Could not verify payment");
+  } finally {
     toast.dismiss(toastId);
     dispatch(setPaymentLoading(false));
+  }
 }

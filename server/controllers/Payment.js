@@ -359,44 +359,69 @@ exports.capturePayment = async (req, res) => {
 
 // verify the payment
 exports.verifyPayment = async (req, res) => {
-  const razorpay_order_id = req.body?.razorpay_order_id
-  const razorpay_payment_id = req.body?.razorpay_payment_id
-  const razorpay_signature = req.body?.razorpay_signature
-  const courses = req.body?.courses
-  const userId = req.user.id
+  try {
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      courses
+    } = req.body;
+    const userId = req.user?.id;
 
-  console.log("razor pay order id ", razorpay_order_id);
-  console.log("razor pay payment id ", razorpay_payment_id);
-  console.log("razorpay signature" ,razorpay_signature);
-  console.log("razorpay courses", courses);
-  console.log("razorpay", userId);
+    // Debug logs
+    console.log("razorpay_order_id:", razorpay_order_id);
+    console.log("razorpay_payment_id:", razorpay_payment_id);
+    console.log("razorpay_signature:", razorpay_signature);
+    console.log("courses:", courses);
+    console.log("userId:", userId);
 
-  if (
-    !razorpay_order_id ||
-    !razorpay_payment_id ||
-    !razorpay_signature ||
-    !courses ||
-    !userId
-  ) {
-    return res.status(200).json({ success: false, message: "Payment Failed" })
+    // Validation
+    if (
+      !razorpay_order_id ||
+      !razorpay_payment_id ||
+      !razorpay_signature ||
+      !courses ||
+      !userId
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing payment details"
+      });
+    }
+
+    // Generate expected signature
+    const body = `${razorpay_order_id}|${razorpay_payment_id}`;
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_SECRET)
+      .update(body.toString())
+      .digest("hex");
+
+    console.log("Expected Signature:", expectedSignature);
+
+    // Compare signatures
+    if (expectedSignature !== razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid payment signature"
+      });
+    }
+
+    // Enroll student
+    await enrollStudents(courses, userId, res);
+
+    return res.status(200).json({
+      success: true,
+      message: "Payment verified and courses enrolled"
+    });
+
+  } catch (error) {
+    console.error("VERIFY PAYMENT ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error during payment verification"
+    });
   }
-
-  let body = razorpay_order_id + "|" + razorpay_payment_id
-
-  const expectedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_SECRET)
-    .update(body.toString())
-    .digest("hex")
-
-  console.log("expected signature", expectedSignature);
-
-  if (expectedSignature === razorpay_signature) {
-    await enrollStudents(courses, userId, res)
-    return res.status(200).json({ success: true, message: "Payment Verified" })
-  }
-
-  return res.status(200).json({ success: false, message: "Payment Failed" })
-}
+};
 
 
 

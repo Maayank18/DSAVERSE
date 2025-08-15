@@ -1,5 +1,20 @@
 .rating-stars {
   display: flex;
-  gap: 0.25rem; /* 4px gap between stars */
-  color: #facc15; /* text-yellow-100 (roughly #facc15) */
+  align-items: center;
+  gap: 4px;
+  color: #ffd700; /* gold for filled stars */
+}
+
+.rating-stars svg {
+  cursor: default;
+  transition: transform 0.2s ease;
+}
+
+.rating-stars.editable svg {
+  cursor: pointer;
+}
+
+.rating-stars.editable svg:hover {
+  transform: scale(1.2);
+  color: #ffb400;
 }

@@ -10,7 +10,7 @@
 //   const { token } = useSelector((state) => state.auth)
 //   const { user } = useSelector((state) => state.profile)
 //   const [loading, setLoading] = useState(false)
-//   const [instructorData, setInstructorData] = useState(null)
+//   const [instructorData, setInstructorData] = useState([])
 //   const [courses, setCourses] = useState([])
 
 //   useEffect(() => {
@@ -18,21 +18,24 @@
 //       setLoading(true)
 //       const instructorApiData = await getInstructorData(token)
 //       const result = await fetchInstructorCourses(token)
-//       if (instructorApiData.length) setInstructorData(instructorApiData)
-//       if (result) {
-//         setCourses(result)
-//       }
+
+//       if (Array.isArray(instructorApiData)) setInstructorData(instructorApiData)
+//       else setInstructorData([])
+
+//       if (Array.isArray(result)) setCourses(result)
+//       else setCourses([])
+
 //       setLoading(false)
 //     })()
-//   }, [])
+//   }, [token])
 
 //   const totalAmount = instructorData?.reduce(
-//     (acc, curr) => acc + curr.totalAmountGenerated,
+//     (acc, curr) => acc + (curr.totalAmountGenerated ?? 0),
 //     0
 //   )
 
 //   const totalStudents = instructorData?.reduce(
-//     (acc, curr) => acc + curr.totalStudentsEnrolled,
+//     (acc, curr) => acc + (curr.totalStudentsEnrolled ?? 0),
 //     0
 //   )
 
@@ -46,39 +49,15 @@
 //       {loading ? (
 //         <div className="spinner"></div>
 //       ) : courses.length > 0 ? (
-//         <div>
-//           <div className="chart-statistics-container">
-//             {/* Render chart / graph */}
-//             {totalAmount > 0 || totalStudents > 0 ? (
+//         <>
+//           {/* TOP ROW: visualize fills full width; stats are inside InstructorChart */}
+//           <div className="top-row">
+//             <div className="visualize-wrapper">
 //               <InstructorChart courses={instructorData} />
-//             ) : (
-//               <div className="visualize-box">
-//                 <p className="visualize-title">Visualize</p>
-//                 <p className="visualize-message">Not Enough Data To Visualize</p>
-//               </div>
-//             )}
-
-//             {/* Total Statistics */}
-//             <div className="statistics-box">
-//               <p className="stat-heading">Statistics</p>
-//               <div className="stat-group">
-//                 <div>
-//                   <p className="stat-label">Total Courses</p>
-//                   <p className="stat-value">{courses.length}</p>
-//                 </div>
-//                 <div>
-//                   <p className="stat-label">Total Students</p>
-//                   <p className="stat-value">{totalStudents}</p>
-//                 </div>
-//                 <div>
-//                   <p className="stat-label">Total Income</p>
-//                   <p className="stat-value">Rs. {totalAmount}</p>
-//                 </div>
-//               </div>
 //             </div>
 //           </div>
 
-//           {/* Course Preview Section */}
+//           {/* Courses — list of cards with larger thumbnails and readable details */}
 //           <div className="course-preview-box">
 //             <div className="course-preview-header">
 //               <p className="course-preview-title">Your Courses</p>
@@ -86,6 +65,7 @@
 //                 View All
 //               </Link>
 //             </div>
+
 //             <div className="course-cards">
 //               {courses.slice(0, 3).map((course) => (
 //                 <div key={course._id} className="course-card">
@@ -96,21 +76,30 @@
 //                   />
 //                   <div className="course-details">
 //                     <p className="course-name">{course.courseName}</p>
+
 //                     <div className="course-meta">
 //                       <p className="course-meta-item">
-//                         {/* {course.studentsEnroled.length} students */}
-//                         {course?.studentsEnrolled?.length ?? 0} students
-
+//                         {Array.isArray(course?.studentsEnrolled)
+//                           ? course.studentsEnrolled.length
+//                           : 0}{' '}
+//                         students
 //                       </p>
-//                       <p className="course-meta-item">|</p>
+//                       <p className="course-meta-sep">|</p>
 //                       <p className="course-meta-item">Rs. {course.price}</p>
 //                     </div>
+
+//                     <p className="course-desc">
+//                       {course.courseDescription
+//                         ? course.courseDescription.slice(0, 260) +
+//                           (course.courseDescription.length > 260 ? '...' : '')
+//                         : 'No description available'}
+//                     </p>
 //                   </div>
 //                 </div>
 //               ))}
 //             </div>
 //           </div>
-//         </div>
+//         </>
 //       ) : (
 //         <div className="no-course-box">
 //           <p className="no-course-text">You have not created any courses yet</p>
@@ -122,7 +111,6 @@
 //     </div>
 //   )
 // }
-
 
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -145,7 +133,6 @@ export default function Instructor() {
       const instructorApiData = await getInstructorData(token)
       const result = await fetchInstructorCourses(token)
 
-      // ✅ Defensive: only set data if it's an array
       if (Array.isArray(instructorApiData)) setInstructorData(instructorApiData)
       else setInstructorData([])
 
@@ -154,9 +141,8 @@ export default function Instructor() {
 
       setLoading(false)
     })()
-  }, [])
+  }, [token])
 
-  // ✅ Defensive: use nullish coalescing to avoid undefined
   const totalAmount = instructorData?.reduce(
     (acc, curr) => acc + (curr.totalAmountGenerated ?? 0),
     0
@@ -175,41 +161,21 @@ export default function Instructor() {
       </div>
 
       {loading ? (
-        <div className="spinner"></div>
+        <div className="spinner" />
       ) : courses.length > 0 ? (
-        <div>
-          <div className="chart-statistics-container">
-            {/* Render chart / graph */}
-            {totalAmount > 0 || totalStudents > 0 ? (
-              <InstructorChart courses={instructorData} />
-            ) : (
-              <div className="visualize-box">
-                <p className="visualize-title">Visualize</p>
-                <p className="visualize-message">Not Enough Data To Visualize</p>
-              </div>
-            )}
-
-            {/* Total Statistics */}
-            <div className="statistics-box">
-              <p className="stat-heading">Statistics</p>
-              <div className="stat-group">
-                <div>
-                  <p className="stat-label">Total Courses</p>
-                  <p className="stat-value">{courses.length}</p>
-                </div>
-                <div>
-                  <p className="stat-label">Total Students</p>
-                  <p className="stat-value">{totalStudents}</p>
-                </div>
-                <div>
-                  <p className="stat-label">Total Income</p>
-                  <p className="stat-value">Rs. {totalAmount}</p>
-                </div>
-              </div>
+        <>
+          {/* TOP ROW: visualize fills full width; stats are inside InstructorChart */}
+          <div className="top-row">
+            <div className="visualize-wrapper">
+              <InstructorChart
+                courses={instructorData}
+                instructorName={user?.firstName}
+                subtitle=""
+              />
             </div>
           </div>
 
-          {/* Course Preview Section */}
+          {/* Courses — list of cards (thumbnail left + details right) */}
           <div className="course-preview-box">
             <div className="course-preview-header">
               <p className="course-preview-title">Your Courses</p>
@@ -217,9 +183,10 @@ export default function Instructor() {
                 View All
               </Link>
             </div>
+
             <div className="course-cards">
               {courses.slice(0, 3).map((course) => (
-                <div key={course._id} className="course-card">
+                <div key={course._id} className="instructor-course-card">
                   <img
                     src={course.thumbnail}
                     alt={course.courseName}
@@ -227,23 +194,30 @@ export default function Instructor() {
                   />
                   <div className="course-details">
                     <p className="course-name">{course.courseName}</p>
+
                     <div className="course-meta">
                       <p className="course-meta-item">
-                        {/* ✅ Safe access with fallback */}
                         {Array.isArray(course?.studentsEnrolled)
                           ? course.studentsEnrolled.length
                           : 0}{' '}
                         students
                       </p>
-                      <p className="course-meta-item">|</p>
+                      <p className="course-meta-sep">|</p>
                       <p className="course-meta-item">Rs. {course.price}</p>
                     </div>
+
+                    <p className="course-desc">
+                      {course.courseDescription
+                        ? course.courseDescription.slice(0, 260) +
+                          (course.courseDescription.length > 260 ? '...' : '')
+                        : 'No description available'}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
+        </>
       ) : (
         <div className="no-course-box">
           <p className="no-course-text">You have not created any courses yet</p>

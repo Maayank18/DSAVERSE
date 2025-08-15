@@ -42,7 +42,7 @@
   color: #0fe7ad;
 }
 
-/* Dropdown parent group */
+/* Parent container */
 .dropdown-group {
   position: relative;
   display: flex;
@@ -51,51 +51,47 @@
   cursor: pointer;
 }
 
-/* Highlight active catalog */
-.dropdown-group.active p {
-  color: #ffd60a;
-}
-
-/* Dropdown content box */
+/* Hidden by default */
 .dropdown-content {
-  visibility: hidden;
-  opacity: 0;
   position: absolute;
-  top: 120%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  background-color: #ffffff; /* white background */
-  color: #0f0f0f;
-  width: 240px;
-  padding: 0.5rem 0;
+  top: calc(100% + 8px);   /* 8px gap under the label */
+  left: 50%;               /* start at 50% of parent */
+  transform: translateX(-50%) translateY(-10px);
+  min-width: 180px;        /* enforce a sensible minimum */
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
 }
 
-/* Show dropdown on hover */
+/* Reveal on hover */
 .dropdown-group:hover .dropdown-content {
-  visibility: visible;
   opacity: 1;
-  transform: translate(-50%, 10%);
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
 }
 
-/* Dropdown arrow */
+/* Little arrow pointing up */
 .dropdown-arrow {
   position: absolute;
-  top: 0;
+  top: -6px;               /* place it above the box */
   left: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-  width: 16px;
-  height: 16px;
-  background-color: #ffffff;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border-left: 1px solid #e2e8f0;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: -1px -1px 2px rgba(0, 0, 0, 0.05);
   z-index: -1;
-  box-shadow: -2px -2px 4px rgba(0,0,0,0.05);
-  border-radius: 2px;
 }
 
-/* Dropdown items */
+/* Individual link items */
 .dropdown-item {
   display: block;
   padding: 0.75rem 1rem;
@@ -103,14 +99,14 @@
   color: #0f0f0f;
   font-weight: 600;
   font-size: 0.95rem;
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out;
 }
 
-/* Item hover */
+/* Hover state for items */
 .dropdown-item:hover {
   background-color: #f0f0f0;
-  color: #0f0f0f;
 }
+
 
 /* Cart and auth styles */
 .navbar-auth {

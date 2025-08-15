@@ -11,13 +11,111 @@ const mongoose = require("mongoose");
 // create the rating if everthing is good
 // update the course model which ever got the rating
 // return response
+// exports.createRating = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const { rating, review, courseId } = req.body;
+
+//     console.log("Incoming User:", req.user.id);
+//     console.log("Incoming CourseId:", courseId);
+
+
+//     // Validate courseId format
+//     if (!mongoose.Types.ObjectId.isValid(courseId)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid courseId",
+//       });
+//     }
+
+//     // Validate rating and review
+//     if (!rating || rating < 1 || rating > 5) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Rating must be between 1 and 5",
+//       });
+//     }
+//     if (!review || review.trim().length === 0) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Review text is required",
+//       });
+//     }
+
+//     // Check if user is enrolled in the course
+//     const courseDetails = await Course.findOne({
+//       _id: courseId,
+//       studentsEnrolled: new mongoose.Types.ObjectId(userId),
+//     });
+
+
+//     if (!courseDetails) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Student not enrolled in course",
+//       });
+//     }
+
+//     // Check if user already reviewed the course
+//     const alreadyReviewed = await RatingAndReview.findOne({
+//       user: userId,
+//       course: courseId,
+//     });
+
+//     if (alreadyReviewed) {
+//       return res.status(403).json({
+//         success: false,
+//         message: "Already reviewed by user",
+//       });
+//     }
+
+//     // Create new rating and review
+//     const ratingReview = await RatingAndReview.create({
+//       rating,
+//       review,
+//       course: courseId,
+//       user: userId,
+//     });
+
+//     // Update course document to add the new review
+//     const updatedCourseDetails = await Course.findByIdAndUpdate(
+//       courseId,
+//       {
+//         $push: {
+//           ratingAndReview: ratingReview._id,
+//         },
+//       },
+//       { new: true }
+//     );
+
+//     console.log("Updated course details with new review:", updatedCourseDetails);
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Rating and review created successfully",
+//     });
+//   } catch (error) {
+//     console.error("Error creating rating and review:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Rating and review can't be created",
+//     });
+//   }
+// };
+
+
 exports.createRating = async (req, res) => {
   try {
     const userId = req.user.id;
     const { rating, review, courseId } = req.body;
 
+    console.log("=== CREATE RATING DEBUG START ===");
+    console.log("[server] Incoming User:", userId);
+    console.log("[server] Incoming CourseId:", courseId);
+
     // Validate courseId format
     if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      console.error("[server] Invalid courseId format");
       return res.status(400).json({
         success: false,
         message: "Invalid courseId",
@@ -26,64 +124,81 @@ exports.createRating = async (req, res) => {
 
     // Validate rating and review
     if (!rating || rating < 1 || rating > 5) {
+      console.error("[server] Rating invalid:", rating);
       return res.status(400).json({
         success: false,
         message: "Rating must be between 1 and 5",
       });
     }
     if (!review || review.trim().length === 0) {
+      console.error("[server] Review is empty");
       return res.status(400).json({
         success: false,
         message: "Review text is required",
       });
     }
 
-    // Check if user is enrolled in the course
+    const userObjId = mongoose.Types.ObjectId.isValid(userId)
+      ? new mongoose.Types.ObjectId(userId)
+      : userId;
+
+    // Step 1: Check if course exists at all
+    const rawCourse = await Course.findById(courseId).lean();
+    console.log("[server] Raw course fetch:", rawCourse ? "FOUND" : "NOT FOUND");
+
+    if (rawCourse) {
+      console.log("[server] Raw course _id:", rawCourse._id);
+      console.log("[server] Raw course studentsEnrolled:", rawCourse.studentsEnrolled);
+    }
+
+    // Step 2: Check enrollment specifically
     const courseDetails = await Course.findOne({
-      _id: courseId,
-      studentsEnrolled: { $elemMatch: { $eq: userId } },
+      _id: new mongoose.Types.ObjectId(courseId),
+      studentsEnrolled: { $elemMatch: { $eq: userObjId } }
     });
 
+    console.log("[server] Course found for enrollment check:", courseDetails ? "FOUND" : "NULL");
+    console.log("[server] Students enrolled (raw):", courseDetails?.studentsEnrolled);
+
     if (!courseDetails) {
+      console.error("[server] Enrollment check failed: User not in course");
       return res.status(404).json({
         success: false,
         message: "Student not enrolled in course",
       });
     }
 
-    // Check if user already reviewed the course
+    // Step 3: Check if already reviewed
     const alreadyReviewed = await RatingAndReview.findOne({
-      user: userId,
-      course: courseId,
+      user: userObjId,
+      course: new mongoose.Types.ObjectId(courseId),
     });
 
     if (alreadyReviewed) {
+      console.error("[server] Already reviewed by user");
       return res.status(403).json({
         success: false,
         message: "Already reviewed by user",
       });
     }
 
-    // Create new rating and review
+    // Step 4: Create new rating and review
     const ratingReview = await RatingAndReview.create({
       rating,
       review,
-      course: courseId,
-      user: userId,
+      course: new mongoose.Types.ObjectId(courseId),
+      user: userObjId,
     });
 
-    // Update course document to add the new review
+    // Step 5: Push review into course
     const updatedCourseDetails = await Course.findByIdAndUpdate(
       courseId,
-      {
-        $push: {
-          ratingAndReview: ratingReview._id,
-        },
-      },
+      { $push: { ratingAndReview: ratingReview._id } },
       { new: true }
     );
 
-    console.log("Updated course details with new review:", updatedCourseDetails);
+    console.log("[server] Updated course details with new review:", updatedCourseDetails?._id);
+    console.log("=== CREATE RATING DEBUG END ===");
 
     return res.status(200).json({
       success: true,
@@ -97,6 +212,8 @@ exports.createRating = async (req, res) => {
     });
   }
 };
+
+
 
 
 

@@ -1,0 +1,266 @@
+:root{
+  --page-bg: #0b1116;
+  --panel-bg: #141621;        /* dark panel */
+  --card-bg: #1d2028;         /* slightly lighter card */
+  --muted: #9aa3ad;
+  --text: #e8eef6;
+  --accent: #2f86ff;
+  --panel-border: rgba(255,255,255,0.04);
+}
+
+/* Page base */
+.contact-page {
+  background: var(--page-bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 3rem;
+  font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Main area with 2-column layout */
+.contact-main {
+  max-width: 1200px;
+  margin: 3.5rem auto;
+  padding: 0 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr; /* mobile stack by default */
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* Desktop two-column */
+@media (min-width: 992px) {
+  .contact-main {
+    grid-template-columns: 40% 60%;
+    gap: 3.5rem;
+  }
+}
+
+/* Left column: contact cards */
+.contact-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* individual contact card */
+.contact-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 14px;
+  padding: 1.6rem;
+  box-shadow: 0 8px 28px rgba(2,6,23,0.6);
+  border: 1px solid var(--panel-border);
+}
+
+/* Darker explicit card variant (matches your screenshot) */
+.contact-card--dark {
+  background: var(--card-bg);
+  border: none;
+}
+
+/* inside row structure */
+.card-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* icon area */
+.card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.03);
+  flex-shrink: 0;
+}
+
+/* card content text */
+.card-content h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1.4rem;
+  color: var(--text);
+  line-height: 1.05;
+}
+
+.card-content .muted {
+  color: var(--muted);
+  margin: 0.25rem 0;
+  font-size: 0.98rem;
+}
+
+.card-content .strong {
+  color: #dbe2eb;
+  font-weight: 600;
+}
+
+/* Right column: form card look */
+.contact-right {
+  display: flex;
+  align-items: stretch;
+}
+
+.form-card {
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+  border-radius: 12px;
+  padding: 2.2rem;
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.5);
+}
+
+/* Title and subtitle */
+.form-title {
+  font-size: 2.2rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.03;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.form-sub {
+  color: var(--muted);
+  margin: 0 0 1.3rem;
+}
+
+/* Form layout */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+/* two-column row for name, phone select + number */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* on wider screens, first form-row becomes two columns */
+@media (min-width: 680px) {
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* special layout for phone row: keep select smaller */
+.phone-row {
+  grid-template-columns: 1fr 2fr; /* on wide screens this will take effect due to media query above */
+}
+
+.phone-select select {
+  width: 100%;
+}
+
+/* form group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* labels */
+.form-group label {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* inputs */
+.contact-form input,
+.contact-form textarea,
+.contact-form select {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 0.82rem 1rem;
+  border-radius: 10px;
+  outline: none;
+  font-size: 1rem;
+  transition: box-shadow 140ms ease, transform 140ms ease;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: rgba(255,255,255,0.35);
+  font-size: 0.98rem;
+}
+
+/* textarea */
+.contact-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* focus state */
+.contact-form input:focus,
+.contact-form textarea:focus,
+.contact-form select:focus {
+  box-shadow: 0 6px 18px rgba(47,134,255,0.08);
+  border-color: rgba(47,134,255,0.22);
+  transform: translateY(-1px);
+}
+
+/* action buttons row */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.45rem;
+  align-items: center;
+}
+
+/* primary btn */
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.95rem 1.4rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(47,134,255,0.12);
+}
+
+/* ghost btn */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Reviews section */
+.reviews-section {
+  max-width: 1200px;
+  margin: 2.5rem auto 4rem;
+  padding: 0 1.25rem;
+}
+
+.reviews-heading {
+  color: var(--text);
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Small screens: stack columns */
+@media (max-width: 991px) {
+  .form-title {
+    font-size: 1.6rem;
+  }
+
+  .contact-main {
+    margin: 2rem auto;
+  }
+
+  .form-card {
+    padding: 1.25rem;
+  }
+
+  .contact-card {
+    padding: 1.25rem;
+    border-radius: 10px;
+  }
+}

@@ -1,41 +1,57 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import {
   TiStarFullOutline,
   TiStarHalfOutline,
   TiStarOutline,
-} from "react-icons/ti"
+} from "react-icons/ti";
+import "./RatingStars.css";
 
-import "./RatingStars.css"
-
-function RatingStars({ Review_Count, Star_Size }) {
-  const [starCount, SetStarCount] = useState({
-    full: 0,
-    half: 0,
-    empty: 0,
-  })
+function RatingStars({ Review_Count, Star_Size = 20, onChange, editable = false }) {
+  const [starCount, setStarCount] = useState({ full: 0, half: 0, empty: 5 });
 
   useEffect(() => {
-    const wholeStars = Math.floor(Review_Count) || 0
-    SetStarCount({
-      full: wholeStars,
-      half: Number.isInteger(Review_Count) ? 0 : 1,
-      empty: Number.isInteger(Review_Count) ? 5 - wholeStars : 4 - wholeStars,
-    })
-  }, [Review_Count])
+    let rating = Number(Review_Count) || 0;
+    rating = Math.max(0, Math.min(rating, 5)); // clamp between 0 and 5
+
+    const full = Math.floor(rating);
+    const hasHalf = rating % 1 >= 0.5 ? 1 : 0;
+    const empty = 5 - full - hasHalf;
+
+    setStarCount({ full, half: hasHalf, empty });
+  }, [Review_Count]);
+
+  const handleClick = (index) => {
+    if (!editable) return;
+    onChange?.(index + 1);
+  };
 
   return (
-    <div className="rating-stars">
-      {[...new Array(starCount.full)].map((_, i) => (
-        <TiStarFullOutline key={`full-${i}`} size={Star_Size || 20} />
+    <div className={`rating-stars ${editable ? "editable" : ""}`}>
+      {[...Array(starCount.full)].map((_, i) => (
+        <TiStarFullOutline
+          key={`full-${i}`}
+          size={Star_Size}
+          onClick={() => handleClick(i)}
+        />
       ))}
-      {[...new Array(starCount.half)].map((_, i) => (
-        <TiStarHalfOutline key={`half-${i}`} size={Star_Size || 20} />
+      {[...Array(starCount.half)].map((_, i) => (
+        <TiStarHalfOutline
+          key={`half-${i}`}
+          size={Star_Size}
+          onClick={() => handleClick(starCount.full)}
+        />
       ))}
-      {[...new Array(starCount.empty)].map((_, i) => (
-        <TiStarOutline key={`empty-${i}`} size={Star_Size || 20} />
+      {[...Array(starCount.empty)].map((_, i) => (
+        <TiStarOutline
+          key={`empty-${i}`}
+          size={Star_Size}
+          onClick={() =>
+            handleClick(starCount.full + starCount.half + i)
+          }
+        />
       ))}
     </div>
-  )
+  );
 }
 
-export default RatingStars
+export default RatingStars;

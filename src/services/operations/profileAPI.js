@@ -132,7 +132,8 @@ export async function getInstructorData(token) {
     })
 
     console.log("GET_INSTRUCTOR_API_RESPONSE", response);
-    result = response?.data?.courses
+    // result = response?.data?.courses
+    result = response?.data?.courses;
 
   }
   catch(error) {
