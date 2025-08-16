@@ -112,7 +112,7 @@
 //               </div>
 //             ))}
 //           </div>
-//           <div className="footer-copy">Made with ❤️ CodeHelp © 2023 Studynotion</div>
+//           <div className="footer-copy">Made with ❤️ Mayank © 2023 DSAverse</div>
 //         </div>
 //       </div>
 //     </div>
@@ -281,7 +281,7 @@ const Footer = () => {
               </div>
             ))}
           </div>
-          <div className="footer-copy">Made with ❤️ CodeHelp © {new Date().getFullYear()} Studynotion</div>
+          <div className="footer-copy">Made with ❤️ Mayank © {new Date().getFullYear()} DSAverse</div>
         </div>
       </div>
     </div>

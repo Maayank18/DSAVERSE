@@ -3,22 +3,25 @@
 }
 
 .instructor-container {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;  /* force horizontal on desktop */
   align-items: center;
+  justify-content: space-between;
   gap: 80px;
-  flex-wrap: nowrap; /* prevents unintentional stacking */
+  flex-wrap: nowrap;
 }
 
 .instructor-image,
 .instructor-content {
-  flex: 1;
+  flex: 0 0 50%;
   max-width: 50%;
+  padding-right: 20px;
 }
 
-
-.instructor-image {
+.instructor-image img {
+  display: block;
   width: 100%;
-  max-width: 50%;
+  height: auto;
 }
 
 .image-shadow {
@@ -28,8 +31,6 @@
 }
 
 .instructor-content {
-  width: 100%;
-  max-width: 50%;
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -38,15 +39,24 @@
 .instructor-heading {
   font-size: 32px;
   font-weight: 600;
-  max-width: 50%;
+  max-width: 90%; /* give heading more breathing space */
 }
 
 .instructor-text {
   font-size: 16px;
-  font-weight: 500;
-  color: #a3a3a3; /* Tailwind's text-richblack-300 */
-  max-width: 80%;
+  font-weight: 500;          /* keeps default text weight for non-bold parts */
+  color: #a3a3a3;
+  max-width: 90%;
+  line-height: 1.6;          /* improves paragraph legibility */
+  margin-top: 10px;          /* small top gap */
+  margin-bottom: 10px;       /* small bottom gap */
 }
+
+.instructor-text strong {
+  font-weight: 700;          /* make the main content stand out */
+  color: #d4d4d4;            /* optional: slightly lighter for contrast */
+}
+
 
 .instructor-button {
   width: fit-content;
@@ -59,15 +69,15 @@
   align-items: center;
 }
 
-/* Responsive */
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 768px) { /* stack only on small devices */
   .instructor-container {
-    flex-direction: column;
+    flex-direction: column !important;
     gap: 40px;
   }
 
   .instructor-image,
   .instructor-content {
+    flex: 1 1 100%;
     max-width: 100%;
   }
 

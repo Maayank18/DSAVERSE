@@ -12,13 +12,15 @@
 .sidebar-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   height: calc(100vh - 3.5rem);
   width: 240px;
   flex-shrink: 0;
   border-right: 1px solid #2c2f36;
   background-color: #1c1f24;
-  padding: 2.5rem 1rem;
+  padding: 1.5rem 1rem; /* reduced top/bottom padding */
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
 /* Sidebar links group */
@@ -28,20 +30,15 @@
   gap: 1rem;
 }
 
-/* Divider */
-.sidebar-divider {
-  margin: 1.5rem auto;
-  height: 1px;
-  width: 83%;
-  background-color: #2c2f36;
-}
-
 /* Settings + Logout section */
 .sidebar-settings {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: auto;
+  border-top: 1px solid #2c2f36;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem; /* prevents too-close-to-bottom feel */
 }
 
 /* Shared sidebar link style */
@@ -61,7 +58,6 @@
   cursor: pointer;
 }
 
-/* Hover and active styles */
 .sidebar-link:hover {
   background-color: #2c2f36;
   color: #ffffff;
@@ -73,7 +69,6 @@
   border-left: 4px solid #7c3aed;
 }
 
-/* Highlight bar */
 .sidebar-highlight {
   position: absolute;
   left: 0;
@@ -90,20 +85,17 @@
   opacity: 1;
 }
 
-/* Icon + text layout */
 .sidebar-link-content {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
-/* Icon styling */
 .sidebar-icon {
   font-size: 1.125rem;
   flex-shrink: 0;
 }
 
-/* Text styling */
 .sidebar-link-text {
   flex-grow: 1;
   color: inherit;
@@ -111,7 +103,18 @@
   font-weight: inherit;
 }
 
-/* Logout button inherits sidebar-link styling */
 .sidebar-logout-button {
   all: unset;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-logout-button:hover {
+  background-color: #2c2f36;
+  color: #ffffff;
 }

@@ -24,7 +24,7 @@
 //             Driving Innovation in Online Education for a
 //             <HighlightText text={"Brighter Future"} />
 //             <p className="about-subtext">
-//               Studynotion is at the forefront of driving innovation in online
+//               DSAverse is at the forefront of driving innovation in online
 //               education. We're passionate about creating a brighter future by
 //               offering cutting-edge courses, leveraging emerging technologies,
 //               and nurturing a vibrant learning community.
@@ -148,7 +148,7 @@ const About = () => {
             Driving Innovation in Online Education for a
             <HighlightText text={" Brighter Future"} />
             <p className="about-subtext">
-              Studynotion is at the forefront of driving innovation in online
+              DSAverse is at the forefront of driving innovation in online
               education. We're passionate about creating a brighter future by
               offering cutting-edge courses, leveraging emerging technologies,
               and nurturing a vibrant learning community.

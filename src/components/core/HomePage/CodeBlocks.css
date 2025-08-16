@@ -1,65 +1,71 @@
+/* Base: stacked mobile layout */
 .codeblock-wrapper {
   display: flex;
   flex-direction: column;
   gap: 40px;
-  justify-content: space-between;
   margin: 80px 0;
-  align-items: center; /* ✅ center on small screens */
-  text-align: center;  /* ✅ center text on small screens */
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  width: 100%;
 }
 
-/* Responsive layout */
-.flex-row-lg {
-  flex-direction: column;
-}
-.flex-row-reverse-lg {
-  flex-direction: column;
-}
-
-@media screen and (min-width: 1024px) {
-  .flex-row-lg {
-    flex-direction: row;
+/* Desktop: use grid with equal columns — reliable 50/50 */
+@media (min-width: 1024px) {
+  .codeblock-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 48px;
+    align-items: start;
     text-align: left;
-    align-items: flex-start;
-  }
-  .flex-row-reverse-lg {
-    flex-direction: row-reverse;
-    text-align: left;
-    align-items: flex-start;
   }
 }
 
-/* Left Section */
+/* LEFT SECTION */
 .codeblock-left {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  align-items: center; /* ✅ center heading + buttons */
+  gap: 24px;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 12px;
+  min-width: 0; /* critical to prevent children from forcing column growth */
 }
 
-@media screen and (min-width: 1024px) {
+/* desktop: keep left aligned */
+@media (min-width: 1024px) {
   .codeblock-left {
-    width: 50%;
-    align-items: flex-start; /* revert to left align on large screens */
+    align-items: flex-start;
+    padding-right: 0;
   }
+}
+
+.codeblock-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.15;
+  max-width: 100%;
+  margin: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .codeblock-subtext {
   color: #ccc;
-  font-weight: bold;
-  max-width: 500px;
+  font-weight: 500;
+  max-width: 100%;
+  margin: 0;
 }
 
 .codeblock-buttons {
   display: flex;
-  gap: 28px;
-  margin-top: 28px;
+  gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-@media screen and (min-width: 1024px) {
+@media (min-width: 1024px) {
   .codeblock-buttons {
     justify-content: flex-start;
   }
@@ -71,41 +77,96 @@
   align-items: center;
 }
 
-/* Right Section */
+/* RIGHT SECTION */
 .codeblock-right {
-  display: flex;
-  flex-direction: row;
   width: 100%;
-  padding: 16px 0;
+  display: flex;
   justify-content: center;
+  box-sizing: border-box;
+  padding: 0 12px;
+  min-width: 0; /* critical */
 }
 
-@media screen and (min-width: 1024px) {
+@media (min-width: 1024px) {
   .codeblock-right {
-    width: 500px;
-    justify-content: flex-start;
+    justify-content: flex-end;
+    padding-left: 0;
   }
 }
 
-.codeblock-lines {
-  width: 10%;
-  font-family: 'Inter', sans-serif;
-  font-weight: bold;
-  text-align: center;
-  color: #aaa;
+/* Editor container: occupies full width of its column and keeps stable height */
+/* Editor container: smaller, tighter height to remove excess bottom space */
+.code-editor-container {
+  display: flex;
+  align-items: stretch;
+  background-color: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    inset 0 0 8px rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  /* ↓ reduced min-height so there's less empty space under the last line */
+  min-height: 220px;
+  /* keep a reasonable cap for very tall screens */
+  max-height: 540px;
+  box-sizing: border-box;
 }
 
-.codeblock-code {
-  width: 90%;
+/* Gutter - fixed width and aligned to top so lines and spacing are consistent */
+.codeblock-lines {
+  flex: 0 0 48px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-weight: bold;
+  justify-content: flex-start; /* ensure numbers sit at the top */
   font-family: monospace;
-  text-align: left;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #888;
+  text-align: right;
+  /* slightly reduce padding so less unused space */
+  padding: 12px 8px;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  box-sizing: border-box;
+  user-select: none;
 }
 
-/* Replacement for "text-yellow-25" */
+/* numbers stacked */
+.codeblock-lines span {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+/* Code area: wrap long lines, vertical scroll inside editor, reserve scrollbar gutter */
+.codeblock-code {
+  flex: 1 1 auto;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: inherit;
+  margin: 0;
+  /* reduced padding to eliminate extra empty room below */
+  padding: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  scrollbar-gutter: stable;
+}
+
+/* highlight text color helper */
 .text-yellow-25 {
   color: #f9f295;
+}
+
+/* Responsive smaller view */
+@media (max-width: 1023px) {
+  .codeblock-wrapper { padding: 0 12px; }
+  .code-editor-container { min-height: 280px; }
+  .codeblock-lines { padding: 12px 6px; }
+  .codeblock-code { padding: 12px; }
 }

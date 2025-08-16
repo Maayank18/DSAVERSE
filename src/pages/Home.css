@@ -1,5 +1,6 @@
 /* General Layout */
 .home-container {
+  text-decoration: none;
   max-width: 1300px;
   margin: 0 auto;
   padding: 5px 10px;
@@ -28,6 +29,7 @@
 }
 
 .instructor-inner {
+  text-decoration: none;
   display: flex;
   gap: 8px;
   align-items: center;
@@ -78,7 +80,7 @@
 }
 
 .homepage-bg.dark-buttons {
-  background-color:	#0A0F2C;
+  background-color:	#000000;
   height: 100px; /* ⬆️ Increased from 310px to give more visual space */
   display: flex;
   align-items: center;
@@ -117,19 +119,34 @@
   text-align: center;
 }
 
+/* @media screen and (min-width: 1024px) {
+  .flex-row-lg {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .flex-row-reverse-lg {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+} */
+
 @media screen and (min-width: 1024px) {
   .flex-row-lg {
     flex-direction: row;
+    justify-content: space-between;  /* override center */
     align-items: flex-start;
     text-align: left;
   }
-
   .flex-row-reverse-lg {
     flex-direction: row-reverse;
+    justify-content: space-between;  /* override center */
     align-items: flex-start;
     text-align: left;
   }
 }
+
 
 
 /* Section Two */

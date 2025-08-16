@@ -1,28 +1,44 @@
 // import React from "react";
 // import CTAButton from "./Button";
-// import HighlightText from "./HighlightText";
 // import { FaArrowRight } from "react-icons/fa";
 // import { TypeAnimation } from "react-type-animation";
 // import "./CodeBlocks.css";
 
 // const CodeBlocks = ({
 //   positioning = "",
-//   heading,
-//   subheading,
-//   ctabtn1 = {},
-//   ctabtn2 = {},
-//   codeSnippet = "",
-//   codecolor,
+//   heading = "Unlock Your coding potential with our online courses",
+//   subheading =
+//     "Our courses are designed and taught by industry experts who have years of experience in coding and are passionate about sharing their knowledge with you.",
+//   ctabtn1 = { btnText: "Try it yourself", linkto: "/", active: true },
+//   ctabtn2 = { btnText: "Learn More", linkto: "/learn", active: false },
+//   codeSnippet = `<<!DOCTYPE html>
+// <html>
+// <head><title>Example</title>
+// </head>
+// <body>
+// <h1><ahref="/">Header</a>
+// </h1>
+// <nav><ahref="one/">One</a><ahref="two/">Two</a>
+// <ahref="three/">Three
+// </nav>
+// </body>
+// </html>`,
+//   codecolor = "text-yellow-25",
 // }) => {
-//   // Split code snippet by lines
 //   const lines = codeSnippet.split("\n");
+
+//   // Build a sequence that types line by line, never fully deleting
+//   const sequence = [];
+//   for (let i = 0; i < lines.length; i++) {
+//     sequence.push(lines.slice(0, i + 1).join("\n"), 1000);
+//   }
 
 //   return (
 //     <div className={`codeblock-wrapper ${positioning}`}>
-//       {/* Left Section */}
+//       {/* LEFT SECTION */}
 //       <div className="codeblock-left">
-//         {heading}
-//         <div className="codeblock-subtext">{subheading}</div>
+//         <h1 className="codeblock-heading">{heading}</h1>
+//         <p className="codeblock-subtext">{subheading}</p>
 //         <div className="codeblock-buttons">
 //           <CTAButton active={ctabtn1.active} linkto={ctabtn1.linkto}>
 //             <div className="cta-content">
@@ -36,30 +52,23 @@
 //         </div>
 //       </div>
 
-//       {/* Right Section */}
+//       {/* RIGHT SECTION */}
 //       <div className="codeblock-right">
-//         {/* Line Numbers */}
-//         <div className="codeblock-lines">
-//           {lines.map((_, i) => (
-//             <p key={i}>{i + 1}</p>
-//           ))}
-//         </div>
-
-//         {/* Code Lines with Type Animation */}
-//         <div className={`codeblock-code ${codecolor}`}>
-//           {lines.map((line, i) => (
+//         <div className="code-editor-container">
+//           <div className="codeblock-lines">
+//             {lines.map((_, i) => (
+//               <span key={i}>{i + 1}</span>
+//             ))}
+//           </div>
+//           <pre className={`codeblock-code ${codecolor}`}>
 //             <TypeAnimation
-//               key={i}
-//               sequence={[line, 1000]}
+//               sequence={sequence}
 //               repeat={Infinity}
-//               cursor={false}
-//               style={{
-//                 whiteSpace: "pre",
-//                 display: "block",
-//               }}
+//               cursor={true}
 //               omitDeletionAnimation={true}
+//               style={{ whiteSpace: "pre" }}
 //             />
-//           ))}
+//           </pre>
 //         </div>
 //       </div>
 //     </div>
@@ -70,38 +79,46 @@
 
 import React from "react";
 import CTAButton from "./Button";
-import HighlightText from "./HighlightText";
 import { FaArrowRight } from "react-icons/fa";
 import { TypeAnimation } from "react-type-animation";
 import "./CodeBlocks.css";
 
 const CodeBlocks = ({
   positioning = "",
-  heading,
-  subheading,
-  ctabtn1 = {},
-  ctabtn2 = {},
-  codeSnippet,
-  codecolor,
+  heading = "Unlock Your coding potential with our online courses",
+  subheading =
+    "Our courses are designed and taught by industry experts who have years of experience in coding and are passionate about sharing their knowledge with you.",
+  ctabtn1 = { btnText: "Try it yourself", linkto: "/", active: true },
+  ctabtn2 = { btnText: "Learn More", linkto: "/learn", active: false },
+  codeSnippet = `<!DOCTYPE html>
+<html>
+<head><title>Example</title>
+</head>
+<body>
+<h1><a href="/">Header</a></h1>
+<nav>
+  <a href="one/">One</a>
+  <a href="two/">Two</a>
+  <a href="three/">Three</a>
+</nav>
+</body>
+</html>`,
+  codecolor = "text-yellow-25",
 }) => {
-  // Split the snippet into lines
   const lines = codeSnippet.split("\n");
 
-  // Create animation steps: type each line incrementally
+  // Build animation sequence: line by line typing
   const sequence = [];
   for (let i = 0; i < lines.length; i++) {
-    const current = lines.slice(0, i + 1).join("\n");
-    sequence.push(current, 1000); // 1s delay
+    sequence.push(lines.slice(0, i + 1).join("\n"), 1000);
   }
-  sequence.push("", 1000); // clear and pause
-  // This gives effect like type → type → full → delete → repeat
 
   return (
     <div className={`codeblock-wrapper ${positioning}`}>
-      {/* Left Section */}
+      {/* LEFT */}
       <div className="codeblock-left">
-        {heading}
-        <div className="codeblock-subtext">{subheading}</div>
+        <h1 className="codeblock-heading">{heading}</h1>
+        <p className="codeblock-subtext">{subheading}</p>
         <div className="codeblock-buttons">
           <CTAButton active={ctabtn1.active} linkto={ctabtn1.linkto}>
             <div className="cta-content">
@@ -115,24 +132,25 @@ const CodeBlocks = ({
         </div>
       </div>
 
-      {/* Right Section */}
+      {/* RIGHT */}
       <div className="codeblock-right">
-        <div className="codeblock-lines">
-          {[...Array(10)].map((_, i) => (
-            <p key={i}>{i + 1}</p>
-          ))}
-        </div>
-        <div className={`codeblock-code ${codecolor}`}>
-          <TypeAnimation
-            sequence={sequence}
-            repeat={Infinity}
-            cursor={true}
-            style={{
-              whiteSpace: "pre-line",
-              display: "block",
-            }}
-            omitDeletionAnimation={false}
-          />
+        <div className="code-editor-container" role="region" aria-label="Code example">
+          <div className="codeblock-lines" aria-hidden>
+            {lines.map((_, i) => (
+              <span key={i}>{i + 1}</span>
+            ))}
+          </div>
+
+          {/* The <pre> stays fixed size; TypeAnimation is contained inside it */}
+          <pre className={`codeblock-code ${codecolor}`} aria-live="polite">
+            <TypeAnimation
+              sequence={sequence}
+              repeat={Infinity}
+              cursor={true}
+              omitDeletionAnimation={true}
+              style={{ whiteSpace: "pre-wrap", display: "block", width: "100%" }}
+            />
+          </pre>
         </div>
       </div>
     </div>
@@ -140,3 +158,6 @@ const CodeBlocks = ({
 };
 
 export default CodeBlocks;
+
+
+

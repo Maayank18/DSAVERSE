@@ -10,6 +10,7 @@ import TimeLineSection from '../components/core/HomePage/TimeLineSection';
 import InstructorSection from '../components/core/HomePage/InstructorSection';
 import Footer from '../components/common/Footer';
 import ExploreMore from '../components/core/HomePage/ExploreMore';
+import ReviewSlider from '../components/common/ReviewSlider';
 
 import './Home.css';
 
@@ -18,7 +19,7 @@ const Home = () => {
     <div>
       {/* Section One */}
       <div className="home-container">
-        <Link to={"/signup"}>
+        <Link to={"/signup"} style={{ textDecoration: "none" }}>
           <div className="instructor-button">
             <div className="instructor-inner">
               <p>Become an instructor</p>
@@ -28,13 +29,13 @@ const Home = () => {
         </Link>
 
         <div className="home-heading">
-          Empower your Future growth
+          Learn. Grow. Code. Achieve Your Future
           <HighlightText text={"Coding Skills"} />
         </div>
 
         <div className="home-subtext">
-          With me mayank ic welcome you to ever created wesite my me where we
-          learn we grow and we inspire thats our goal
+          “Our courses are crafted to help you build strong coding foundations, 
+          solve real challenges, and grow confidently in your tech journey.”
         </div>
 
         <div className="cta-buttons">
@@ -64,7 +65,7 @@ const Home = () => {
             </div>
           }
           subheading={
-            "Our courses are designed to teach students so they can unlock their potential with our learning and grow in life."
+            "Our courses empower students to unlock their true potential and achieve lifelong growth."
           }
           ctabtn1={{
             btnText: "Try it yourself",
@@ -85,12 +86,11 @@ const Home = () => {
           positioning="flex-row-reverse-lg"
           heading={
             <div className="code-heading">
-              Unlock Your <HighlightText text={"coding potential"} /> with our
-              online courses
+              <HighlightText text={"Code smarter, grow faster"} /> — learn with our online courses.
             </div>
           }
           subheading={
-            "Our courses are designed to teach students so they can unlock their potential with our learning and grow in life."
+            "With our learning, students discover their strengths, unlock opportunities, and shape a brighter future."
           }
           ctabtn1={{
             btnText: "Try it yourself",
@@ -154,6 +154,7 @@ const Home = () => {
       <div className="section-three">
         <InstructorSection />
         <h2 className="review-heading">Review from other learners</h2>
+        <ReviewSlider />
       </div>
 
       {/* Section Four */}

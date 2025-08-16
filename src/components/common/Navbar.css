@@ -1,5 +1,3 @@
-/* Navbar.css */
-
 /* Wrapper around the navbar */
 .navbar-wrapper {
   height: 56px;
@@ -29,6 +27,9 @@
   display: flex;
   gap: 24px;
   list-style: none;
+  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 /* Nav link text */
@@ -37,8 +38,13 @@
   text-decoration: none;
 }
 
+/* Active link */
+.navbar-links a.active p {
+  color: #0fe7ad;
+}
+
 /* Nav link hover */
-.navbar-links a:hover {
+.navbar-links a:hover p {
   color: #0fe7ad;
 }
 
@@ -47,66 +53,130 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
+  outline: none;
 }
 
-/* Hidden by default */
+.dropdown-group:focus-visible .dropdown-trigger,
+.dropdown-group:focus-visible .dropdown-chevron {
+  outline: none;
+  color: #0fe7ad;
+}
+
+/* Trigger styles */
+/* Keep the Catalog label visible (white) */
+.dropdown-trigger {
+  margin: 0;
+  color: #ffffff;
+}
+
+/* Trigger hover/focus */
+.dropdown-group:hover .dropdown-trigger,
+.dropdown-group:focus-within .dropdown-trigger {
+  color: #0fe7ad;
+}
+
+/* Make chevron transition/appearance */
+.dropdown-chevron {
+  transition: transform 0.2s ease, color 0.2s ease;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+/* Rotate chevron when open (hover or keyboard focus) */
+.dropdown-group:hover .dropdown-chevron,
+.dropdown-group:focus-within .dropdown-chevron {
+  transform: rotate(180deg);
+  color: #0fe7ad;
+}
+
+/* Also rotate chevron when the group has 'active' (route open) */
+.dropdown-group.active .dropdown-chevron {
+  transform: rotate(180deg);
+  color: #0fe7ad;
+}
+
+/* Dropdown panel (hidden by default)
+   NOTE: anchored to the left of the trigger and slightly overlaps the trigger
+   so there is no mouse gap when moving from trigger -> panel. */
 .dropdown-content {
   position: absolute;
-  top: calc(100% + 8px);   /* 8px gap under the label */
-  left: 50%;               /* start at 50% of parent */
-  transform: translateX(-50%) translateY(-10px);
-  min-width: 180px;        /* enforce a sensible minimum */
+  top: calc(100% - 6px);   /* slightly overlap by 6px to avoid hover gap */
+  left: 0;                 /* anchor to the left edge of the trigger */
+  transform: translateY(-6px); /* small upward offset when hidden */
+  min-width: 200px;
+  max-width: 320px;        /* prevent overly wide panels */
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 0;
+  border-radius: 10px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.18),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 6px 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 1000;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 10000;          /* very high so it sits above other page content */
+  overflow: hidden;
+  white-space: normal;
 }
 
-/* Reveal on hover */
-.dropdown-group:hover .dropdown-content {
+/* Reveal on hover OR focus (keyboard accessible) */
+.dropdown-group:hover .dropdown-content,
+.dropdown-group:focus-within .dropdown-content {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
+}
+
+/* ALSO reveal when the group has the 'active' class (route open / programmatic open) */
+.dropdown-group.active .dropdown-content {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 /* Little arrow pointing up */
 .dropdown-arrow {
   position: absolute;
-  top: -6px;               /* place it above the box */
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 12px;
-  height: 12px;
+  top: -7px;               /* place it above the box */
+  left: 20px;              /* align arrow near the left so it points to trigger */
+  width: 14px;
+  height: 14px;
   background: #ffffff;
   border-left: 1px solid #e2e8f0;
   border-top: 1px solid #e2e8f0;
+  transform: rotate(45deg);
   box-shadow: -1px -1px 2px rgba(0, 0, 0, 0.05);
-  z-index: -1;
+  z-index: 10001;          /* above dropdown box border */
 }
 
-/* Individual link items */
-.dropdown-item {
+/* === FIX: make selector more specific so it overrides .navbar-links a color === */
+/* Individual link items inside the dropdown panel */
+/* Dropdown option text explicitly dark and visible by default */
+.dropdown-content .dropdown-item {
   display: block;
-  padding: 0.75rem 1rem;
+  padding: 10px 14px;
   text-decoration: none;
-  color: #0f0f0f;
+  color: #0f172a; /* slate-900 — dark text for options */
   font-weight: 600;
   font-size: 0.95rem;
-  transition: background-color 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
 }
 
 /* Hover state for items */
-.dropdown-item:hover {
-  background-color: #f0f0f0;
+.dropdown-content .dropdown-item:hover {
+  background-color: #f1f5f9; /* slate-100 */
+  color: #0f172a;
 }
 
+/* Empty/loading states */
+.dropdown-status {
+  margin: 6px 12px;
+  color: #475569; /* slate-600 */
+  font-size: 0.9rem;
+}
 
 /* Cart and auth styles */
 .navbar-auth {
@@ -122,6 +192,10 @@
   border-radius: 8px;
   color: #d1d5db;
   cursor: pointer;
+}
+
+.auth-button:hover {
+  background-color: #22263b;
 }
 
 /* Cart icon */
@@ -159,21 +233,12 @@
 }
 
 /* Logo sizing */
-/* .navbar-logo {
-  height: 40px;
-  width: auto;
-  object-fit: contain;
-  display: block;
-} */
-
 .navbar-logo {
-  height: 190px;        /* Inherits container’s height */
+  height: 165px;
   width: auto;
   object-fit: contain;
   display: block;
 }
-
-
 
 /* Responsive: hide links, show menu on mobile */
 @media screen and (max-width: 768px) {

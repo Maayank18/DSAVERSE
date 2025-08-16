@@ -13,11 +13,22 @@
   margin: 0 auto;
 }
 
-.stats-grid {
+/* .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   text-align: center;
+} */
+
+.stats-wrapper .stats-container .stats-grid {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  text-align: center;
 }
+
+
 
 @media (min-width: 768px) {
   .stats-grid {

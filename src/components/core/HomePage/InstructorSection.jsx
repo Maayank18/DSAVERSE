@@ -9,16 +9,25 @@ const InstructorSection = () => {
   return (
     <div className="instructor-wrapper">
       <div className="instructor-container">
+        {/* IMAGE - LEFT */}
         <div className="instructor-image">
           <img src={Instructor} alt="Instructor" className="image-shadow" />
         </div>
+
+        {/* CONTENT - RIGHT */}
         <div className="instructor-content">
           <div className="instructor-heading">
             Become an <HighlightText text="Instructor" />
           </div>
           <p className="instructor-text">
-            " Instructors from around the corner have arrived to showcase their talents and share their remarkable learning journeys. With dedication and expertise, they bring forth a vibrant display of skills honed through years of experience and passion. "
+            “<strong>
+              Our instructors come with years of hands-on experience and a deep passion for coding.
+              They are dedicated to guiding learners through a journey of growth, sharing not only their technical expertise
+              but also the insights and lessons they’ve gathered throughout their careers.
+              With their support, you can master new skills, tackle real-world challenges, and achieve your professional goals.
+            </strong>”
           </p>
+
           <div className="instructor-button">
             <CTAButton active={true} linkto="/signup">
               <div className="instructor-cta">

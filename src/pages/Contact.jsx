@@ -21,7 +21,7 @@ const Contact = () => {
               <div className="card-content">
                 <h3>Chat on us</h3>
                 <p className="muted">Our friendly team is here to help.</p>
-                <p className="muted strong">info@studynotion.com</p>
+                <p className="muted strong">info@DSAverse.com</p>
               </div>
             </div>
           </div>

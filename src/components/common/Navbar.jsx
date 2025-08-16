@@ -6,8 +6,7 @@
 
 // import Logo from "../../assets/Images/WebsiteLogo.png";
 // import { NavbarLinks } from "../../data/navbar-links";
-// import { apiConnector } from "../../services/apiconnector";
-// import { categories } from "../../services/apis";
+// import { fetchCourseCategories } from "../../services/operations/courseDetailsAPI"; // ✅ updated import
 // import { ACCOUNT_TYPE } from "../../utils/constants";
 // import ProfileDropDown from "../core/Auth/ProfileDropDown";
 // import "./Navbar.css";
@@ -22,11 +21,12 @@
 //   const [loading, setLoading] = useState(false);
 
 //   useEffect(() => {
+//     // ✅ fetch categories using fetchCategories function
 //     (async () => {
 //       setLoading(true);
 //       try {
-//         const res = await apiConnector("GET", categories.CATEGORIES_API);
-//         setSubLinks(res.data.data);
+//         const res = await fetchCourseCategories(); // ✅ using fetchCategories
+//         setSubLinks(res || []);
 //       } catch (error) {
 //         console.log("Could not fetch Categories.", error);
 //       }
@@ -50,7 +50,6 @@
 //           />
 //         </Link>
 
-
 //         <nav className="navbar-links">
 //           <ul>
 //             {NavbarLinks.map((link, index) => (
@@ -59,22 +58,22 @@
 //                   <div className={`dropdown-group ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}>
 //                     <p>{link.title}</p>
 //                     <BsChevronDown />
+
+//                     {/* ✅ DROPDOWN CONTENT */}
 //                     <div className="dropdown-content">
 //                       <div className="dropdown-arrow" />
 //                       {loading ? (
 //                         <p className="text-center">Loading...</p>
-//                       ) : subLinks && subLinks.length ? (
-//                         subLinks
-//                           .filter((subLink) => subLink?.courses?.length > 0)
-//                           .map((subLink, i) => (
-//                             <Link
-//                               to={`/catalog/${subLink.name.split(" ").join("-").toLowerCase()}`}
-//                               className="dropdown-item"
-//                               key={i}
-//                             >
-//                               <p>{subLink.name}</p>
-//                             </Link>
-//                           ))
+//                       ) : subLinks && subLinks.length > 0 ? (
+//                         subLinks.map((subLink, i) => (
+//                           <Link
+//                             to={`/catalog/${subLink.name.split(" ").join("-").toLowerCase()}`}
+//                             className="dropdown-item"
+//                             key={i}
+//                           >
+//                             <p>{subLink.name}</p>
+//                           </Link>
+//                         ))
 //                       ) : (
 //                         <p className="text-center">No Courses Found</p>
 //                       )}
@@ -120,7 +119,6 @@
 
 // export default Navbar;
 
-
 import { useEffect, useState } from "react";
 import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
@@ -129,7 +127,7 @@ import { Link, matchPath, useLocation } from "react-router-dom";
 
 import Logo from "../../assets/Images/WebsiteLogo.png";
 import { NavbarLinks } from "../../data/navbar-links";
-import { fetchCourseCategories } from "../../services/operations/courseDetailsAPI"; // ✅ updated import
+import { fetchCourseCategories } from "../../services/operations/courseDetailsAPI";
 import { ACCOUNT_TYPE } from "../../utils/constants";
 import ProfileDropDown from "../core/Auth/ProfileDropDown";
 import "./Navbar.css";
@@ -144,11 +142,10 @@ function Navbar() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // ✅ fetch categories using fetchCategories function
     (async () => {
       setLoading(true);
       try {
-        const res = await fetchCourseCategories(); // ✅ using fetchCategories
+        const res = await fetchCourseCategories();
         setSubLinks(res || []);
       } catch (error) {
         console.log("Could not fetch Categories.", error);
@@ -178,15 +175,17 @@ function Navbar() {
             {NavbarLinks.map((link, index) => (
               <li key={index}>
                 {link.title === "Catalog" ? (
-                  <div className={`dropdown-group ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}>
-                    <p>{link.title}</p>
-                    <BsChevronDown />
+                  <div
+                    className={`dropdown-group ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}
+                    tabIndex={0}
+                  >
+                    <p className="dropdown-trigger">{link.title}</p>
+                    <BsChevronDown className="dropdown-chevron" />
 
-                    {/* ✅ DROPDOWN CONTENT */}
-                    <div className="dropdown-content">
+                    <div className="dropdown-content" role="menu">
                       <div className="dropdown-arrow" />
                       {loading ? (
-                        <p className="text-center">Loading...</p>
+                        <p className="text-center dropdown-status">Loading...</p>
                       ) : subLinks && subLinks.length > 0 ? (
                         subLinks.map((subLink, i) => (
                           <Link
@@ -198,7 +197,7 @@ function Navbar() {
                           </Link>
                         ))
                       ) : (
-                        <p className="text-center">No Courses Found</p>
+                        <p className="text-center dropdown-status">No Courses Found</p>
                       )}
                     </div>
                   </div>

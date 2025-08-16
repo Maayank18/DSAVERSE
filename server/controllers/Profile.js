@@ -158,14 +158,30 @@ exports.instructorDashboard = async (req, res) => {
     // Fetch all courses by instructor
     const courseDetails = await Course.find({ instructor: req.user.id });
 
-    const courseData = courseDetails.map((course) => {
-      // ✅ Handle missing or undefined studentsEnrolled array
+    // const courseData = courseDetails.map((course) => {
+    //   // ✅ Handle missing or undefined studentsEnrolled array
+    //   const totalStudentsEnrolled = Array.isArray(course.studentsEnrolled)
+    //     ? course.studentsEnrolled.length
+    //     : 0;
+
+    //   // ✅ Ensure price is a number (handle string or undefined cases)
+    //   const price = typeof course.price === "number" ? course.price : 0;
+    //   const totalAmountGenerated = totalStudentsEnrolled * price;
+
+    //   return {
+    //     _id: course._id,
+    //     courseName: course.courseName,
+    //     courseDescription: course.courseDescription,
+    //     totalStudentsEnrolled,
+    //     totalAmountGenerated,
+    //   };
+    // });
+        const courseData = courseDetails.map((course) => {
       const totalStudentsEnrolled = Array.isArray(course.studentsEnrolled)
         ? course.studentsEnrolled.length
         : 0;
 
-      // ✅ Ensure price is a number (handle string or undefined cases)
-      const price = typeof course.price === "number" ? course.price : 0;
+      const price = Number(course.price) || 0; // ✅ Convert string to number
       const totalAmountGenerated = totalStudentsEnrolled * price;
 
       return {
@@ -176,6 +192,7 @@ exports.instructorDashboard = async (req, res) => {
         totalAmountGenerated,
       };
     });
+
 
     res.status(200).json({ courses: courseData });
   } catch (error) {
