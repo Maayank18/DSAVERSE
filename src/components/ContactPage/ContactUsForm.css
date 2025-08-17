@@ -46,6 +46,8 @@
   font-size: 0.95rem;
   outline: none;
   transition: border 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-style:focus {
@@ -63,6 +65,11 @@
     flex-direction: row;
     gap: 1rem;
   }
+}
+
+.country-select select {
+  appearance: none;
+  cursor: pointer;
 }
 
 .country-select,

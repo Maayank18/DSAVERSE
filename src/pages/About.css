@@ -11,12 +11,12 @@
 .about-hero-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2.25rem 1.5rem 1.25rem; /* less bottom padding to keep compact */
+  padding: 2.25rem 1.5rem 1.25rem;
   text-align: center;
   color: white;
 }
 
-/* header sits above images; keep high stacking but images are now separate */
+/* header sits above images */
 .about-header {
   position: relative;
   z-index: 4;
@@ -28,39 +28,34 @@
   letter-spacing: -0.5px;
 }
 
-/* subtext slightly closer */
+/* subtext */
 .about-subtext {
   margin-top: 0.6rem;
   font-size: 1rem;
-  font-weight: 500;
-  color: #a1a1aa;
+  font-weight: 600;         /* bold */
+  color: #ffffff;           /* white */
   max-width: 85%;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.55;
+  line-height: 1.7;         /* more spacing */
+  margin-bottom: 1rem;      /* extra gap */
 }
 
-/* small spacer inside hero for breathing room */
+/* small spacer inside hero */
 .hero-spacer {
-  height: 18px; /* small spacer; images live below hero now */
+  height: 18px;
 }
 
-/* ===================== BANNER WRAPPER (NEW) =====================
-   Images are placed in their own section AFTER the hero to guarantee
-   they never cover the hero heading. We keep the layout compact by
-   pulling them just slightly upward if desired, but default is
-   to sit below the hero (no covering).
-   ================================================================= */
+/* banner wrapper */
 .about-banner-wrapper {
   background: transparent;
   display: flex;
   justify-content: center;
-  padding: 0 1rem; /* horizontal padding */
-  margin-top: 0; /* images sit directly after hero; no overlap */
+  padding: 0 1rem;
+  margin-top: 0;
   z-index: 2;
 }
 
-/* images grid */
 .about-banner-images {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -68,10 +63,9 @@
   width: 84%;
   max-width: 1000px;
   align-items: start;
-  pointer-events: none; /* decorative */
+  pointer-events: none;
 }
 
-/* banner images styling */
 .about-banner-images img {
   width: 100%;
   height: auto;
@@ -81,12 +75,11 @@
   transform-origin: center;
 }
 
-/* subtle divider style */
+/* quote container */
 .about-quote-section {
   border-bottom: 1px solid rgba(255,255,255,0.03);
 }
 
-/* quote container reduced padding */
 .about-quote-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -94,15 +87,14 @@
   color: #a1a1aa;
 }
 
-/* smaller spacer so the next section sits close but not colliding */
 .quote-spacer {
   height: 40px;
 }
 
-/* MAIN ABOUT SECTION - compact and keeps clear distance from images */
+/* main about section */
 .about-section {
   max-width: 1200px;
-  margin: 0 auto; /* no negative margin so it won't climb into images */
+  margin: 0 auto;
   padding: 2rem 2rem;
   color: #a1a1aa;
   display: flex;
@@ -112,7 +104,6 @@
   z-index: 1;
 }
 
-/* STORY block - stacked on small screens, side-by-side on large screens */
 .about-story {
   display: flex;
   flex-direction: column;
@@ -120,7 +111,6 @@
   align-items: stretch;
 }
 
-/* left text column within story */
 .about-story-text {
   flex: 1;
   display: flex;
@@ -129,20 +119,22 @@
   margin-top: 1.5rem;
 }
 
-.about-story-text p {
+/* ✅ Paragraphs styling (all main body text) */
+.about-story-text p,
+.about-vision p,
+.about-mission p {
   font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.6;
-  color: #a8b0b6;
+  font-weight: 600;    /* bold */
+  line-height: 1.7;    /* more line spacing */
+  color: #ffffff;      /* white */
+  margin-bottom: 1rem; /* gap between paras */
 }
 
-/* wrapper for image so we can control alignment on larger screens */
 .about-story-image-wrap {
   display: block;
   align-self: center;
 }
 
-/* image style: keep shadow but compact */
 .founding-image {
   box-shadow: 0 0 26px rgba(252,103,103,0.18);
   max-width: 100%;
@@ -152,7 +144,7 @@
   display: block;
 }
 
-/* VISION + MISSION stacked on small screens, row on large */
+/* vision + mission */
 .about-vision-mission {
   display: flex;
   flex-direction: column;
@@ -168,7 +160,7 @@
   gap: 1rem;
 }
 
-/* GRADIENT TEXT (no vendor prefixes) */
+/* gradient headers */
 .gradient-text-1 {
   background-image: linear-gradient(45deg, #833AB4 0%, #FD1D1D 50%, #FCB045 100%);
   background-size: 200% 200%;
@@ -178,7 +170,7 @@
   margin-bottom: 0.25rem;
   background-clip: text;
   color: transparent;
-  color: #ffb347; /* fallback */
+  color: #ffb347;
   text-shadow: 0 1px 0 rgba(0,0,0,0.45);
 }
 
@@ -189,7 +181,7 @@
   font-weight: 700;
   background-clip: text;
   color: transparent;
-  color: #ff8a50; /* fallback */
+  color: #ff8a50;
   text-shadow: 0 1px 0 rgba(0,0,0,0.35);
 }
 
@@ -200,11 +192,11 @@
   font-weight: 700;
   background-clip: text;
   color: transparent;
-  color: #7fdcf2; /* fallback */
+  color: #7fdcf2;
   text-shadow: 0 1px 0 rgba(0,0,0,0.35);
 }
 
-/* learning/contact spacing */
+/* learning/contact */
 .about-learning-contact {
   max-width: 1200px;
   margin: 5rem auto;
@@ -215,7 +207,7 @@
   gap: 2.5rem;
 }
 
-/* reviews block */
+/* reviews */
 .about-reviews {
   max-width: 1200px;
   margin: 5rem auto;
@@ -231,7 +223,7 @@
   margin-bottom: 2rem;
 }
 
-/* ---------- RESPONSIVE / LARGER SCREEN LAYOUT ---------- */
+/* responsive */
 @media (min-width: 900px) {
   .about-header {
     font-size: 3.25rem;
@@ -265,7 +257,6 @@
   }
 }
 
-/* small screens: stack images and content */
 @media (max-width: 900px) {
   .about-header {
     font-size: 1.9rem;
@@ -292,7 +283,6 @@
   }
 }
 
-/* Very small devices: single-column banners */
 @media (max-width: 480px) {
   .about-hero-container {
     padding: 1.2rem;

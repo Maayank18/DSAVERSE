@@ -1,55 +1,89 @@
+/* Wrapper background */
 .stats-wrapper {
-  background-color: #2c2f36; /* equivalent to bg-richblack-700 */
+  background-color: #2c2f36; /* bg-richblack-700-ish */
 }
 
+/* Container: ensure it's a simple block wrapper centered on the page,
+   but force layout behaviour locally so parent styles don't break it */
 .stats-container {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  justify-content: space-between;
   width: 91.666667%;
-  max-width: 1200px; /* max-w-maxContent */
+  max-width: 1200px;
   color: white;
   margin: 0 auto;
+  box-sizing: border-box;
+  /* Force this container to act as a neutral flex container so children behave predictably */
+  display: block; /* keep block by default */
 }
 
-/* .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  text-align: center;
-} */
-
+/* Stronger specificity to ensure we override outside CSS that might be applied */
 .stats-wrapper .stats-container .stats-grid {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
+  display: flex !important;                 /* force horizontal layout */
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;             /* keep them in a single row on wide screens */
   gap: 2rem;
-  flex-wrap: wrap;
-  text-align: center;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-
-
-@media (min-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(4, 1fr); /* md:grid-cols-4 */
-  }
-}
-
-.stats-item {
+/* Items: make them shrink/grow nicely in a row */
+.stats-wrapper .stats-container .stats-grid .stats-item {
   display: flex;
   flex-direction: column;
-  padding: 2.5rem 0; /* py-10 */
+  padding: 2.5rem 0;
+  flex: 0 1 23% !important;                 /* try to fit 4 items in a row */
+  min-width: 160px;                         /* ensure reasonable width */
+  box-sizing: border-box;
+  text-align: center;
 }
 
+/* Typography */
 .stats-count {
   font-size: 30px;
   font-weight: bold;
-  color: #f1f1f1; /* roughly text-richblack-5 */
+  color: #f1f1f1; /* text-richblack-5-ish */
+  margin: 0; /* avoid default h1 margin impacting layout */
 }
 
 .stats-label {
   font-size: 16px;
   font-weight: 600;
-  color: #a1a1aa; /* roughly text-richblack-500 */
+  color: #a1a1aa; /* text-richblack-500-ish */
+  margin: 0.25rem 0 0; /* subtle spacing under count */
+}
+
+/* Responsive: allow wrapping on medium screens (two per row) */
+@media (max-width: 1024px) {
+  .stats-wrapper .stats-container .stats-grid {
+    flex-wrap: wrap !important;             /* allow items to wrap into multiple rows */
+    gap: 1.25rem;
+  }
+
+  .stats-wrapper .stats-container .stats-grid .stats-item {
+    flex: 1 1 calc(50% - 1.25rem) !important; /* 2-per-row layout for mid screens */
+    min-width: 180px;
+  }
+}
+
+/* Mobile: single column stacked */
+@media (max-width: 480px) {
+  .stats-wrapper .stats-container .stats-grid {
+    flex-direction: column !important;
+    gap: 1rem;
+  }
+
+  .stats-wrapper .stats-container .stats-grid .stats-item {
+    width: 100%;
+    flex: none !important;
+    padding: 1rem 0;
+  }
+
+  .stats-count {
+    font-size: 26px;
+  }
+
+  .stats-label {
+    font-size: 14px;
+  }
 }

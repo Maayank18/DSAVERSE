@@ -29,6 +29,8 @@ import React from "react";
 import { toast } from "react-hot-toast";
 import { apiConnector } from "../apiconnector";
 import { catalogData } from "../apis";
+import { contactusEndpoint } from "../apis";
+const { CONTACT_US_API } = contactusEndpoint;
 
 export const getCatalogaPageData = async (categoryId) => {
   const toastId = toast.loading("Loading...");
@@ -61,3 +63,14 @@ export const getCatalogaPageData = async (categoryId) => {
 
   return result;
 };
+
+
+export const contactUsAPI = async (formData) => {
+  try {
+    const response = await apiConnector("POST", CONTACT_US_API, formData);
+    return response?.data;
+  } catch (error) {
+    console.log("CONTACT US API ERROR:", error);
+    throw error;
+  }
+}

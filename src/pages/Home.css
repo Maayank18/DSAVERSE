@@ -80,8 +80,9 @@
 }
 
 .homepage-bg.dark-buttons {
-  background-color:	#000000;
-  height: 100px; /* ⬆️ Increased from 310px to give more visual space */
+  background-color:	#000814;
+  /* height: 100px; ⬆️ Increased from 310px to give more visual space */
+  min-height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,22 +116,10 @@
   align-items: center;
   justify-content: center;
   gap: 40px;
-  margin: 80px 0;
+  margin: 60px 0; 
+  /* debug change in the margin earlier was 80px 0  */
   text-align: center;
 }
-
-/* @media screen and (min-width: 1024px) {
-  .flex-row-lg {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .flex-row-reverse-lg {
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-} */
 
 @media screen and (min-width: 1024px) {
   .flex-row-lg {
@@ -168,7 +157,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 310px; /* Matches gradient height */
+  min-height: 310px; /* Matches gradient height */
   flex-direction: column;
 }
 
@@ -199,16 +188,20 @@
   gap: 32px;
 }
 
-/* .skills-section {
+ /* .skills-section {
+  margin-top: 40px; /* reduced from 120px */
+  /* debug chnage earlier 80px margin top */
+  /* gap: 24px; */
+/* } */ 
+
+.skills-section {
+  /* make it a vertical stack */
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 32px;
-  margin-top: 120px;
-} */
- .skills-section {
-  margin-top: 80px; /* reduced from 120px */
-  gap: 24px;
+  flex-direction: column;
+  align-items: center;       /* horizontal center */
+  text-align: center;        /* center the text itself */
+  gap: 16px;                  /* space between heading, para, button */
+  margin-top: 40px;
 }
 
 .section-two-inner.buttons-centered {
@@ -221,18 +214,24 @@
 .skills-heading {
   font-size: 32px;
   font-weight: 600;
-  width: 45%;
+}
+
+.skills-heading,
+.skills-subtext {
+  width: 100%;                /* let them span full available space */
+  max-width: 800px;           /* optional: keeps content readable on large screens */
 }
 
 .skills-subtext {
-  width: 40%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  align-items: center;        /* center the paragraph and button */
+  gap: 16px;
 }
 
 .skills-para {
   font-size: 16px;
+  font-weight: bold;          /* makes “The modern DSAverse…” bold */
 }
 
 /* Section Three */

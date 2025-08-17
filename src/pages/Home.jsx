@@ -131,12 +131,12 @@ const Home = () => {
         <div className="section-two-content compact-white">
           <div className="skills-section">
             <div className="skills-heading">
-              Get the skills u need for a
-              <HighlightText text={"job that is in demand"} />
+              Gain the practical expertise you need to thrive in your
+              <HighlightText text={"career and beyond"} />
             </div>
             <div className="skills-subtext">
               <div className="skills-para">
-                The modern DSAverse is an mindblowing tool u cant even know
+                Step into the modern DSAverse, a groundbreaking resource that reshapes how you learn and solve.
               </div>
               <CTAButton active={true} linkto={"/signup"}>
                 Learn More
