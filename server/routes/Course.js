@@ -21,6 +21,7 @@ const {
   showAllCategories,
   createCategory,
   categoryPageDetails,
+  deleteCategory,
 } = require("../controllers/Category")
 
 // Sections Controllers Import
@@ -90,6 +91,9 @@ router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 router.post("/createCategory", auth, isAdmin, createCategory)
 router.get("/showAllCategories", showAllCategories)
 router.post("/getCategoryPageDetails", categoryPageDetails)
+// final URL: DELETE /api/v1/category/deleteCategory/:categoryId
+// router.delete("/deleteCategory/:categoryId", auth,isAdmin,deleteCategory);
+
 
 // RATING AND REVIEW ROUTES
 router.post("/createRating", auth, isStudent, createRating)

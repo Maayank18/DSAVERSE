@@ -130,11 +130,20 @@
   transform: translateY(0);
 }
 
-/* ALSO reveal when the group has the 'active' class (route open / programmatic open) */
-.dropdown-group.active .dropdown-content {
+/* === NEW: programmatic open controlled by React state === */
+.dropdown-group.open .dropdown-content {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
+}
+
+/* NOTE: do not force-open the panel just because the route is active.
+   Keep 'active' only for chevron rotation and minor styling */
+.dropdown-group.active .dropdown-content {
+  /* ensure route 'active' doesn't force-open the dropdown */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
 }
 
 /* Little arrow pointing up */

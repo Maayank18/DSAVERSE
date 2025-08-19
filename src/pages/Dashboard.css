@@ -17,12 +17,14 @@
 }
 
 .dashboard-inner {
-  width: 91.666667%; /* w-11/12 */
-  max-width: 1000px;
-  margin: 0 auto;
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
+  width: 100%;         /* make full width */
+  max-width: none;     /* remove restriction */
+  margin: 0;           /* remove auto-centering */
+  padding: 2rem;       /* keep some padding */
+  box-sizing: border-box;
 }
+
+
 
 /* Spinner styles — if not already defined globally */
 .spinner {

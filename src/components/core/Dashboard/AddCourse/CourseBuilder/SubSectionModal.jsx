@@ -68,7 +68,7 @@
 //     }
 
 //     setLoading(true)
-//     const result = await createSubSection(formData, token)
+//     const result = await updateSubSection(formData, token) // ✅ fixed
 //     if (result) {
 //       const updatedCourseContent = course.courseContent.map((section) =>
 //         section._id === modalData.sectionId ? result : section
@@ -80,48 +80,44 @@
 //   }
 
 //   const onSubmit = async (data) => {
-//   if (view) return
-//   if (edit) {
-//     if (!isFormUpdated()) {
-//       toast.error("No changes made to the form")
-//     } else {
-//       handleEditSubsection()
+//     if (view) return
+//     if (edit) {
+//       if (!isFormUpdated()) {
+//         toast.error("No changes made to the form")
+//       } else {
+//         handleEditSubsection()
+//       }
+//       return
 //     }
-//     return
+
+//     console.log("📝 Form Data Input:")
+//     console.log("sectionId:", modalData.sectionId)
+//     console.log("lectureTitle:", data.lectureTitle)
+//     console.log("lectureDesc:", data.lectureDesc)
+//     console.log("lectureVideo:", data.lectureVideo)
+
+//     const formData = new FormData()
+//     formData.append("sectionId", modalData.sectionId)
+//     formData.append("title", data.lectureTitle)
+//     formData.append("description", data.lectureDesc)
+//     formData.append("video", data.lectureVideo)
+
+//     console.log("📦 FormData entries:")
+//     for (let [key, value] of formData.entries()) {
+//       console.log(`${key}:`, value)
+//     }
+
+//     setLoading(true)
+//     const result = await createSubSection(formData, token)
+//     if (result) {
+//       const updatedCourseContent = course.courseContent.map((section) =>
+//         section._id === modalData.sectionId ? result : section
+//       )
+//       dispatch(setCourse({ ...course, courseContent: updatedCourseContent }))
+//     }
+//     setModalData(null)
+//     setLoading(false)
 //   }
-
-//   // ✅ Debug logs before creating FormData
-//   console.log("📝 Form Data Input:")
-//   console.log("sectionId:", modalData.sectionId)
-//   console.log("lectureTitle:", data.lectureTitle)
-//   console.log("lectureDesc:", data.lectureDesc)
-//   console.log("lectureVideo:", data.lectureVideo)
-
-//   const formData = new FormData()
-//   formData.append("sectionId", modalData.sectionId)
-//   formData.append("title", data.lectureTitle)
-//   formData.append("description", data.lectureDesc)
-//   formData.append("video", data.lectureVideo)  // debug change 
-
-//   // ✅ Print actual FormData being sent
-//   console.log("📦 FormData entries:")
-//   for (let [key, value] of formData.entries()) {
-//     console.log(`${key}:`, value)
-//   }
-
-//   setLoading(true)
-//   const result = await createSubSection(formData, token)
-//   if (result) {
-//     const updatedCourseContent = course.courseContent.map((section) =>
-//       section._id === modalData.sectionId ? result : section
-//     )
-//     dispatch(setCourse({ ...course, courseContent: updatedCourseContent }))
-//   }
-//   setModalData(null)
-//   setLoading(false)
-// }
-
-
 
 //   return (
 //     <div className="modal-backdrop">
@@ -197,6 +193,7 @@
 //   )
 // }
 
+// (unchanged imports)
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -237,8 +234,10 @@ export default function SubSectionModal({
     if (view || edit) {
       setValue("lectureTitle", modalData.title)
       setValue("lectureDesc", modalData.description)
-      setValue("lectureVideo", modalData.video)
+      // use videoUrl consistently (server sends videoUrl)
+      setValue("lectureVideo", modalData.videoUrl)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const isFormUpdated = () => {
@@ -267,12 +266,10 @@ export default function SubSectionModal({
     }
 
     setLoading(true)
-    const result = await updateSubSection(formData, token) // ✅ fixed
+    const result = await updateSubSection(formData, token) // result is the updated course (server returns course)
     if (result) {
-      const updatedCourseContent = course.courseContent.map((section) =>
-        section._id === modalData.sectionId ? result : section
-      )
-      dispatch(setCourse({ ...course, courseContent: updatedCourseContent }))
+      // server already returned the full updated course — simply replace course in redux
+      dispatch(setCourse(result))
     }
     setModalData(null)
     setLoading(false)
@@ -289,30 +286,17 @@ export default function SubSectionModal({
       return
     }
 
-    console.log("📝 Form Data Input:")
-    console.log("sectionId:", modalData.sectionId)
-    console.log("lectureTitle:", data.lectureTitle)
-    console.log("lectureDesc:", data.lectureDesc)
-    console.log("lectureVideo:", data.lectureVideo)
-
     const formData = new FormData()
     formData.append("sectionId", modalData.sectionId)
     formData.append("title", data.lectureTitle)
     formData.append("description", data.lectureDesc)
     formData.append("video", data.lectureVideo)
 
-    console.log("📦 FormData entries:")
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value)
-    }
-
     setLoading(true)
     const result = await createSubSection(formData, token)
     if (result) {
-      const updatedCourseContent = course.courseContent.map((section) =>
-        section._id === modalData.sectionId ? result : section
-      )
-      dispatch(setCourse({ ...course, courseContent: updatedCourseContent }))
+      // server returned the full updated course — use it directly
+      dispatch(setCourse(result))
     }
     setModalData(null)
     setLoading(false)

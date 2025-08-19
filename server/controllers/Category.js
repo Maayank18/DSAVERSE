@@ -91,215 +91,6 @@ exports.showAllCategories = async (req, res) => {
 };
 
 
-// category page details 
-// exports.categoryPageDetails = async (req, res) => {
-//     try {
-
-//         //  get category id 
-//         // get couress for specific category ID
-//         //  validatin
-//         //  get course for different categories
-//         //  get top selling courses 
-//         //  return response
-
-//       const { categoryId } = req.body
-
-//       console.log("PRINTING CATEGORY ID: ", categoryId);
-
-//       // Get courses for the specified category
-//       const selectedCategory = await Category.findById(categoryId)
-//         .populate("courses")
-//         .exec();
-  
-//       //console.log("SELECTED COURSE", selectedCategory)
-//       // Handle the case when the category is not found
-//       if (!selectedCategory) {
-//         console.log("Category not found.")
-//         return res.status(404).json({
-//             success: false,
-//             message: "Category not found",
-//          });
-//       }
-
-//       // Handle the case when there are no courses
-//       if (selectedCategory.course.length === 0) {
-//         console.log("No courses found for the selected category.")
-//         return res.status(404).json({
-//           success: false,
-//           message: "No courses found for the selected category.",
-//         })
-//       }
-  
-//       const differentCategory = await Category.find({
-//                                         _id:{$ne:categoryId},                               
-//       }).populate("courses").exec();
-
-//       // ✅ Get top-selling courses (most studentsEnrolled)
-//     const allCourses = await Course.find({})
-//       .sort({ studentsEnrolled: -1 }) // This won't work directly
-//       .exec();
-
-//     // We manually sort by length of studentsEnrolled
-//     const topSellingCourses = await Course.find({})
-//       .populate("instructor") // optional: populate instructor or category
-//       .lean();
-
-//     topSellingCourses.sort((a, b) => b.studentsEnrolled.length - a.studentsEnrolled.length);
-
-//     const top10Courses = topSellingCourses.slice(0, 10);
-
-//     // ✅ Return everything
-//     return res.status(200).json({
-//       success: true,
-//       data: {
-//         selectedCategory,
-//         differentCategory: differentCategories[0], // debug change 
-//         topSellingCourses: top10Courses,
-//       },
-//     });
-      
-
-//     } catch (error) {
-//       return res.status(500).json({
-//         success: false,
-//         message: "Internal server error",
-//         error: error.message,
-//       })
-//     }
-//   }
-
-// exports.categoryPageDetails = async (req, res) => {
-//   try {
-//     // get category id 
-//     const { categoryId } = req.body;
-
-//     console.log("PRINTING CATEGORY ID: ", categoryId);
-
-//     // Get courses for the specified category
-//     const selectedCategory = await Category.findById(categoryId)
-//       .populate("courses")
-//       .exec();
-
-//     // Handle the case when the category is not found
-//     if (!selectedCategory) {
-//       console.log("Category not found.");
-//       return res.status(404).json({
-//         success: false,
-//         message: "Category not found",
-//       });
-//     }
-
-//     // Handle the case when there are no courses
-//     if (selectedCategory.courses.length === 0) {
-//       console.log("No courses found for the selected category.");
-//       return res.status(404).json({
-//         success: false,
-//         message: "No courses found for the selected category.",
-//       });
-//     }
-
-//     const differentCategory = await Category.find({
-//       _id: { $ne: categoryId },
-//     }).populate("course").exec();
-
-//     // ✅ Get top-selling courses (most studentsEnrolled)
-//     const allCourses = await Course.find({})
-//       .sort({ studentsEnrolled: -1 }) // This won't work directly
-//       .exec();
-
-//     // We manually sort by length of studentsEnrolled
-//     const topSellingCourses = await Course.find({})
-//       .populate("instructor") // optional: populate instructor or category
-//       .lean();
-
-//     topSellingCourses.sort(
-//       (a, b) => b.studentsEnrolled.length - a.studentsEnrolled.length
-//     );
-
-//     const top10Courses = topSellingCourses.slice(0, 10);
-
-//     // ✅ Return everything
-//     return res.status(200).json({
-//       success: true,
-//       data: {
-//         selectedCategory,
-//         differentCategory: differentCategory[0], // ✅ fixed here
-//         topSellingCourses: top10Courses,
-//       },
-//     });
-
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: "Internal server error",
-//       error: error.message,
-//     });
-//   }
-// };
-
-// exports.categoryPageDetails = async (req, res) => {
-//   try {
-//     const { categoryId } = req.body;
-//     console.log("PRINTING CATEGORY ID: ", categoryId);
-
-//     // ✅ Step 1: Check if category exists
-//     const selectedCategory = await Category.findById(categoryId).exec();
-//     if (!selectedCategory) {
-//       console.log("Category not found.");
-//       return res.status(404).json({
-//         success: false,
-//         message: "Category not found",
-//       });
-//     }
-
-//     // ✅ Step 2: Get all courses linked to this category
-//     const categoryCourses = await Course.find({ category: categoryId })
-//       .populate("instructor") // optional: for instructor info
-//       .exec();
-
-//     // Handle if no courses found in that category
-//     if (categoryCourses.length === 0) {
-//       console.log("No courses found for the selected category.");
-//       return res.status(404).json({
-//         success: false,
-//         message: "No courses found for the selected category.",
-//       });
-//     }
-
-//     // ✅ Step 3: Get different category (for recommendation)
-//     const differentCategory = await Category.findOne({ _id: { $ne: categoryId } });
-
-//     // ✅ Step 4: Get top 10 best-selling courses
-//     const topSellingCourses = await Course.find({})
-//       .populate("instructor") // optionally populate category too
-//       .lean();
-
-//     topSellingCourses.sort(
-//       (a, b) => b.studentsEnrolled.length - a.studentsEnrolled.length
-//     );
-
-//     const top10Courses = topSellingCourses.slice(0, 10);
-
-//     // ✅ Step 5: Return everything
-//     return res.status(200).json({
-//       success: true,
-//       data: {
-//         selectedCategory,
-//         categoryCourses, // send the list of courses separately
-//         differentCategory,
-//         topSellingCourses: top10Courses,
-//       },
-//     });
-//   } catch (error) {
-//     console.log("CATEGORY PAGE DETAILS ERROR:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Internal server error",
-//       error: error.message,
-//     });
-//   }
-// };
-
 exports.categoryPageDetails = async (req, res) => {
   try {
     const { categoryId } = req.body;
@@ -377,3 +168,93 @@ exports.categoryPageDetails = async (req, res) => {
     });
   }
 };
+
+
+// exports.deleteCategory = async (req, res) => {
+//   const { categoryId } = req.params;
+//   const action = (req.query.action || "").toLowerCase(); // "", "unset", "delete"
+
+//   try {
+//     // 1) Admin guard - expects req.user to be populated by auth middleware
+//     if (!req.user || req.user.role !== "Admin") {
+//       return res.status(403).json({
+//         success: false,
+//         message: "Access denied. Admins only.",
+//       });
+//     }
+
+//     // 2) Validate input
+//     if (!categoryId || !mongoose.Types.ObjectId.isValid(categoryId)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Valid categoryId is required.",
+//       });
+//     }
+
+//     const categoryObjectId = new mongoose.Types.ObjectId(categoryId);
+
+//     // 3) Check category exists
+//     const category = await Category.findById(categoryObjectId).exec();
+//     if (!category) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Category not found.",
+//       });
+//     }
+
+//     // 4) Count courses tied to this category
+//     const coursesCount = await Course.countDocuments({ category: categoryObjectId });
+
+//     // 5) If there are courses and action not specified, refuse deletion
+//     if (coursesCount > 0 && action === "") {
+//       return res.status(400).json({
+//         success: false,
+//         message:
+//           `Category has ${coursesCount} course(s). ` +
+//           `Provide query ?action=unset to disassociate category from courses OR ?action=delete to remove those courses.`,
+//         coursesCount,
+//       });
+//     }
+
+//     // 6) Start transaction to ensure atomicity
+//     const session = await mongoose.startSession();
+//     session.startTransaction();
+
+//     try {
+//       if (action === "unset") {
+//         // disassociate category but keep courses
+//         await Course.updateMany(
+//           { category: categoryObjectId },
+//           { $unset: { category: "" } },
+//           { session }
+//         );
+//       } else if (action === "delete") {
+//         // delete all courses under that category
+//         await Course.deleteMany({ category: categoryObjectId }, { session });
+//         // NOTE: if courses have related files (cloudinary, etc.) you should delete those first
+//       }
+
+//       // finally delete the category document
+//       await Category.deleteOne({ _id: categoryObjectId }, { session });
+
+//       await session.commitTransaction();
+//       session.endSession();
+
+//       return res.status(200).json({
+//         success: true,
+//         message: "Category deleted successfully.",
+//         deletedCategoryId: categoryId,
+//         affectedCourses: coursesCount,
+//         actionTaken: action || "refused-if-courses-present",
+//       });
+//     } catch (err) {
+//       await session.abortTransaction();
+//       session.endSession();
+//       console.error("DELETE CATEGORY TX ERROR:", err);
+//       return res.status(500).json({ success: false, message: "Transaction failed" });
+//     }
+//   } catch (error) {
+//     console.error("DELETE CATEGORY ERROR:", error);
+//     return res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// };

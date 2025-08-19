@@ -8,19 +8,73 @@ const CourseProgress = require("../models/CourseProgress");
 
 
 
-
-// update profile
-exports.updateProfile = async (req, res) => {
-  try {
-
-    // fetch data 
+// fetch data 
         // get user id
         // validation
         // find the profile 
         // update the profile
         // return response
 
+// update profile
+// exports.updateProfile = async (req, res) => {
+//   try {
+//     //  testing advice use correct format for date
+//     const { dateOfBirth = "", about = "", contactNumber, gender } = req.body;
+//     const id = req.user.id;
 
+//     if (!contactNumber || !gender || !id) {
+//       return res.status(400).json({
+//         success: false,
+//         message: " All fields are required ",
+//       });
+//     }
+
+//     console.log("User ID:", id);
+
+//     const userDetails = await User.findById(id);
+//     if (!userDetails) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+
+//     console.log("User details found:", userDetails);
+
+//     const profileId = userDetails.additionalDetails;
+//     const profileDetails = await Profile.findById(profileId);
+
+//     if (!profileDetails) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Profile not found",
+//       });
+//     }
+
+//     console.log("Profile details found:", profileDetails);
+
+//     profileDetails.dateOfBirth = dateOfBirth;
+//     profileDetails.about = about;
+//     profileDetails.contactNumber = contactNumber;
+//     profileDetails.gender = gender;
+//     await profileDetails.save();
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Profile updated successfully",
+//       updatedUserDetails: profileDetails,
+//     });
+//   } catch (error) {
+//     console.error("Update Profile Error:", error); // Add this line
+//     return res.status(500).json({
+//       success: false,
+//       message: "Profile updation failed",
+//     });
+//   }
+// };
+
+exports.updateProfile = async (req, res) => {
+  try {
     //  testing advice use correct format for date
     const { dateOfBirth = "", about = "", contactNumber, gender } = req.body;
     const id = req.user.id;
@@ -62,13 +116,16 @@ exports.updateProfile = async (req, res) => {
     profileDetails.gender = gender;
     await profileDetails.save();
 
+    // <-- NEW: return the full user (populated) so client gets firstName/lastName/accountType etc.
+    const updatedUser = await User.findById(id).populate("additionalDetails");
+
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      updatedUserDetails: profileDetails,
+      updatedUserDetails: updatedUser, // unchanged key name, but now contains full user
     });
   } catch (error) {
-    console.error("Update Profile Error:", error); // Add this line
+    console.error("Update Profile Error:", error);
     return res.status(500).json({
       success: false,
       message: "Profile updation failed",

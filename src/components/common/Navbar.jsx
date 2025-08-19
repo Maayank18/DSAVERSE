@@ -6,7 +6,7 @@
 
 // import Logo from "../../assets/Images/WebsiteLogo.png";
 // import { NavbarLinks } from "../../data/navbar-links";
-// import { fetchCourseCategories } from "../../services/operations/courseDetailsAPI"; // ✅ updated import
+// import { fetchCourseCategories } from "../../services/operations/courseDetailsAPI";
 // import { ACCOUNT_TYPE } from "../../utils/constants";
 // import ProfileDropDown from "../core/Auth/ProfileDropDown";
 // import "./Navbar.css";
@@ -21,11 +21,10 @@
 //   const [loading, setLoading] = useState(false);
 
 //   useEffect(() => {
-//     // ✅ fetch categories using fetchCategories function
 //     (async () => {
 //       setLoading(true);
 //       try {
-//         const res = await fetchCourseCategories(); // ✅ using fetchCategories
+//         const res = await fetchCourseCategories();
 //         setSubLinks(res || []);
 //       } catch (error) {
 //         console.log("Could not fetch Categories.", error);
@@ -55,15 +54,17 @@
 //             {NavbarLinks.map((link, index) => (
 //               <li key={index}>
 //                 {link.title === "Catalog" ? (
-//                   <div className={`dropdown-group ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}>
-//                     <p>{link.title}</p>
-//                     <BsChevronDown />
+//                   <div
+//                     className={`dropdown-group ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}
+//                     tabIndex={0}
+//                   >
+//                     <p className="dropdown-trigger">{link.title}</p>
+//                     <BsChevronDown className="dropdown-chevron" />
 
-//                     {/* ✅ DROPDOWN CONTENT */}
-//                     <div className="dropdown-content">
+//                     <div className="dropdown-content" role="menu">
 //                       <div className="dropdown-arrow" />
 //                       {loading ? (
-//                         <p className="text-center">Loading...</p>
+//                         <p className="text-center dropdown-status">Loading...</p>
 //                       ) : subLinks && subLinks.length > 0 ? (
 //                         subLinks.map((subLink, i) => (
 //                           <Link
@@ -75,7 +76,7 @@
 //                           </Link>
 //                         ))
 //                       ) : (
-//                         <p className="text-center">No Courses Found</p>
+//                         <p className="text-center dropdown-status">No Courses Found</p>
 //                       )}
 //                     </div>
 //                   </div>
@@ -119,7 +120,8 @@
 
 // export default Navbar;
 
-import { useEffect, useState } from "react";
+
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
 import { useSelector } from "react-redux";
@@ -141,6 +143,10 @@ function Navbar() {
   const [subLinks, setSubLinks] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // --- NEW: local UI state and ref to control dropdown open/close ---
+  const dropdownRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -157,6 +163,31 @@ function Navbar() {
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname);
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, []);
+
+  // Close dropdown when location changes (navigations)
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
+  // Close on Escape key
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   return (
     <div className={`navbar-wrapper ${location.pathname !== "/" ? "navbar-colored" : ""}`}>
@@ -176,10 +207,29 @@ function Navbar() {
               <li key={index}>
                 {link.title === "Catalog" ? (
                   <div
-                    className={`dropdown-group ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}
+                    ref={dropdownRef}
+                    className={`dropdown-group ${isOpen ? "open" : ""} ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}
                     tabIndex={0}
                   >
-                    <p className="dropdown-trigger">{link.title}</p>
+                    {/* Make trigger interactive - click toggles open state */}
+                    <p
+                      className="dropdown-trigger"
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => {
+                        // toggle only when clicking trigger
+                        setIsOpen((s) => !s);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setIsOpen((s) => !s);
+                        }
+                      }}
+                    >
+                      {link.title}
+                    </p>
+
                     <BsChevronDown className="dropdown-chevron" />
 
                     <div className="dropdown-content" role="menu">
@@ -192,6 +242,10 @@ function Navbar() {
                             to={`/catalog/${subLink.name.split(" ").join("-").toLowerCase()}`}
                             className="dropdown-item"
                             key={i}
+                            onClick={() => {
+                              // close immediately on click (route change also closes via effect)
+                              setIsOpen(false);
+                            }}
                           >
                             <p>{subLink.name}</p>
                           </Link>
