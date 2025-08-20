@@ -19,15 +19,15 @@ export default function Instructor() {
       const instructorApiData = await getInstructorData(token)
       const result = await fetchInstructorCourses(token)
 
-      setInstructorData(Array.isArray(instructorApiData) ? instructorApiData : [])
-      setCourses(Array.isArray(result) ? result : [])
+      if (instructorApiData.length) setInstructorData(instructorApiData)
+      if (result) setCourses(result)
+      
       setLoading(false)
     })()
   }, [token])
 
   return (
-    <div className="instructor-container">
-      {/* Header */}
+    <div className="instructor-dashboard">
       <div className="instructor-header">
         <h1 className="instructor-heading">Hi {user?.firstName} 👋</h1>
         <p className="instructor-subheading">Let's start something new</p>
@@ -36,11 +36,9 @@ export default function Instructor() {
       {loading ? (
         <div className="spinner" />
       ) : (
-        <div className="instructor-content-layout">
-          {/* Visualization block */}
+        <>
           <InstructorChart courses={instructorData} />
 
-          {/* Courses Section */}
           <div className="course-preview-box">
             <div className="course-preview-header">
               <p className="course-preview-title">Your Courses</p>
@@ -57,38 +55,26 @@ export default function Instructor() {
               ) : (
                 courses.slice(0, 3).map((course) => (
                   <div key={course._id} className="instructor-course-card">
-                    <img
-                      src={course.thumbnail}
-                      alt={course.courseName}
-                      className="course-thumbnail"
-                    />
-                    <div className="course-details">
+                    <div className="course-card-left">
+                      <img
+                        src={course.thumbnail}
+                        alt={course.courseName}
+                        className="course-thumbnail"
+                      />
+                    </div>
+                    <div className="course-card-right">
                       <p className="course-name">{course.courseName}</p>
                       <div className="course-meta">
-                        <p className="course-meta-item">
-                          {Array.isArray(course?.studentsEnrolled)
-                            ? course.studentsEnrolled.length
-                            : 0}{" "}
-                          students
-                        </p>
-                        <p className="course-meta-sep">|</p>
-                        <p className="course-meta-item">Rs. {course.price}</p>
+                        <p>{course.studentsEnrolled.length} Students</p>
                       </div>
-                      <p className="course-desc">
-                        {course.courseDescription
-                          ? course.courseDescription.slice(0, 260) +
-                            (course.courseDescription.length > 260 ? "..." : "")
-                          : "No description available"}
-                      </p>
                     </div>
                   </div>
                 ))
               )}
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   )
-
 }
