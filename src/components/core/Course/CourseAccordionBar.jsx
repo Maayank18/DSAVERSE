@@ -1,28 +1,56 @@
-import { useEffect, useRef, useState } from "react"
-import { AiOutlineDown } from "react-icons/ai"
+// import CourseSubSectionAccordion from "./CourseSubSectionAccordion"
+// import "./CourseAccordionBar.css"
+
+// export default function CourseAccordionBar({ course, onToggleSubSection }) {
+//   return (
+//     <div className="accordion-container">
+//       <div className="accordion-header">
+//         <div className="accordion-title">
+//           <p>{course?.sectionName}</p>
+//         </div>
+//         <div className="accordion-lectures">
+//           <span>{`${course.subSection.length || 0} lecture(s)`}</span>
+//         </div>
+//       </div>
+
+//       {/* 🔥 subsections are always visible, no toggle */}
+//       <div className="accordion-content always-open">
+//         <div className="accordion-subsections">
+//           {course?.subSection?.map((subSec, i) => (
+//             // <CourseSubSectionAccordion
+//             //   subSec={subSec}
+//             //   key={subSec?._id ?? i}
+//             //   isCompleted={subSec?.isCompleted}
+//             //   toggleCompleted={onToggleSubSection}
+//             // />
+//             <CourseSubSectionAccordion
+//               courseId={course._id}
+//               subSec={subSec}
+//               isCompleted={completedLectures[course._id]?.includes(subSec._id)}
+//               toggleCompleted={(courseId, subSecId) =>
+//                 dispatch(toggleLectureCompletion({ courseId, subSecId }))
+//               }
+//             />
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+import { useDispatch, useSelector } from "react-redux"
+import { toggleLectureCompletion } from "../../../slices/viewCourseSlice"
 import CourseSubSectionAccordion from "./CourseSubSectionAccordion"
 import "./CourseAccordionBar.css"
 
-export default function CourseAccordionBar({ course, isActive, handleActive }) {
-  const contentEl = useRef(null)
-  const [active, setActive] = useState(false)
-  const [sectionHeight, setSectionHeight] = useState(0)
-
-  useEffect(() => {
-    setActive(isActive?.includes(course._id))
-  }, [isActive])
-
-  useEffect(() => {
-    setSectionHeight(active ? contentEl.current.scrollHeight : 0)
-  }, [active])
+export default function CourseAccordionBar({ course }) {
+  const dispatch = useDispatch()
+  const { completedLectures } = useSelector((state) => state.viewCourse)
 
   return (
     <div className="accordion-container">
-      <div className="accordion-header" onClick={() => handleActive(course._id)}>
+      <div className="accordion-header">
         <div className="accordion-title">
-          <i className={isActive.includes(course._id) ? "rotate" : ""}>
-            <AiOutlineDown />
-          </i>
           <p>{course?.sectionName}</p>
         </div>
         <div className="accordion-lectures">
@@ -30,17 +58,23 @@ export default function CourseAccordionBar({ course, isActive, handleActive }) {
         </div>
       </div>
 
-      <div
-        ref={contentEl}
-        className="accordion-content"
-        style={{ height: sectionHeight }}
-      >
+      {/* 🔥 subsections are always visible, no toggle */}
+      <div className="accordion-content always-open">
         <div className="accordion-subsections">
           {course?.subSection?.map((subSec, i) => (
-            <CourseSubSectionAccordion subSec={subSec} key={i} />
+            <CourseSubSectionAccordion
+              key={subSec?._id ?? i}
+              courseId={course._id}
+              subSec={subSec}
+              isCompleted={completedLectures[course._id]?.includes(String(subSec._id))}
+              toggleCompleted={(courseId, subSecId) =>
+                dispatch(toggleLectureCompletion({ courseId, subSecId }))
+              }
+            />
           ))}
         </div>
       </div>
     </div>
   )
 }
+

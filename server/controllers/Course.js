@@ -263,34 +263,6 @@ exports.createCourse = async (req, res) => {
 
 // get all the courses
 
-// exports.showAllCourses = async (req,res) => {
-//     try{
-
-//     //though i dont have any parameter of finding but name and description should be present
-//     // reunderstand the makring here 
-//     const allCourses = await Course.find({},{courseName:true,
-//                                           thumbNail:true,
-//                                           price:true,
-//                                           instructor:true,
-//                                           ratingAndReviews:true,
-//                                           studentEnrolled:true,})
-//                                     .populate("instructor").exec();
-
-//     // returning the response
-//         return res.status(200).json({
-//             success:true,
-//             message:" All category returned successfully ",
-//             data:allCourses,
-//         });
-
-//     }catch(error){
-//         return res.status(500).json({
-//             success:false,
-//             message:"something went wrong , courses cant be fetched"
-//         });
-//     }
-// }
-
 exports.showAllCourses = async (req, res) => {
   try {
     const allCourses = await Course.find({ status: "Published" }, {
@@ -459,79 +431,6 @@ exports.editCourse = async (req, res) => {
 
 
 
-// exports.getFullCourseDetails = async (req, res) => {
-//   try {
-//     const { courseId } = req.body
-//     const userId = req.user.id
-//     const courseDetails = await Course.findOne({
-//       _id: courseId,
-//     })
-//       .populate({
-//         path: "instructor",
-//         populate: {
-//           path: "additionalDetails",
-//         },
-//       })
-//       .populate("category")
-//       //("ratingAndReviews")
-//       .populate({
-//         path: "courseContent",
-//         populate: {
-//           path: "subSection",
-//         },
-//       })
-//       .exec()
-
-//     let courseProgressCount = await CourseProgress.findOne({
-//       courseID: courseId,
-//       userId: userId,
-//     })
-
-//     console.log("courseProgressCount : ", courseProgressCount)
-
-//     if (!courseDetails) {
-//       return res.status(400).json({
-//         success: false,
-//         message: `Could not find course with id: ${courseId}`,
-//       })
-//     }
-
-//    const totalDuration = calculateCourseDuration(courseDetails.courseContent)
-
-//     // testing changes
-//     function calculateCourseDuration(courseContent) {
-//       const totalSeconds = courseContent.reduce((total, content) => {
-//         const sectionSeconds = content.subSection.reduce((sum, sub) => {
-//           const time = parseInt(sub.timeDuration || "0", 10);
-//           return sum + (isNaN(time) ? 0 : time);
-//         }, 0);
-//         return total + sectionSeconds;
-//       }, 0);
-
-//       return convertSecondsToDuration(totalSeconds);
-//     }
-
-
-//     return res.status(200).json({
-//       success: true,
-//       data: {
-//         courseDetails,
-//         totalDuration,
-//         completedVideos: courseProgressCount?.completedVideos
-//           ? courseProgressCount?.completedVideos
-//           : [],
-//       },
-//     })
-//   } catch (error) {
-//     console.log("possible error while fetching all the details of course", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     })
-//   }
-// }
-// controllers/Course.js
-
 exports.getFullCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body;
@@ -596,7 +495,7 @@ exports.getFullCourseDetails = async (req, res) => {
       enrolledStudent.coursesProgress &&
       enrolledStudent.coursesProgress.length > 0
     ) {
-      completedVideos = enrolledStudent.courseProgress[0].completedVideos || [];
+      completedVideos = enrolledStudent.coursesProgress[0].completedVideos || [];
     }
 
     console.log("Completed videos:", completedVideos);

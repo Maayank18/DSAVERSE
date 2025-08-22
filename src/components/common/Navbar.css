@@ -6,6 +6,8 @@
   justify-content: center;
   border-bottom: 1px solid #2c2f41; /* richblack-700 */
   transition: all 0.2s ease-in-out;
+  position: relative;
+  z-index: 1000; /* keep navbar above other content */
 }
 
 /* Colored navbar when not on home */
@@ -48,7 +50,7 @@
   color: #0fe7ad;
 }
 
-/* Parent container */
+/* Parent container - interactive wrapper */
 .dropdown-group {
   position: relative;
   display: flex;
@@ -56,12 +58,22 @@
   gap: 6px;
   cursor: pointer;
   outline: none;
+  z-index: 1100; /* ensure wrapper is above page content */
+  pointer-events: auto; /* guard against inherited none */
 }
 
+/* focus styling */
 .dropdown-group:focus-visible .dropdown-trigger,
 .dropdown-group:focus-visible .dropdown-chevron {
   outline: none;
   color: #0fe7ad;
+}
+
+/* Trigger grouping */
+.dropdown-trigger-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 /* Trigger styles */
@@ -69,6 +81,7 @@
 .dropdown-trigger {
   margin: 0;
   color: #ffffff;
+  user-select: none;
 }
 
 /* Trigger hover/focus */
@@ -97,27 +110,23 @@
   color: #0fe7ad;
 }
 
-/* Dropdown panel (hidden by default)
-   NOTE: anchored to the left of the trigger and slightly overlaps the trigger
-   so there is no mouse gap when moving from trigger -> panel. */
+/* Dropdown panel (hidden by default) */
 .dropdown-content {
   position: absolute;
-  top: calc(100% - 6px);   /* slightly overlap by 6px to avoid hover gap */
-  left: 0;                 /* anchor to the left edge of the trigger */
+  top: calc(100% - 6px); /* slightly overlap by 6px to avoid hover gap */
+  left: 0;
   transform: translateY(-6px); /* small upward offset when hidden */
   min-width: 200px;
-  max-width: 320px;        /* prevent overly wide panels */
+  max-width: 320px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.18),
-    0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
   padding: 6px 0;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.18s ease, transform 0.18s ease;
-  z-index: 10000;          /* very high so it sits above other page content */
+  z-index: 2000; /* strongly above page content */
   overflow: hidden;
   white-space: normal;
 }
@@ -130,27 +139,23 @@
   transform: translateY(0);
 }
 
-/* === NEW: programmatic open controlled by React state === */
+/* Programmatic open controlled by React state */
 .dropdown-group.open .dropdown-content {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
 }
 
-/* NOTE: do not force-open the panel just because the route is active.
-   Keep 'active' only for chevron rotation and minor styling */
-.dropdown-group.active .dropdown-content {
-  /* ensure route 'active' doesn't force-open the dropdown */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-6px);
+/* route 'active' should not block opening - allow pointer events still */
+.dropdown-group.active {
+  pointer-events: auto;
 }
 
 /* Little arrow pointing up */
 .dropdown-arrow {
   position: absolute;
-  top: -7px;               /* place it above the box */
-  left: 20px;              /* align arrow near the left so it points to trigger */
+  top: -7px; /* place it above the box */
+  left: 20px; /* align arrow near the left so it points to trigger */
   width: 14px;
   height: 14px;
   background: #ffffff;
@@ -158,15 +163,13 @@
   border-top: 1px solid #e2e8f0;
   transform: rotate(45deg);
   box-shadow: -1px -1px 2px rgba(0, 0, 0, 0.05);
-  z-index: 10001;          /* above dropdown box border */
+  z-index: 2001; /* above dropdown box border */
 }
 
-/* === FIX: make selector more specific so it overrides .navbar-links a color === */
 /* Individual link items inside the dropdown panel */
-/* Dropdown option text explicitly dark and visible by default */
 .dropdown-content .dropdown-item {
   display: block;
-  padding: 10px 14px;
+  padding: 14px 16px;
   text-decoration: none;
   color: #0f172a; /* slate-900 — dark text for options */
   font-weight: 600;
@@ -241,12 +244,20 @@
   border: none;
 }
 
-/* Logo sizing */
+.navbar-logo-wrapper {
+  height: 56px;        /* same as navbar */
+  display: flex;
+  align-items: center; /* center logo vertically */
+  overflow: hidden;    /* cut off extra invisible space */
+}
+
+/* Logo sizing - keep within navbar height to avoid overlaps */
 .navbar-logo {
-  height: 165px;
+  height: 165px; /* small enough to fit within navbar */
   width: auto;
   object-fit: contain;
   display: block;
+  pointer-events: none;
 }
 
 /* Responsive: hide links, show menu on mobile */
@@ -257,5 +268,13 @@
   .menu-icon {
     display: block;
     margin-right: 1rem;
+  }
+
+  /* ensure dropdown panel remains positioned nicely on small screens */
+  .dropdown-content {
+    left: 0;
+    transform: none;
+    min-width: 180px;
+    max-width: 260px;
   }
 }

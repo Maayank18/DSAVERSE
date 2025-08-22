@@ -1,3 +1,4 @@
+// // (unchanged imports)
 // import { useEffect, useState } from "react"
 // import { useForm } from "react-hook-form"
 // import { toast } from "react-hot-toast"
@@ -38,8 +39,10 @@
 //     if (view || edit) {
 //       setValue("lectureTitle", modalData.title)
 //       setValue("lectureDesc", modalData.description)
-//       setValue("lectureVideo", modalData.video)
+//       // use videoUrl consistently (server sends videoUrl)
+//       setValue("lectureVideo", modalData.videoUrl)
 //     }
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
 //   }, [])
 
 //   const isFormUpdated = () => {
@@ -68,12 +71,10 @@
 //     }
 
 //     setLoading(true)
-//     const result = await updateSubSection(formData, token) // ✅ fixed
+//     const result = await updateSubSection(formData, token) // result is the updated course (server returns course)
 //     if (result) {
-//       const updatedCourseContent = course.courseContent.map((section) =>
-//         section._id === modalData.sectionId ? result : section
-//       )
-//       dispatch(setCourse({ ...course, courseContent: updatedCourseContent }))
+//       // server already returned the full updated course — simply replace course in redux
+//       dispatch(setCourse(result))
 //     }
 //     setModalData(null)
 //     setLoading(false)
@@ -90,30 +91,17 @@
 //       return
 //     }
 
-//     console.log("📝 Form Data Input:")
-//     console.log("sectionId:", modalData.sectionId)
-//     console.log("lectureTitle:", data.lectureTitle)
-//     console.log("lectureDesc:", data.lectureDesc)
-//     console.log("lectureVideo:", data.lectureVideo)
-
 //     const formData = new FormData()
 //     formData.append("sectionId", modalData.sectionId)
 //     formData.append("title", data.lectureTitle)
 //     formData.append("description", data.lectureDesc)
 //     formData.append("video", data.lectureVideo)
 
-//     console.log("📦 FormData entries:")
-//     for (let [key, value] of formData.entries()) {
-//       console.log(`${key}:`, value)
-//     }
-
 //     setLoading(true)
 //     const result = await createSubSection(formData, token)
 //     if (result) {
-//       const updatedCourseContent = course.courseContent.map((section) =>
-//         section._id === modalData.sectionId ? result : section
-//       )
-//       dispatch(setCourse({ ...course, courseContent: updatedCourseContent }))
+//       // server returned the full updated course — use it directly
+//       dispatch(setCourse(result))
 //     }
 //     setModalData(null)
 //     setLoading(false)
@@ -193,7 +181,7 @@
 //   )
 // }
 
-// (unchanged imports)
+
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -223,6 +211,7 @@ export default function SubSectionModal({
     setValue,
     formState: { errors },
     getValues,
+    reset,
   } = useForm()
 
   const dispatch = useDispatch()
@@ -230,22 +219,40 @@ export default function SubSectionModal({
   const { token } = useSelector((state) => state.auth)
   const { course } = useSelector((state) => state.course)
 
+  // populate/reset form whenever modalData/view/edit changes
   useEffect(() => {
     if (view || edit) {
-      setValue("lectureTitle", modalData.title)
-      setValue("lectureDesc", modalData.description)
-      // use videoUrl consistently (server sends videoUrl)
-      setValue("lectureVideo", modalData.videoUrl)
+      setValue("lectureTitle", modalData?.title ?? "", {
+        shouldValidate: true,
+        shouldDirty: true,
+      })
+      setValue("lectureDesc", modalData?.description ?? "", {
+        shouldValidate: true,
+        shouldDirty: true,
+      })
+      // IMPORTANT: give RHF the existing video URL (so the field is not considered empty)
+      setValue("lectureVideo", modalData?.videoUrl ?? null, {
+        shouldValidate: true,
+        shouldDirty: true,
+      })
+    } else {
+      // adding new lecture — clear fields
+      reset({
+        lectureTitle: "",
+        lectureDesc: "",
+        lectureVideo: null,
+      })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // run this effect when modalData/view/edit change
+  }, [modalData, view, edit, setValue, reset])
 
   const isFormUpdated = () => {
     const currentValues = getValues()
     return (
-      currentValues.lectureTitle !== modalData.title ||
-      currentValues.lectureDesc !== modalData.description ||
-      currentValues.lectureVideo !== modalData.videoUrl
+      currentValues.lectureTitle !== modalData?.title ||
+      currentValues.lectureDesc !== modalData?.description ||
+      // be tolerant: video can be File object or string URL
+      String(currentValues.lectureVideo ?? "") !== String(modalData?.videoUrl ?? "")
     )
   }
 
@@ -261,17 +268,19 @@ export default function SubSectionModal({
     if (currentValues.lectureDesc !== modalData.description) {
       formData.append("description", currentValues.lectureDesc)
     }
-    if (currentValues.lectureVideo !== modalData.videoUrl) {
+    // If user chose a new File, lectureVideo will be a File; if unchanged it's a URL string
+    if (String(currentValues.lectureVideo ?? "") !== String(modalData.videoUrl ?? "")) {
       formData.append("video", currentValues.lectureVideo)
     }
 
     setLoading(true)
-    const result = await updateSubSection(formData, token) // result is the updated course (server returns course)
+    const result = await updateSubSection(formData, token)
     if (result) {
-      // server already returned the full updated course — simply replace course in redux
       dispatch(setCourse(result))
+      setModalData(null)
+    } else {
+      toast.error("Failed to update lecture")
     }
-    setModalData(null)
     setLoading(false)
   }
 
@@ -281,7 +290,7 @@ export default function SubSectionModal({
       if (!isFormUpdated()) {
         toast.error("No changes made to the form")
       } else {
-        handleEditSubsection()
+        await handleEditSubsection()
       }
       return
     }
@@ -295,10 +304,11 @@ export default function SubSectionModal({
     setLoading(true)
     const result = await createSubSection(formData, token)
     if (result) {
-      // server returned the full updated course — use it directly
       dispatch(setCourse(result))
+      setModalData(null)
+    } else {
+      toast.error("Failed to create lecture")
     }
-    setModalData(null)
     setLoading(false)
   }
 
@@ -324,8 +334,8 @@ export default function SubSectionModal({
             setValue={setValue}
             errors={errors}
             isVideo={true}
-            viewData={view ? modalData.videoUrl : null}
-            editData={edit ? modalData.videoUrl : null}
+            viewData={view ? modalData?.videoUrl : null}
+            editData={edit ? modalData?.videoUrl : null}
           />
 
           {/* Lecture Title */}
@@ -337,7 +347,7 @@ export default function SubSectionModal({
               disabled={view || loading}
               id="lectureTitle"
               placeholder="Enter Lecture Title"
-              {...register("lectureTitle", { required: true })}
+              {...register("lectureTitle", { required: !view })}
               className="modal-input"
             />
             {errors.lectureTitle && (
@@ -354,7 +364,7 @@ export default function SubSectionModal({
               disabled={view || loading}
               id="lectureDesc"
               placeholder="Enter Lecture Description"
-              {...register("lectureDesc", { required: true })}
+              {...register("lectureDesc", { required: !view })}
               className="modal-textarea"
             />
             {errors.lectureDesc && (
@@ -364,7 +374,9 @@ export default function SubSectionModal({
 
           {!view && (
             <div className="modal-btn-wrapper">
+              {/* Ensure IconBtn forwards the `type` prop. This makes it a real submit button. */}
               <IconBtn
+                type="submit"
                 disabled={loading}
                 text={loading ? "Loading.." : edit ? "Save Changes" : "Save"}
               />

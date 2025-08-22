@@ -1,4 +1,4 @@
-// import { useEffect, useState } from "react";
+// import { useEffect, useRef, useState } from "react";
 // import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai";
 // import { BsChevronDown } from "react-icons/bs";
 // import { useSelector } from "react-redux";
@@ -20,6 +20,10 @@
 //   const [subLinks, setSubLinks] = useState([]);
 //   const [loading, setLoading] = useState(false);
 
+//   // --- NEW: local UI state and ref to control dropdown open/close ---
+//   const dropdownRef = useRef(null);
+//   const [isOpen, setIsOpen] = useState(false);
+
 //   useEffect(() => {
 //     (async () => {
 //       setLoading(true);
@@ -36,6 +40,31 @@
 //   const matchRoute = (route) => {
 //     return matchPath({ path: route }, location.pathname);
 //   };
+
+//   // Close dropdown when clicking outside
+//   useEffect(() => {
+//     const onDocClick = (e) => {
+//       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+//         setIsOpen(false);
+//       }
+//     };
+//     document.addEventListener("mousedown", onDocClick);
+//     return () => document.removeEventListener("mousedown", onDocClick);
+//   }, []);
+
+//   // Close dropdown when location changes (navigations)
+//   useEffect(() => {
+//     setIsOpen(false);
+//   }, [location]);
+
+//   // Close on Escape key
+//   useEffect(() => {
+//     const onKeyDown = (e) => {
+//       if (e.key === "Escape") setIsOpen(false);
+//     };
+//     document.addEventListener("keydown", onKeyDown);
+//     return () => document.removeEventListener("keydown", onKeyDown);
+//   }, []);
 
 //   return (
 //     <div className={`navbar-wrapper ${location.pathname !== "/" ? "navbar-colored" : ""}`}>
@@ -55,10 +84,29 @@
 //               <li key={index}>
 //                 {link.title === "Catalog" ? (
 //                   <div
-//                     className={`dropdown-group ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}
+//                     ref={dropdownRef}
+//                     className={`dropdown-group ${isOpen ? "open" : ""} ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}
 //                     tabIndex={0}
 //                   >
-//                     <p className="dropdown-trigger">{link.title}</p>
+//                     {/* Make trigger interactive - click toggles open state */}
+//                     <p
+//                       className="dropdown-trigger"
+//                       role="button"
+//                       tabIndex={0}
+//                       onClick={(e) => {
+//                         // toggle only when clicking trigger
+//                         setIsOpen((s) => !s);
+//                       }}
+//                       onKeyDown={(e) => {
+//                         if (e.key === "Enter" || e.key === " ") {
+//                           e.preventDefault();
+//                           setIsOpen((s) => !s);
+//                         }
+//                       }}
+//                     >
+//                       {link.title}
+//                     </p>
+
 //                     <BsChevronDown className="dropdown-chevron" />
 
 //                     <div className="dropdown-content" role="menu">
@@ -71,6 +119,10 @@
 //                             to={`/catalog/${subLink.name.split(" ").join("-").toLowerCase()}`}
 //                             className="dropdown-item"
 //                             key={i}
+//                             onClick={() => {
+//                               // close immediately on click (route change also closes via effect)
+//                               setIsOpen(false);
+//                             }}
 //                           >
 //                             <p>{subLink.name}</p>
 //                           </Link>
@@ -119,7 +171,6 @@
 // }
 
 // export default Navbar;
-
 
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai";
@@ -190,15 +241,14 @@ function Navbar() {
   }, []);
 
   return (
-    <div className={`navbar-wrapper ${location.pathname !== "/" ? "navbar-colored" : ""}`}>
+    <div
+      className={`navbar-wrapper ${
+        location.pathname !== "/" ? "navbar-colored" : ""
+      }`}
+    >
       <div className="navbar-container">
-        <Link to="/">
-          <img
-            src={Logo}
-            alt="Logo"
-            className="navbar-logo"
-            loading="lazy"
-          />
+        <Link to="/" className="navbar-logo-wrapper">
+          <img src={Logo} alt="Logo" className="navbar-logo" loading="lazy" />
         </Link>
 
         <nav className="navbar-links">
@@ -206,31 +256,41 @@ function Navbar() {
             {NavbarLinks.map((link, index) => (
               <li key={index}>
                 {link.title === "Catalog" ? (
+                  /* interactive wrapper is the dropdownRef */
                   <div
                     ref={dropdownRef}
-                    className={`dropdown-group ${isOpen ? "open" : ""} ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}
+                    className={`dropdown-group ${
+                      isOpen ? "open" : ""
+                    } ${matchRoute("/catalog/:catalogName") ? "active" : ""}`}
+                    role="button"
                     tabIndex={0}
-                  >
-                    {/* Make trigger interactive - click toggles open state */}
-                    <p
-                      className="dropdown-trigger"
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => {
-                        // toggle only when clicking trigger
+                    aria-haspopup="menu"
+                    aria-expanded={isOpen}
+                    onClick={(e) => {
+                      // If click originated from a dropdown item (a Link), don't toggle here.
+                      // Let the link's onClick handle closing and navigation.
+                      const el = e.target;
+                      // Support environments without closest by guarding:
+                      const clickedItem =
+                        typeof el.closest === "function"
+                          ? el.closest(".dropdown-item")
+                          : null;
+                      if (clickedItem) return;
+                      setIsOpen((s) => !s);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
                         setIsOpen((s) => !s);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          setIsOpen((s) => !s);
-                        }
-                      }}
-                    >
-                      {link.title}
-                    </p>
-
-                    <BsChevronDown className="dropdown-chevron" />
+                      } else if (e.key === "Escape") {
+                        setIsOpen(false);
+                      }
+                    }}
+                  >
+                    <div className="dropdown-trigger-wrapper">
+                      <p className="dropdown-trigger">{link.title}</p>
+                      <BsChevronDown className="dropdown-chevron" />
+                    </div>
 
                     <div className="dropdown-content" role="menu">
                       <div className="dropdown-arrow" />
@@ -239,7 +299,10 @@ function Navbar() {
                       ) : subLinks && subLinks.length > 0 ? (
                         subLinks.map((subLink, i) => (
                           <Link
-                            to={`/catalog/${subLink.name.split(" ").join("-").toLowerCase()}`}
+                            to={`/catalog/${subLink.name
+                              .split(" ")
+                              .join("-")
+                              .toLowerCase()}`}
                             className="dropdown-item"
                             key={i}
                             onClick={() => {
@@ -251,7 +314,9 @@ function Navbar() {
                           </Link>
                         ))
                       ) : (
-                        <p className="text-center dropdown-status">No Courses Found</p>
+                        <p className="text-center dropdown-status">
+                          No Courses Found
+                        </p>
                       )}
                     </div>
                   </div>

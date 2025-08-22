@@ -46,7 +46,8 @@ const {
 } = require("../controllers/RatingAndReview")
 
 const {
-  updateCourseProgress
+  updateCourseProgress,
+  getCourseProgress,
 } = require("../controllers/courseProgress");
 
 // Importing Middlewares
@@ -83,6 +84,7 @@ router.get("/getInstructorCourses", auth, isinstructor, getInstructorCourses)
 // Delete a Course
 router.delete("/deleteCourse/:courseId",auth, deleteCourse)
 
+router.get("/:courseId/progress", auth,isStudent,getCourseProgress);
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 
 // CATEGORY ROUTES

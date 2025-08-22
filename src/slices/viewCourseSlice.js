@@ -1,9 +1,76 @@
+// import { createSlice } from "@reduxjs/toolkit"
+
+// const initialState = {
+//   courseSectionData: [],
+//   courseEntireData: {},
+//   completedLectures: {},   // ✅ keyed by courseId
+//   totalNoOfLectures: 0,
+// }
+
+// const viewCourseSlice = createSlice({
+//   name: "viewCourse",
+//   initialState,
+//   reducers: {
+//     setCourseSectionData: (state, action) => {
+//       state.courseSectionData = action.payload || []
+//     },
+//     setEntireCourseData: (state, action) => {
+//       state.courseEntireData = action.payload || {}
+//     },
+//     setTotalNoOfLectures: (state, action) => {
+//       state.totalNoOfLectures = action.payload || 0
+//     },
+
+//     // ✅ Per-course lectures
+//     setCompletedLectures: (state, action) => {
+//       const { courseId, lectures } = action.payload
+//       state.completedLectures[courseId] = Array.isArray(lectures)
+//         ? lectures.map((id) => String(id))
+//         : []
+//     },
+
+//     updateCompletedLectures: (state, action) => {
+//       const { courseId, lectureId } = action.payload
+//       if (!Array.isArray(state.completedLectures[courseId])) {
+//         state.completedLectures[courseId] = []
+//       }
+//       state.completedLectures[courseId].push(String(lectureId))
+//     },
+
+//     // ✅ Unified toggle action (renamed to match your UI usage)
+//     toggleLectureCompletion: (state, action) => {
+//       const { courseId, subSecId } = action.payload
+//       if (!Array.isArray(state.completedLectures[courseId])) {
+//         state.completedLectures[courseId] = []
+//       }
+//       const id = String(subSecId)
+//       if (state.completedLectures[courseId].includes(id)) {
+//         state.completedLectures[courseId] =
+//           state.completedLectures[courseId].filter((lecId) => lecId !== id)
+//       } else {
+//         state.completedLectures[courseId].push(id)
+//       }
+//     },
+//   },
+// })
+
+// export const {
+//   setCourseSectionData,
+//   setEntireCourseData,
+//   setTotalNoOfLectures,
+//   setCompletedLectures,
+//   updateCompletedLectures,
+//   toggleLectureCompletion,   // ✅ exported and matches UI
+// } = viewCourseSlice.actions
+
+// export default viewCourseSlice.reducer
+
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
   courseSectionData: [],
-  courseEntireData: [],
-  completedLectures: [],
+  courseEntireData: {},
+  completedLectures: {},   // ✅ keyed by courseId
   totalNoOfLectures: 0,
 }
 
@@ -12,19 +79,61 @@ const viewCourseSlice = createSlice({
   initialState,
   reducers: {
     setCourseSectionData: (state, action) => {
-      state.courseSectionData = action.payload
+      state.courseSectionData = action.payload || []
     },
     setEntireCourseData: (state, action) => {
-      state.courseEntireData = action.payload
+      state.courseEntireData = action.payload || {}
     },
     setTotalNoOfLectures: (state, action) => {
-      state.totalNoOfLectures = action.payload
+      state.totalNoOfLectures = action.payload || 0
     },
-    setCompletedLectures: (state, action) => {
-      state.completedLectures = action.payload
-    },
+
+    // ✅ Requires courseId and lectures
+    // setCompletedLectures: (state, action) => {
+    //   const { courseId, lectures } = action.payload
+    //   state.completedLectures[courseId] = Array.isArray(lectures)
+    //     ? lectures.map((id) => String(id))
+    //     : []
+    // },
+    // viewCourseSlice.js (only the reducer part changed)
+      setCompletedLectures: (state, action) => {
+        // defensive: action.payload might be undefined or not the expected shape
+        const payload = action.payload || {};
+        const { courseId, lectures } = payload;
+
+        // if courseId is missing, do nothing (or optionally log)
+        if (!courseId) {
+          // optional: console.warn to help find where this bad dispatch originates
+          // console.warn('setCompletedLectures called without courseId', action);
+          return;
+        }
+
+        state.completedLectures[courseId] = Array.isArray(lectures)
+          ? lectures.map((id) => String(id))
+          : [];
+      },
+
+
     updateCompletedLectures: (state, action) => {
-      state.completedLectures = [...state.completedLectures, action.payload]
+      const { courseId, lectureId } = action.payload
+      if (!Array.isArray(state.completedLectures[courseId])) {
+        state.completedLectures[courseId] = []
+      }
+      state.completedLectures[courseId].push(String(lectureId))
+    },
+
+    toggleLectureCompletion: (state, action) => {
+      const { courseId, subSecId } = action.payload
+      if (!Array.isArray(state.completedLectures[courseId])) {
+        state.completedLectures[courseId] = []
+      }
+      const id = String(subSecId)
+      if (state.completedLectures[courseId].includes(id)) {
+        state.completedLectures[courseId] =
+          state.completedLectures[courseId].filter((lecId) => lecId !== id)
+      } else {
+        state.completedLectures[courseId].push(id)
+      }
     },
   },
 })
@@ -35,6 +144,7 @@ export const {
   setTotalNoOfLectures,
   setCompletedLectures,
   updateCompletedLectures,
+  toggleLectureCompletion,
 } = viewCourseSlice.actions
 
 export default viewCourseSlice.reducer

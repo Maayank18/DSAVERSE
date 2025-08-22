@@ -1,5 +1,4 @@
 .accordion-container {
-  overflow: hidden;
   border: 1px solid #4a4a4a; /* richblack-600 */
   background-color: #2c2c2c; /* richblack-700 */
   color: #f1f1f1; /* richblack-5 */
@@ -10,10 +9,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  cursor: pointer;
   padding: 1.5rem 1.75rem;
   background-color: rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease;
 }
 
 .accordion-title {
@@ -22,23 +19,13 @@
   gap: 0.5rem;
 }
 
-.accordion-title i {
-  transition: transform 0.3s ease;
-}
-
-.accordion-title i.rotate {
-  transform: rotate(180deg);
-}
-
 .accordion-lectures span {
   color: #f5d100; /* yellow-25 */
   margin-right: 1rem;
 }
 
-.accordion-content {
+.accordion-content.always-open {
   background-color: #1a1a1a; /* richblack-900 */
-  overflow: hidden;
-  transition: height 0.35s ease;
 }
 
 .accordion-subsections {

@@ -39,6 +39,8 @@ export default function CoursesTable({ courses, setCourses }) {
     setLoading(false)
   }
 
+  
+
   return (
     <>
       <Table className="course-table">
