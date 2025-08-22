@@ -7,7 +7,7 @@
   flex-direction: row !important;  /* force horizontal on desktop */
   align-items: center;
   justify-content: space-between;
-  gap: 80px;
+  gap: 45px;
   flex-wrap: nowrap;
 }
 

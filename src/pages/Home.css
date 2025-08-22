@@ -1,3 +1,17 @@
+/* box-sizing so padding doesn't increase width unexpectedly */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* prevent accidental viewport overflow from child elements using 100vw */
+html, body {
+  width: 100%;
+  overflow-x: hidden; /* safe fallback while we fix children; remove later if you like */
+}
+
+
 /* General Layout */
 .home-container {
   text-decoration: none;
@@ -92,7 +106,7 @@
 
 /* Code Headings */
 .code-heading {
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 600;
   text-align: center;
 }
