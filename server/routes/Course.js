@@ -21,7 +21,7 @@ const {
   showAllCategories,
   createCategory,
   categoryPageDetails,
-  deleteCategory,
+  // deleteCategory,
 } = require("../controllers/Category")
 
 // Sections Controllers Import

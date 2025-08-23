@@ -261,55 +261,112 @@ exports.createRating = async (req, res) => {
 };
 
 
-
-
-
-// get average rating
-exports.getAverageRating = async (req,res) => {
-    try{
-
-        // get course id 
-        // calculate average rating
-        //  return rating
-
-        const courseId = req.body.courseId;
-
-        const result = await RatingAndReview.aggregate([
-            {
-                $match:{
-                    course: mongoose.Types.ObjectId(courseId),
-                },
-            },
-            {
-                $group:{
-                    _id:null, // sabhi entreis ko ek single group me wrap kar dia
-                    averageRating: {$avg : "$rating"},
-                },
-            },
-        ]);
-
-        if(result.length > 0){ // rating mil gyi
-            return res.status(200).json({
-                success:true,
-                averageRating : result[0].averageRating,
-            });
-        }
-
-        // if no result no review
-        return res.status(200).json({
-                success:true,
-                message:" 0 rating , no one has reviewed it yet",
-                averageRating : 0,
-            });
-
-
-    }catch(error){
-        return res.status(400).json({
-                success:false,
-                message:"average rating cant be fecthed",
-            });
+// get course id 
+//         // calculate average rating
+//         //  return rating
+exports.getAverageRating = async (req, res) => {
+  try {
+    const courseId = req.query.courseId;
+    if (!courseId) {
+      return res.status(400).json({ success: false, message: "courseId is required" });
     }
-}
+    if (!mongoose.isValidObjectId(courseId)) {
+      return res.status(400).json({ success: false, message: "Invalid courseId" });
+    }
+
+    const courseObjectId = new mongoose.Types.ObjectId(courseId);
+
+    const result = await RatingAndReview.aggregate([
+      { $match: { course: courseObjectId } },
+      {
+        $group: {
+          _id: null,
+          averageRating: { $avg: "$rating" },
+          reviewCount: { $sum: 1 }, // count reviews
+        },
+      },
+    ]);
+
+    if (result.length > 0) {
+      const avg = result[0].averageRating || 0;
+      const rounded = Math.round(avg * 10) / 10;
+      return res.status(200).json({
+        success: true,
+        averageRating: rounded,
+        reviewCount: result[0].reviewCount || 0,
+      });
+    }
+
+    // no reviews
+    return res.status(200).json({
+      success: true,
+      averageRating: 0,
+      reviewCount: 0,
+      message: "0 rating, no one has reviewed it yet",
+    });
+  } catch (error) {
+    console.error("getAverageRating error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "average rating can't be fetched",
+    });
+  }
+};
+
+
+
+// exports.getAverageRating = async (req, res) => {
+//   try {
+//     const courseId = req.query.courseId;
+
+//     if (!courseId) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "courseId is required as a query parameter",
+//       });
+//     }
+
+//     // Validate courseId
+//     if (!mongoose.isValidObjectId(courseId)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid courseId",
+//       });
+//     }
+
+//     // Create ObjectId instance using `new` to avoid the "cannot be invoked without 'new'" error
+//     const courseObjectId = new mongoose.Types.ObjectId(courseId);
+
+//     const result = await RatingAndReview.aggregate([
+//       { $match: { course: courseObjectId } },
+//       { $group: { _id: null, averageRating: { $avg: "$rating" } } },
+//     ]);
+
+//     // Debugging log (optional — remove in production)
+//     // console.log("aggregation result for avg rating:", result);
+
+//     if (result.length > 0 && typeof result[0].averageRating === "number") {
+//       const rounded = Math.round(result[0].averageRating * 10) / 10;
+//       return res.status(200).json({
+//         success: true,
+//         averageRating: rounded,
+//       });
+//     }
+
+//     // No reviews found
+//     return res.status(200).json({
+//       success: true,
+//       message: "0 rating, no one has reviewed it yet",
+//       averageRating: 0,
+//     });
+//   } catch (error) {
+//     console.error("getAverageRating error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "average rating can't be fetched",
+//     });
+//   }
+// };
 
 
 

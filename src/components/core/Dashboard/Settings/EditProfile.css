@@ -1,39 +1,44 @@
 /* EditProfile.css */
 
+/* Make the form container span wider but still look centered */
 .profile-form {
-  margin: 40px auto;
+  margin: 40px auto;           /* auto horizontally centers when width is set */
   padding: 36px;
-  max-width: 770px; /* Wide enough to feel spacious */
+  max-width: 1200px;           /* keeps it readable on large screens */
+  width: 100%;
   background-color: #1f2128;
   border: 1px solid #3d4048;
   border-radius: 14px;
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.4);
+
+  display: flex;               /* enable flexbox */
+  flex-direction: column;      /* stack form content vertically */
+  align-items: center;         /* center all child elements horizontally */
 }
 
-.form-title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 28px;
-  text-align: left; /* Move to top left corner */
+.form-section {
+  width: 100%;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-.form-grid .full-width {
-  grid-column: span 1;
-}
-
-.form-group {
+/* Layout for form rows */
+.form-row {
   display: flex;
-  flex-direction: column;
-  width: 100%; /* Ensures it takes full grid cell width */
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
+/* Make each field share row width equally */
+.form-row .form-group {
+  flex: 1;       /* equal space for each group in a row */
+  min-width: 250px; /* prevent too small on narrow screens */
+}
+
+/* Full-width rows stay full */
+.form-row.single-column .form-group {
+  flex: 1 1 100%;
+}
+
+/* Labels */
 .label {
   font-size: 15px;
   font-weight: 500;
@@ -41,8 +46,11 @@
   color: #dddddd;
 }
 
-.input {
-  width: 100%; /* Make inputs stretch fully */
+/* Inputs & Textareas fill their group */
+.input,
+.input.textarea,
+select.input {
+  width: 100%;
   box-sizing: border-box;
   padding: 12px 14px;
   font-size: 15px;
@@ -59,18 +67,21 @@
   background-color: #353843;
 }
 
+/* Taller area for About section */
 .input.textarea {
   resize: vertical;
   min-height: 140px;
   line-height: 1.5;
 }
 
+/* Error messages */
 .error-text {
   font-size: 12px;
   margin-top: 4px;
   color: #ffe400;
 }
 
+/* Actions row */
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -78,6 +89,7 @@
   margin-top: 32px;
 }
 
+/* Buttons */
 .btn,
 .IconBtn button {
   padding: 12px 24px;

@@ -5,6 +5,7 @@
 
 const Course = require("../models/Course");
 const CourseProgress = require("../models/CourseProgress");
+const mongoose = require("mongoose");
 const Category = require("../models/Category");
 const User = require("../models/User");
 const Section = require("../models/Section");
@@ -539,10 +540,6 @@ exports.getFullCourseDetails = async (req, res) => {
     });
   }
 };
-
-
-
-
 
 
 

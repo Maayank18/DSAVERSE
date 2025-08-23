@@ -541,7 +541,7 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
             className="back-button"
             title="Back"
           >
-            <IoIosArrowBack size={24} />
+            <IoIosArrowBack size={18} /> Back
           </div>
           <IconBtn
             text="Add Review"

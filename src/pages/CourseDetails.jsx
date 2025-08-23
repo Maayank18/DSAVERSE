@@ -37,13 +37,21 @@
 //     const fetch = async () => {
 //       try {
 //         const res = await getFullDetailsOfCourse(courseId);
-//         if (res?.courseDetails) {
-//           setResponse(res);
+//         // Normalize axios/plain shapes and backend "data" envelope
+//         const payload = res?.data ?? res;
+//         const data = payload?.data ?? payload; // { courseDetails, completedVideos, totalDuration }
+
+//         if (data?.courseDetails) {
+//           // Keep a flat, predictable shape expected by the UI
+//           setResponse({
+//             success: true,
+//             ...data, // courseDetails, completedVideos, totalDuration
+//           });
 //         } else {
-//           setResponse({ success: false });
+//           setResponse({ success: false, courseDetails: null });
 //         }
 //       } catch (error) {
-//         setResponse({ success: false });
+//         setResponse({ success: false, courseDetails: null });
 //       }
 //     };
 
@@ -94,9 +102,9 @@
 //     price,
 //     whatYouWillLearn,
 //     courseContent,
-//     ratingAndReviews,
-//     instructor,
-//     studentsEnrolled,
+//     ratingAndReviews = [],
+//     instructor = {},
+//     studentsEnrolled = [],
 //     createdAt,
 //   } = response.courseDetails;
 
@@ -248,11 +256,11 @@
 // export default CourseDetails;
 
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { BiInfoCircle } from "react-icons/bi";
 import { HiOutlineGlobeAlt } from "react-icons/hi";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // NEW
+import remarkGfm from "remark-gfm";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -266,6 +274,9 @@ import { getFullDetailsOfCourse } from "../services/operations/courseDetailsAPI"
 import { buyCourse } from "../services/operations/studentFeaturesAPI";
 import GetAvgRating from "../utils/avgRating";
 import Error from "./Error";
+
+import { apiConnector } from "../services/apiconnector";       // ← added
+import { ratingsEndpoints } from "../services/apis";         // ← added
 
 import "./CourseDetails.css";
 
@@ -287,20 +298,19 @@ function CourseDetails() {
     const fetch = async () => {
       try {
         const res = await getFullDetailsOfCourse(courseId);
-        // Normalize axios/plain shapes and backend "data" envelope
         const payload = res?.data ?? res;
-        const data = payload?.data ?? payload; // { courseDetails, completedVideos, totalDuration }
+        const data = payload?.data ?? payload;
 
         if (data?.courseDetails) {
-          // Keep a flat, predictable shape expected by the UI
           setResponse({
             success: true,
-            ...data, // courseDetails, completedVideos, totalDuration
+            ...data,
           });
         } else {
           setResponse({ success: false, courseDetails: null });
         }
       } catch (error) {
+        console.error("getFullDetailsOfCourse error:", error);
         setResponse({ success: false, courseDetails: null });
       }
     };
@@ -308,12 +318,41 @@ function CourseDetails() {
     fetch();
   }, [courseId]);
 
-  const [avgReviewCount, setAvgReviewCount] = useState(0);
-  useEffect(() => {
-    const count = GetAvgRating(response?.courseDetails?.ratingAndReviews);
-    setAvgReviewCount(count);
+  // --- NEW: aggregated rating & review count from the API (preferred source) ---
+  const [avgRating, setAvgRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+
+  const fetchAverageRating = useCallback(async (id) => {
+    if (!id) return;
+    try {
+      const url = `${ratingsEndpoints.GET_AVERAGE_RATING_API}?courseId=${id}`;
+      const res = await apiConnector("GET", url);
+      // If your apiConnector wraps axios, check res?.data shape; this assumes standard envelope
+      if (res?.data?.success) {
+        setAvgRating(Number(res.data.averageRating) || 0);
+        setReviewCount(Number(res.data.reviewCount) || 0);
+      } else {
+        // fallback to local calculation if API didn't return aggregated values
+        const fallbackAvg = GetAvgRating(response?.courseDetails?.ratingAndReviews);
+        setAvgRating(fallbackAvg);
+        setReviewCount(response?.courseDetails?.ratingAndReviews?.length || 0);
+      }
+    } catch (err) {
+      console.error("fetchAverageRating error:", err);
+      // fallback
+      const fallbackAvg = GetAvgRating(response?.courseDetails?.ratingAndReviews);
+      setAvgRating(fallbackAvg);
+      setReviewCount(response?.courseDetails?.ratingAndReviews?.length || 0);
+    }
   }, [response]);
 
+  // call when course details arrive
+  useEffect(() => {
+    const id = response?.courseDetails?._id;
+    if (id) fetchAverageRating(id);
+  }, [response?.courseDetails?._id, fetchAverageRating]);
+
+  // --- existing state logic ---
   const [isActive, setIsActive] = useState([]);
   const handleActive = (id) => {
     setIsActive(
@@ -400,9 +439,9 @@ function CourseDetails() {
                 <p className="course-title">{courseName}</p>
                 <p className="course-description">{courseDescription}</p>
                 <div className="course-reviews">
-                  <span className="highlight">{avgReviewCount}</span>
-                  <RatingStars Review_Count={avgReviewCount} Star_Size={24} />
-                  <span>{`(${ratingAndReviews.length} reviews)`}</span>
+                  <span className="highlight">{typeof avgRating === "number" ? avgRating.toFixed(1) : "0.0"}</span>
+                  <RatingStars Review_Count={avgRating} Star_Size={24} />
+                  <span>{`(${reviewCount} reviews)`}</span>
                   <span>{`${studentsEnrolled.length} students enrolled`}</span>
                 </div>
                 <p>

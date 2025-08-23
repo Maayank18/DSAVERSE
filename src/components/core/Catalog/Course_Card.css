@@ -1,9 +1,19 @@
 /* Course_Card.css */
 
-/* 1) Make the link wrapper just pass full width down to the card */
+/* 1) Make the link wrapper behave as a full clickable card without underline */
 .course-card-link {
+  display: block;
   max-width: none !important;
   width: 100% !important;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.course-card-link:hover,
+.course-card-link:focus,
+.course-card-link:active {
+  text-decoration: none !important;
+  color: inherit !important;
 }
 
 /* 2) Card container is a vertical box, fills its parent’s width */
@@ -16,6 +26,13 @@
   overflow: hidden;
   background-color: #1e1e2a; /* whatever your dark bg is */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Optional: subtle hover cue for good UX */
+.course-card-link:hover .course-card {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
 .thumbnail-container {
@@ -23,17 +40,16 @@
   aspect-ratio: 16/9;
   border-radius: 8px 8px 0 0;
   overflow: hidden;
-  background: #111;            /* shows behind letterbox bars */
+  background: #111; /* shows behind letterbox bars */
 }
 
 .thumbnail-container img {
   width: 100%;
   height: 100%;
-  object-fit: contain;         /* show all of the image */
-  object-position: center;     /* center in the box */
+  object-fit: contain; /* show all of the image */
+  object-position: center; /* center in the box */
   display: block;
 }
-
 
 /* 4) Info section padding + vertical stack */
 .course-card-info {

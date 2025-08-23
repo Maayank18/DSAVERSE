@@ -44,10 +44,15 @@
   border-bottom-right-radius: 0.5rem;
 }
 
-.col-name {
+/* .col-name {
   width: 45%;
   padding: 0.75rem 1.25rem;
+} */
+.col-name {
+  width: 65%; /* <-- Increased width */
+  padding: 0.75rem 1.25rem;
 }
+
 
 .col-duration {
   width: 25%;
@@ -55,8 +60,12 @@
   visibility: hidden;
 }
 
-.col-progress {
+/* .col-progress {
   flex: 1;
+  padding: 0.75rem;
+} */
+.col-progress {
+  width: 35%; /* <-- Set a fixed width */
   padding: 0.75rem;
 }
 
@@ -67,18 +76,31 @@
   cursor: pointer;
 }
 
-.course-thumbnail {
+/* .course-thumbnail {
   width: 3.5rem;
   height: 3.5rem;
   object-fit: cover;
   border-radius: 0.5rem;
+} */
+.course-thumbnail {
+  /* Increased size for better UI */
+  width: 13rem;   /* ~208px */
+  height: 7.5rem;  /* ~120px */
+  object-fit: cover;
+  border-radius: 0.5rem;
 }
 
-.course-info {
+/* .course-info {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   max-width: 16rem;
+} */
+.course-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* max-width removed to allow text to fill the column */
 }
 
 .course-title {
