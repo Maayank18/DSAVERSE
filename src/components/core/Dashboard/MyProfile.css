@@ -104,3 +104,117 @@
   font-weight: 500;
   color: #f1f1f1;
 }
+
+
+/* MyProfile.css */
+
+/* ... your existing styles remain ... */
+
+/* Tablet and smaller */
+@media screen and (max-width: 768px) {
+  .profile-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .profile-img {
+    width: 64px;
+  }
+
+  .profile-info {
+    align-items: flex-start;
+  }
+
+  .profile-box {
+    padding: 1.5rem 2rem;
+  }
+
+  .profile-box-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .profile-details {
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 100%;
+  }
+
+  .profile-details-column {
+    width: 100%;
+  }
+}
+
+/* Mobile (very small screens) */
+@media screen and (max-width: 480px) {
+  .profile-heading {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .profile-section,
+  .profile-box {
+    padding: 1rem 1.25rem;
+  }
+
+  .profile-name {
+    font-size: 1rem;
+  }
+
+  .profile-email,
+  .profile-label,
+  .profile-value,
+  .profile-about-text {
+    font-size: 0.8rem;
+  }
+}
+
+
+/* Ensure page content uses full width when sidebar stacks */
+@media screen and (max-width: 768px) {
+  /* If you use the .dashboard-main wrapper (recommended), this guarantees full width */
+  .dashboard-main {
+    padding: 1rem;
+  }
+
+  /* reduce left/right spacing for profile blocks */
+  .profile-section,
+  .profile-box {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* make profile header flow nicely */
+  .profile-header {
+    align-items: flex-start;
+  }
+
+  /* ensure long about text wraps correctly and does not overflow */
+  .profile-about-text {
+    word-break: break-word;
+    white-space: normal;
+  }
+}
+
+/* Very small screens - make text smaller and boxes tighter */
+@media screen and (max-width: 480px) {
+  .profile-section,
+  .profile-box {
+    padding: 0.75rem 1rem;
+  }
+
+  .profile-name { font-size: 1rem; }
+  .profile-email,
+  .profile-label,
+  .profile-value,
+  .profile-about-text { font-size: 0.78rem; }
+}

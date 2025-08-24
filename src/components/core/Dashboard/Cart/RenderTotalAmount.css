@@ -1,21 +1,51 @@
 .render-total-container {
-  min-width: 280px;
-  padding: 1.5rem;
-  border: 1px solid #334155; /* border-richblack-700 */
-  background-color: #1e293b;  /* bg-richblack-800 */
-  border-radius: 0.375rem;    /* rounded-md */
+  min-width: 260px;
+  padding: 1.25rem;
+  border: 1px solid rgba(51,65,85,0.6); /* softer border */
+  background-color: rgba(30,41,59,0.65);  /* slightly translucent panel */
+  border-radius: 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+/* Make total box sticky on larger screens so it's always visible */
+@media (min-width: 1025px) {
+  .render-total-container {
+    position: sticky;
+    top: 110px; /* enough to avoid header overlap */
+  }
 }
 
 .render-total-label {
-  margin-bottom: 0.25rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #cbd5e1; /* text-richblack-300 */
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #cbd5e1; /* muted */
 }
 
 .render-total-price {
-  margin-bottom: 1.5rem;
-  font-size: 1.875rem;
-  font-weight: 500;
-  color: #fef08a; /* text-yellow-100 */
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #fef08a; /* yellow */
+}
+
+/* IconBtn likely styles the button; these helpers keep width consistent */
+.render-total-container .w-full {
+  width: 100%;
+}
+
+/* Small screen tweaks */
+@media (max-width: 1024px) {
+  .render-total-container {
+    min-width: auto;
+    padding: 1rem;
+  }
+  .render-total-price {
+    font-size: 1.5rem;
+  }
 }

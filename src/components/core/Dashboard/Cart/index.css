@@ -1,32 +1,43 @@
+/* Cart page container */
 .cart-wrapper {
   color: #f1f5f9; /* text-richblack-5 */
+  max-width: 1200px;
+  margin: 1.5rem auto;
+  padding: 1.25rem;
+  box-sizing: border-box;
 }
 
+/* Heading */
 .cart-heading {
   font-size: 1.875rem; /* text-3xl */
-  font-weight: 500;     /* font-medium */
-  margin-bottom: 3.5rem;
+  font-weight: 600;     /* slightly heavier for emphasis */
+  margin: 0 0 0.5rem 0;
+  color: #ffffff;
 }
 
+/* Subheading that contains count + separator */
 .cart-subheading {
-  border-bottom: 1px solid #94a3b8; /* border-b-richblack-400 */
-  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(148,163,184,0.18); /* subtle */
+  padding-bottom: 0.6rem;
   font-weight: 600;
   color: #94a3b8; /* text-richblack-400 */
+  margin: 0;
 }
 
+/* cart-body: grid layout (courses list + totals) */
 .cart-body {
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 1.5rem;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+  align-items: start;
 }
 
-@media (min-width: 1024px) {
+/* Mobile: stack into single column */
+@media (max-width: 1024px) {
   .cart-body {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 2.5rem;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 }
 

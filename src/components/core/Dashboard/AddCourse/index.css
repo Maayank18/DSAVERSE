@@ -1,55 +1,122 @@
+/* ---------- Responsive layout for Add Course page ---------- */
+
+/* allow wrapping so tips can move below when space is limited */
 .add-course-container {
   display: flex;
   width: 100%;
   align-items: flex-start;
   gap: 1.5rem;
+  flex-wrap: wrap;          /* allow tips to wrap below the main panel */
 }
 
+/* main column grows, allow it to shrink in flexbox without overflow */
 .add-course-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;             /* important to prevent overflow in flex children */
 }
 
-.add-course-heading {
-  margin-bottom: 3.5rem;
-  font-size: 1.875rem;
-  font-weight: 500;
-  color: #f1f2f7; /* richblack-5 */
-}
-
-.add-course-steps {
-  flex: 1;
-}
-
+/* Default: show tips (desktop & larger laptops) as a sticky right column */
 .course-tips {
   position: sticky;
-  top: 2.5rem;
-  display: none;
-  max-width: 400px;
-  flex: 1;
-  border: 1px solid #2c2f41; /* richblack-700 */
-  border-radius: 6px;
+  top: 2rem;
+  display: block;
+  flex: 0 0 340px; 
+  max-width: 380px;
+
+  /* Card look */
+  border-radius: 12px;
   padding: 1.5rem;
-  background-color: #1e1f2b; /* richblack-800 */
+  background: linear-gradient(145deg, #1f2235, #2a2d44);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+  color: #f1f2f7;
+  font-family: "Inter", sans-serif;
+  height: fit-content;
+  box-sizing: border-box;
 }
 
-@media screen and (min-width: 1280px) {
-  .course-tips {
-    display: block;
-  }
-}
-
+/* Title */
 .course-tips-title {
-  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.25rem;
+
   font-size: 1.125rem;
-  color: #f1f2f7; /* richblack-5 */
+  font-weight: 600;
+  color: #f8fafc;
+  letter-spacing: 0.3px;
+}
+
+.course-tips-title::before {
+  display: inline-block;
+  font-size: 1.2rem;
+  color: #facc15; /* amber-400 */
+  filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.8));
 }
 
 .course-tips-list {
-  margin-left: 1.25rem;
-  list-style-type: disc;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  color: #f1f2f7; /* richblack-5 */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.course-tips-list li {
+  position: relative;
+  padding-left: 1.6rem;
+  line-height: 1.4;
+  font-size: 0.9rem;
+  color: #d1d5db; /* text gray */
+}
+
+/* Custom check-like bullet */
+.course-tips-list li::before {
+  /* content: "✔"; */
+  position: absolute;
+  left: 1;
+  top: 0.1rem;
+  font-size: 0.85rem;
+  color: #22c55e; /* green-500 */
+}
+
+/* On medium screens, keep tips visible as right column but smaller */
+@media screen and (max-width: 1280px) {
+  .course-tips {
+    flex: 0 0 280px;       /* slightly narrower */
+    max-width: 280px;
+  }
+}
+
+/* On narrower screens, move tips below the main content (so form gets full width) */
+@media screen and (max-width: 1100px) {
+  /* make sure main remains first */
+  .add-course-main {
+    order: 1;
+    width: 100%;
+  }
+}
+
+
+
+@media screen and (max-width: 1100px) {
+  .course-tips {
+    position: static;
+    flex: 0 0 100%;
+    max-width: none;
+    margin-top: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .course-tips {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+  .course-tips-list li {
+    font-size: 0.82rem;
+    line-height: 1.3;
+  }
 }

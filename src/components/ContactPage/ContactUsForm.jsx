@@ -1,213 +1,73 @@
-// import React, { useEffect, useState } from "react";
-// import { useForm } from "react-hook-form";
-
-// import CountryCode from "../../data/countrycode.json";
-// import { apiConnector } from "../../services/apiconnector";
-// import { contactusEndpoint } from "../../services/apis";
-// import './ContactUsForm.css'
-
-// const ContactUsForm = () => {
-//   const [loading, setLoading] = useState(false);
-//   const {
-//     register,
-//     handleSubmit,
-//     reset,
-//     formState: { errors, isSubmitSuccessful },
-//   } = useForm();
-
-//   const submitContactForm = async (data) => {
-//     try {
-//       setLoading(true);
-//       const res = await apiConnector(
-//         "POST",
-//         contactusEndpoint.CONTACT_US_API,
-//         data
-//       );
-//       setLoading(false);
-//     } catch (error) {
-//       console.log("ERROR MESSAGE - ", error.message);
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     if (isSubmitSuccessful) {
-//       reset({
-//         email: "",
-//         firstname: "",
-//         lastname: "",
-//         message: "",
-//         phoneNo: "",
-//       });
-//     }
-//   }, [reset, isSubmitSuccessful]);
-
-//   return (
-//     <form className="contact-form" onSubmit={handleSubmit(submitContactForm)}>
-//       <div className="form-row">
-//         <div className="form-group">
-//           <label htmlFor="firstname" className="label-style">
-//             First Name
-//           </label>
-//           <input
-//             type="text"
-//             name="firstname"
-//             id="firstname"
-//             placeholder="Enter first name"
-//             className="form-style"
-//             {...register("firstname", { required: true })}
-//           />
-//           {errors.firstname && (
-//             <span className="error-text">
-//               Please enter your name.
-//             </span>
-//           )}
-//         </div>
-//         <div className="form-group">
-//           <label htmlFor="lastname" className="label-style">
-//             Last Name
-//           </label>
-//           <input
-//             type="text"
-//             name="lastname"
-//             id="lastname"
-//             placeholder="Enter last name"
-//             className="form-style"
-//             {...register("lastname")}
-//           />
-//         </div>
-//       </div>
-
-//       <div className="form-group">
-//         <label htmlFor="email" className="label-style">
-//           Email Address
-//         </label>
-//         <input
-//           type="email"
-//           name="email"
-//           id="email"
-//           placeholder="Enter email address"
-//           className="form-style"
-//           {...register("email", { required: true })}
-//         />
-//         {errors.email && (
-//           <span className="error-text">Please enter your Email address.</span>
-//         )}
-//       </div>
-
-//       <div className="form-group">
-//         <label htmlFor="phonenumber" className="label-style">
-//           Phone Number
-//         </label>
-//         <div className="phone-row">
-//           <div className="country-select">
-//             <select
-//               name="countrycode"
-//               id="countrycode"
-//               className="form-style"
-//               {...register("countrycode", { required: true })}
-//             >
-//               {CountryCode.map((ele, i) => (
-//                 <option key={i} value={ele.code}>
-//                   {ele.code} - {ele.country}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-//           <div className="phone-input">
-//             <input
-//               type="number"
-//               name="phonenumber"
-//               id="phonenumber"
-//               placeholder="12345 67890"
-//               className="form-style"
-//               {...register("phoneNo", {
-//                 required: {
-//                   value: true,
-//                   message: "Please enter your Phone Number.",
-//                 },
-//                 maxLength: { value: 12, message: "Invalid Phone Number" },
-//                 minLength: { value: 10, message: "Invalid Phone Number" },
-//               })}
-//             />
-//           </div>
-//         </div>
-//         {errors.phoneNo && (
-//           <span className="error-text">{errors.phoneNo.message}</span>
-//         )}
-//       </div>
-
-//       <div className="form-group">
-//         <label htmlFor="message" className="label-style">
-//           Message
-//         </label>
-//         <textarea
-//           name="message"
-//           id="message"
-//           cols="30"
-//           rows="7"
-//           placeholder="Enter your message here"
-//           className="form-style"
-//           {...register("message", { required: true })}
-//         ></textarea>
-//         {errors.message && (
-//           <span className="error-text">Please enter your Message.</span>
-//         )}
-//       </div>
-
-//       <button
-//         disabled={loading}
-//         type="submit"
-//         className={`submit-button ${loading ? "disabled" : ""}`}
-//       >
-//         Send Message
-//       </button>
-//     </form>
-//   );
-// };
-
-// export default ContactUsForm;
-
-
+// ContactUsForm.jsx
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 import CountryCode from "../../data/countrycode.json";
-import {contactUsAPI}  from "../../services/operations/pageAndComponentData"
-import './ContactUsForm.css'
+import { apiConnector } from "../../services/apiconnector";
+import { contactusEndpoint } from "../../services/apis";
+import "./ContactUsForm.css";
 
 const ContactUsForm = () => {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const defaultCountry = CountryCode?.[0]?.code || "";
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitSuccessful },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      countrycode: defaultCountry,
+      firstname: "",
+      lastname: "",
+      email: "",
+      phoneNo: "",
+      message: "",
+    },
+  });
 
-  // ✅ Correct submit handler
+  const [loading, setLoading] = useState(false);
+
   const submitContactForm = async (data) => {
-  try {
-    setLoading(true);
-    const response = await contactUsAPI(data);
+    console.log("FORM SUBMIT - data:", data);
+    try {
+      setLoading(true);
 
-    if (response.success) {
-      toast.success("Message sent successfully!");
-      setTimeout(() => navigate("/"), 1500);
-    } else {
-      toast.error(response.message || "Failed to send message");
+      const res = await apiConnector(
+        "POST",
+        contactusEndpoint.CONTACT_US_API,
+        data
+      );
+
+      // handle response according to your apiConnector shape
+      const payload = res?.data ?? res;
+      if (payload?.success) {
+        toast.success(payload.message || "Message sent successfully!");
+        // reset form (keep default country)
+        reset({
+          firstname: "",
+          lastname: "",
+          email: "",
+          phoneNo: "",
+          countrycode: defaultCountry,
+          message: "",
+        });
+        // navigate after short delay so toast is visible
+        setTimeout(() => navigate("/"), 1000);
+      } else {
+        // backend may return success:false or error structure
+        toast.error(payload?.message || "Failed to send message");
+      }
+    } catch (error) {
+      console.error("CONTACT US ERROR -", error);
+      toast.error(error?.message || "Something went wrong. Please try again later.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error("CONTACT US API ERROR:", err);
-    toast.error("Something went wrong. Please try again later.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -217,74 +77,56 @@ const ContactUsForm = () => {
         lastname: "",
         message: "",
         phoneNo: "",
-        countrycode: "",
+        countrycode: defaultCountry,
       });
     }
-  }, [reset, isSubmitSuccessful]);
+  }, [reset, isSubmitSuccessful, defaultCountry]);
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit(submitContactForm)}>
+    <form className="contact-form" onSubmit={handleSubmit(submitContactForm)} noValidate>
       <div className="form-row">
         <div className="form-group">
-          <label htmlFor="firstname" className="label-style">
-            First Name
-          </label>
+          <label htmlFor="firstname" className="label-style">First Name</label>
           <input
-            type="text"
-            name="firstname"
             id="firstname"
+            className="form-style"
             placeholder="Enter first name"
-            className="form-style"
-            {...register("firstname", { required: true })}
+            {...register("firstname", { required: "Please enter your first name." })}
           />
-          {errors.firstname && (
-            <span className="error-text">Please enter your name.</span>
-          )}
+          {errors.firstname && <span className="error-text">{errors.firstname.message}</span>}
         </div>
+
         <div className="form-group">
-          <label htmlFor="lastname" className="label-style">
-            Last Name
-          </label>
+          <label htmlFor="lastname" className="label-style">Last Name</label>
           <input
-            type="text"
-            name="lastname"
             id="lastname"
-            placeholder="Enter last name"
             className="form-style"
+            placeholder="Enter last name"
             {...register("lastname")}
           />
         </div>
       </div>
 
       <div className="form-group">
-        <label htmlFor="email" className="label-style">
-          Email Address
-        </label>
+        <label htmlFor="email" className="label-style">Email Address</label>
         <input
-          type="email"
-          name="email"
           id="email"
-          placeholder="Enter email address"
+          type="email"
           className="form-style"
-          {...register("email", { required: true })}
+          placeholder="Enter email address"
+          {...register("email", {
+            required: "Please enter your Email address.",
+            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Enter a valid email." },
+          })}
         />
-        {errors.email && (
-          <span className="error-text">Please enter your Email address.</span>
-        )}
+        {errors.email && <span className="error-text">{errors.email.message}</span>}
       </div>
 
       <div className="form-group">
-        <label htmlFor="phonenumber" className="label-style">
-          Phone Number
-        </label>
+        <label htmlFor="phoneNo" className="label-style">Phone Number</label>
         <div className="phone-row">
           <div className="country-select">
-            <select
-              name="countrycode"
-              id="countrycode"
-              className="form-style"
-              {...register("countrycode", { required: true })}
-            >
+            <select id="countrycode" className="form-style" {...register("countrycode", { required: true })}>
               {CountryCode.map((ele, i) => (
                 <option key={i} value={ele.code}>
                   {ele.code} - {ele.country}
@@ -292,53 +134,44 @@ const ContactUsForm = () => {
               ))}
             </select>
           </div>
+
           <div className="phone-input">
             <input
-              type="number"
-              name="phonenumber"
-              id="phonenumber"
-              placeholder="12345 67890"
+              id="phoneNo"
+              type="tel"
+              inputMode="numeric"
               className="form-style"
+              placeholder="12345 67890"
               {...register("phoneNo", {
-                required: {
-                  value: true,
-                  message: "Please enter your Phone Number.",
-                },
-                maxLength: { value: 12, message: "Invalid Phone Number" },
+                required: "Please enter your Phone Number.",
                 minLength: { value: 10, message: "Invalid Phone Number" },
+                maxLength: { value: 12, message: "Invalid Phone Number" },
+                pattern: { value: /^[0-9]+$/, message: "Only digits allowed." },
               })}
             />
           </div>
         </div>
-        {errors.phoneNo && (
-          <span className="error-text">{errors.phoneNo.message}</span>
-        )}
+        {errors.phoneNo && <span className="error-text">{errors.phoneNo.message}</span>}
       </div>
 
       <div className="form-group">
-        <label htmlFor="message" className="label-style">
-          Message
-        </label>
+        <label htmlFor="message" className="label-style">Message</label>
         <textarea
-          name="message"
           id="message"
-          cols="30"
-          rows="7"
-          placeholder="Enter your message here"
+          rows={6}
           className="form-style"
-          {...register("message", { required: true })}
-        ></textarea>
-        {errors.message && (
-          <span className="error-text">Please enter your Message.</span>
-        )}
+          placeholder="Enter your message here"
+          {...register("message", { required: "Please enter your message." })}
+        />
+        {errors.message && <span className="error-text">{errors.message.message}</span>}
       </div>
 
       <button
         disabled={loading}
         type="submit"
-        className={`submit-button ${loading ? "disabled" : ""}`}
+        className="submit-button"
       >
-        Send Message
+        {loading ? "Sending..." : "Send Message"}
       </button>
     </form>
   );

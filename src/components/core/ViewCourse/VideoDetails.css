@@ -3,42 +3,57 @@
   flex-direction: column;
   gap: 20px;
   color: white;
-  font-family: sans-serif;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
+/* preview image */
 .video-preview-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
   border-radius: 8px;
+  object-fit: cover;
+  display: block;
 }
 
+/* Wrapper uses 16:9 aspect ratio (56.25% padding-top) */
 .react-player-wrapper {
   position: relative;
   width: 100%;
-  padding-top: 5%; /* 16:9 Aspect Ratio */
+  /* 16:9 => 9/16 = 56.25% */
+  padding-top: 56.25%;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.react-player-wrapper > div {
+/* Make sure the video element fills the wrapper */
+.react-player-wrapper video,
+.react-player-wrapper iframe,
+.react-player-wrapper .react-player {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100% !important;
-  height: 100% !important;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
+/* overlay when video ended */
 .video-overlay {
   position: absolute;
   inset: 0;
   z-index: 10;
   display: grid;
   place-content: center;
-  background-image: linear-gradient(to top, rgb(0, 0, 0), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1));
+  background-image: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.25));
+  padding: 1rem;
+  gap: 0.5rem;
+  text-align: center;
 }
 
+/* Buttons */
 .video-button {
-  font-size: 1.25rem;
-  padding: 0.5rem 1.5rem;
+  font-size: 1.05rem;
+  padding: 0.5rem 1.25rem;
   max-width: max-content;
   margin: 0 auto;
   background-color: #1f2937;
@@ -52,17 +67,18 @@
   margin-top: 10px;
 }
 
+/* navigation row */
 .video-navigation {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 40px;
-  min-width: 250px;
-  font-size: 1.25rem;
+  margin-top: 20px;
+  min-width: 220px;
+  font-size: 1rem;
 }
 
 .nav-button {
-  padding: 0.5rem 1.25rem;
+  padding: 0.45rem 1rem;
   background-color: #000;
   color: #fff;
   border: 1px solid #444;
@@ -70,13 +86,73 @@
   cursor: pointer;
 }
 
+/* Title and description */
 .video-title {
-  margin-top: 1rem;
-  font-size: 2rem;
+  margin-top: 0.75rem;
+  font-size: 1.6rem;
   font-weight: 600;
+  color: #eaeaea;
 }
 
 .video-description {
   padding-top: 0.5rem;
   padding-bottom: 1.5rem;
+  color: #cfcfcf;
+  line-height: 1.5;
+}
+
+/* --- Responsive rules --- */
+@media (max-width: 1024px) {
+  .video-title {
+    font-size: 1.4rem;
+  }
+  .video-navigation {
+    margin-top: 18px;
+    min-width: 200px;
+    font-size: 0.95rem;
+  }
+  .video-button {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .react-player-wrapper {
+    padding-top: 56.25%;
+    border-radius: 6px;
+  }
+  .video-overlay {
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  .video-button {
+    font-size: 0.95rem;
+    padding: 0.45rem 1rem;
+  }
+  .video-navigation {
+    gap: 0.6rem;
+    margin-top: 14px;
+    min-width: 150px;
+    font-size: 0.95rem;
+  }
+  .video-title {
+    font-size: 1.25rem;
+  }
+  .video-description {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .video-title {
+    font-size: 1.05rem;
+  }
+  .video-button {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+  .video-navigation {
+    font-size: 0.9rem;
+    gap: 0.5rem;
+  }
 }

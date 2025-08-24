@@ -1,32 +1,35 @@
+/* Loader wrapper */
 .dashboard-loader-wrapper {
   display: grid;
-  min-height: calc(100vh - 3.5rem);
+  min-height: calc(100vh - 3.5rem); /* full height minus navbar */
   place-items: center;
 }
 
+/* Main wrapper with sidebar + content */
 .dashboard-wrapper {
   position: relative;
   display: flex;
   min-height: calc(100vh - 3.5rem);
+  background-color: #111827; /* optional: dark background */
 }
 
+/* Sidebar will sit on the left, content takes rest of space */
 .dashboard-content {
   flex: 1;
   height: calc(100vh - 3.5rem);
   overflow: auto;
 }
 
+/* Inner container for page content */
 .dashboard-inner {
-  width: 100%;         /* make full width */
-  max-width: none;     /* remove restriction */
-  margin: 0;           /* remove auto-centering */
-  padding: 2rem;       /* keep some padding */
+  width: 100%;         
+  max-width: none;     
+  margin: 0;           
+  padding: 2rem;       
   box-sizing: border-box;
 }
 
-
-
-/* Spinner styles — if not already defined globally */
+/* Spinner styles */
 .spinner {
   width: 40px;
   height: 40px;
@@ -39,5 +42,29 @@
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* ============================= */
+/* 📱 Responsive Layout Handling */
+/* ============================= */
+
+/* Tablet and smaller: stack sidebar on top */
+@media screen and (max-width: 768px) {
+  .dashboard-wrapper {
+    flex-direction: column;
+  }
+
+  .dashboard-content {
+    width: 100%;
+    height: auto; /* let it grow naturally */
+    min-height: calc(100vh - 3.5rem);
+  }
+}
+
+/* Small mobile: tighter padding */
+@media screen and (max-width: 480px) {
+  .dashboard-inner {
+    padding: 1rem;
   }
 }

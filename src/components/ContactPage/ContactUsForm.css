@@ -1,26 +1,28 @@
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
   background-color: #0f111a;
   color: #e2e8f0;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 12px;
   max-width: 700px;
-  margin: auto;
+  margin: 1rem auto;
   font-family: 'Inter', sans-serif;
+  position: relative;
+  align-items: center;
 }
 
 .form-row {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 @media (min-width: 768px) {
   .form-row {
     flex-direction: row;
-    gap: 2rem;
+    gap: 1.25rem;
   }
 }
 
@@ -29,6 +31,7 @@
   flex-direction: column;
   gap: 0.5rem;
   flex: 1;
+  max-width: 500px;  
 }
 
 .label-style {
@@ -45,13 +48,16 @@
   color: #f1f5f9;
   font-size: 0.95rem;
   outline: none;
-  transition: border 0.2s;
+  transition: border 0.2s, box-shadow 0.12s;
   width: 100%;
   box-sizing: border-box;
+  max-width: 500px;          /* matches form-group */
+  margin: 0 auto;
 }
 
 .form-style:focus {
   border: 1px solid #38bdf8;
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.06);
 }
 
 .phone-row {
@@ -67,16 +73,15 @@
   }
 }
 
-.country-select select {
-  appearance: none;
-  cursor: pointer;
-}
-
-.country-select,
+.country-select, 
 .phone-input {
-  flex: 1;
+  width: 100%;
 }
 
+.country-select select,
+.phone-input input {
+  width: 100%;
+}
 .error-text {
   font-size: 0.875rem;
   color: #f87171;
@@ -91,7 +96,9 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  max-width: 500px;    
+  transition: background 0.18s, transform 0.12s, opacity 0.12s;
+  width: 100%;
 }
 
 .submit-button:hover {
@@ -99,7 +106,14 @@
   transform: translateY(-2px);
 }
 
-.submit-button.disabled {
-  opacity: 0.6;
-  pointer-events: none;
+/* use attribute selector for disabled state (native) */
+.submit-button[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* responsive tweaks */
+@media (max-width: 700px) {
+  .country-select { width: 36%; }
 }

@@ -244,6 +244,7 @@
   border: none;
 }
 
+/* Logo area */
 .navbar-logo-wrapper {
   height: 56px;        /* same as navbar */
   display: flex;
@@ -252,15 +253,23 @@
 }
 
 /* Logo sizing - keep within navbar height to avoid overlaps */
+/* If your logo looked huge, lower this value (e.g. 36px or 40px) */
 .navbar-logo {
-  height: 165px; /* small enough to fit within navbar */
+  height: 160px; /* adjusted to fit the navbar height */
   width: auto;
   object-fit: contain;
   display: block;
   pointer-events: none;
 }
 
-/* Responsive: hide links, show menu on mobile */
+/* -------------------- MOBILE MENU STYLES -------------------- */
+
+/* Mobile menu (hidden by default) */
+.mobile-menu {
+  display: none;
+}
+
+/* show responsive layout below 768 */
 @media screen and (max-width: 768px) {
   .navbar-links {
     display: none;
@@ -268,13 +277,130 @@
   .menu-icon {
     display: block;
     margin-right: 1rem;
+    cursor: pointer;
   }
 
-  /* ensure dropdown panel remains positioned nicely on small screens */
-  .dropdown-content {
+  /* mobile menu base */
+  .mobile-menu {
+    display: block;
+    position: absolute;
+    top: 56px;
     left: 0;
-    transform: none;
-    min-width: 180px;
-    max-width: 260px;
+    right: 0;
+    background: #0b0d12; /* dark background */
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 180ms ease, opacity 180ms ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1500;
+  }
+
+  .mobile-menu.open {
+    transform: scaleY(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-links {
+    list-style: none;
+    margin: 0;
+    padding: 8px 10px;
+  }
+
+  .mobile-link-item {
+    border-top: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .mobile-simple-link,
+  .mobile-subitem,
+  .mobile-account-row {
+    display: block;
+    padding: 14px 12px;
+    text-decoration: none;
+    color: #e6eef8;
+    font-weight: 600;
+  }
+
+  .mobile-simple-link:hover,
+  .mobile-subitem:hover,
+  .mobile-account-row:hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .mobile-catalog {
+    padding: 0;
+  }
+
+  .mobile-catalog-trigger {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 12px;
+    background: none;
+    border: none;
+    color: #e6eef8;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* catalog panel hidden until expanded */
+  .mobile-catalog-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 200ms ease;
+    background: rgba(255,255,255,0.01);
+  }
+
+  /* when the parent li gets .expanded toggle open */
+  .mobile-link-item.expanded .mobile-catalog-panel {
+    max-height: 600px; /* plenty for content */
+  }
+
+  .mobile-subitem {
+    padding-left: 28px;
+    font-weight: 600;
+  }
+
+  .mobile-menu-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.03);
+    margin: 8px 0;
+  }
+
+  .mobile-account {
+    padding: 8px 10px 16px 10px;
+  }
+
+  .mobile-auth-buttons {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+  }
+
+  .mobile-auth {
+    padding: 10px 12px;
+    text-decoration: none;
+    background: rgba(255,255,255,0.02);
+    color: #e6eef8;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+
+  .mobile-auth.signup {
+    background: #ffd60a;
+    color: #0b0d12;
+  }
+
+  .cart-count-inline {
+    margin-left: 8px;
+    background: #ffd60a;
+    color: #0b0d12;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 12px;
   }
 }

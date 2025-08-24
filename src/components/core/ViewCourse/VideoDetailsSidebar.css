@@ -8,6 +8,16 @@
   background-color: #1f2024;
   border-right: 1px solid #3a3d44;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease, width 0.2s ease;
+  z-index: 40;
+}
+
+/* page overlay shown when sidebar open on mobile */
+.sidebar-page-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 30;
 }
 
 /* Header: sticky + branding */
@@ -17,7 +27,7 @@
   background-color: #25272a;
   padding: 1.25rem 1rem;
   border-bottom: 1px solid #3a3d44;
-  z-index: 10;
+  z-index: 50;
 }
 
 .sidebar-header-top {
@@ -26,35 +36,43 @@
   gap: 0.5rem;
 }
 
+/* mobile-only toggle button (hamburger) */
+.sidebar-toggle-btn {
+  display: none; /* visible on small screens via media queries below (desktop has it hidden on small screens) */
+  background: transparent;
+  border: none;
+  color: #f1f2f4;
+  padding: 0.25rem;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
 
-/* Back button: rectangular style matching Add Review */
+/* Back button */
 .back-button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;              /* match .icon-btn spacing */
-  padding: 0.5rem 1.25rem;  /* same as .icon-btn */
-  border-radius: 0.375rem;  /* same rounded corners */
-  font-weight: 600;         /* match font weight */
-  font-size: 1rem;          /* match font size */
+  gap: 0.5rem;
+  padding: 0.45rem 1.0rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  color: #000;              /* same as .icon-btn default text */
-  border: none;             /* match filled style (no border) */
-  background-color: #facc15;/* same as .icon-btn-filled */
-  flex-shrink: 0;           /* prevents flex shrinking */
+  color: #000;
+  background-color: #facc15;
+  flex-shrink: 0;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .back-button:hover {
-  background-color: #eab308; /* slightly darker yellow on hover */
+  background-color: #eab308;
   transform: scale(0.98);
 }
 
 .back-button svg {
-  fill: #000;               /* ensure arrow matches text color */
+  fill: #000;
 }
 
-
-/* Course info: tighter typography */
+/* Course info */
 .sidebar-course-info {
   margin-top: 0.75rem;
 }
@@ -78,6 +96,7 @@
   flex: 1;
   overflow-y: auto;
   padding-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sidebar-sections::-webkit-scrollbar {
@@ -131,7 +150,7 @@
 
 /* Subsection list and items */
 .subsection-container {
-  background-color: #1f202024;
+  background-color: rgba(31, 32, 32, 0.02);
 }
 
 .subsection-item {
@@ -141,6 +160,7 @@
   padding: 0.5rem 1.25rem;
   transition: background-color 0.2s;
   position: relative;
+  min-height: 44px;
 }
 
 .subsection-item:hover {
@@ -170,10 +190,125 @@
   accent-color: #f59e0b;
 }
 
+/* Titles: allow wrapping on mobile; keep ellipsis on desktop */
 .subsection-title {
   flex: 1;
-  cursor: pointer; /* now only the text is clickable for navigation */
+  cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 0.95rem;
+}
+
+/* MOBILE HEADER - visible only on small screens */
+.mobile-header {
+  display: none;
+}
+
+/* --- Responsive rules --- */
+
+/* tablet */
+@media (max-width: 1024px) {
+  .sidebar-wrapper {
+    width: 280px;
+    max-width: 320px;
+  }
+}
+
+/* small screens: switch to overlay drawer and show mobile header */
+@media (max-width: 768px) {
+  /* Show the mobile header at the top of the app - keeps back/add review accessible */
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    padding: 0.5rem 0.75rem;
+    background-color: #25272a;
+    border-bottom: 1px solid #3a3d44;
+    z-index: 70;
+  }
+
+  .mobile-toggle {
+    background: transparent;
+    border: none;
+    color: #f1f2f4;
+    padding: 0.25rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+  }
+
+  .mobile-back {
+    padding: 0.35rem 0.75rem;
+  }
+
+  .mobile-add-review {
+    margin-left: auto;
+  }
+
+  /* Sidebar becomes a drawer beneath the mobile header */
+  .sidebar-wrapper {
+    position: fixed;
+    left: 0;
+    top: 56px; /* sit below mobile header */
+    height: calc(100vh - 56px);
+    width: 320px;
+    max-width: 90%;
+    transform: translateX(-110%); /* hidden by default */
+    box-shadow: 0 6px 30px rgba(0,0,0,0.55);
+    transition: transform 0.25s ease;
+  }
+
+  /* When collapsed = true, we show it (note: collapsed toggled in JS) */
+  .sidebar-wrapper.collapsed {
+    transform: translateX(0);
+  }
+
+  .sidebar-header {
+    padding: 0.75rem 0.75rem;
+  }
+
+  /* Hide the inner header toggle on mobile to avoid visual duplication */
+  .sidebar-toggle-btn {
+    display: none;
+  }
+
+  /* Let subsection titles wrap on small screens instead of truncating */
+  .subsection-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.2;
+    font-size: 0.95rem;
+  }
+}
+
+/* landscape phones / very small devices: reduce paddings */
+@media (max-width: 420px) {
+  .back-button {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .section-header {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .subsection-item {
+    padding: 0.45rem 0.9rem;
+  }
+
+  .mobile-header {
+    height: 50px;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .sidebar-wrapper {
+    width: 300px;
+    max-width: 92%;
+  }
 }

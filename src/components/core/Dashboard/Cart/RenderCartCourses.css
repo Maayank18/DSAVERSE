@@ -1,99 +1,163 @@
 .render-cart-wrapper {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  gap: 1.25rem;
+  width: 100%;
 }
 
+/* Each cart item uses a 3-column grid on wide screens:
+   [thumbnail] [details] [actions/price] */
 .render-cart-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 220px 1fr 160px;
+  gap: 1rem;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* Border and spacing between items */
 .with-border {
-  border-bottom: 1px solid #94a3b8; /* border-richblack-400 */
-  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(148,163,184,0.08); /* soft divider */
+  padding-bottom: 1.25rem;
 }
 
 .margin-top {
-  margin-top: 1.5rem;
+  margin-top: 0.75rem;
 }
 
+/* Left block containing thumbnail + basic info (thumbnail kept in its column) */
 .render-cart-left {
   display: flex;
-  flex-direction: column;
   gap: 1rem;
-  flex: 1;
+  align-items: flex-start;
 }
 
-@media (min-width: 1280px) {
-  .render-cart-left {
-    flex-direction: row;
-  }
-}
-
+/* Thumbnail styling */
 .render-cart-img {
   width: 220px;
-  height: 148px;
-  border-radius: 0.5rem;
+  height: 140px;
+  border-radius: 8px;
   object-fit: cover;
+  background: #0b1220;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.5);
+  flex-shrink: 0;
 }
 
+/* Details column */
 .render-cart-details {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  min-width: 0; /* allow text to ellipsize */
 }
 
 .course-name {
   font-size: 1.125rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #f1f5f9; /* text-richblack-5 */
+  margin: 0;
+  white-space: normal;
 }
 
 .course-category {
-  font-size: 0.875rem;
-  color: #cbd5e1; /* text-richblack-300 */
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin: 0;
 }
 
+/* Ratings row */
 .course-rating {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-top: 0.35rem;
 }
 
 .rating-value {
-  color: #facc15; /* text-yellow-5 */
+  color: #facc15; /* accent */
+  font-weight: 700;
 }
 
 .rating-count {
-  color: #94a3b8; /* text-richblack-400 */
+  color: #94a3b8;
+  font-size: 0.9rem;
 }
 
+/* Right column: actions and price */
 .render-cart-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  justify-self: end;
 }
 
+/* Remove button */
 .remove-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  background-color: #1e293b; /* bg-richblack-700 */
-  border: 1px solid #334155; /* border-richblack-600 */
-  color: #fbcfe8; /* text-pink-200 */
-  padding: 0.75rem 12px;
-  border-radius: 0.375rem;
+  gap: 0.5rem;
+  background-color: rgba(30,41,59,0.65); /* subtle */
+  border: 1px solid rgba(51,65,85,0.5);
+  color: #fbcfe8;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
 }
 
+/* Price */
 .course-price {
-  margin-bottom: 1.5rem;
-  font-size: 1.875rem;
-  font-weight: 500;
-  color: #fef08a; /* text-yellow-100 */
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fef08a;
+}
+
+/* Responsiveness: collapse into vertical stacked layout on small screens */
+@media (max-width: 1024px) {
+  .render-cart-item {
+    grid-template-columns: 1fr;
+  }
+
+  .render-cart-left {
+    flex-direction: row;
+    gap: 0.9rem;
+  }
+
+  .render-cart-img {
+    width: 120px;
+    height: 88px;
+  }
+
+  .render-cart-right {
+    align-items: flex-start;
+    margin-top: 0.5rem;
+  }
+
+  .course-price {
+    font-size: 1.5rem;
+  }
+}
+
+/* Tighten spacing on very small devices */
+@media (max-width: 420px) {
+  .render-cart-img {
+    width: 110px;
+    height: 78px;
+    border-radius: 6px;
+  }
+
+  .course-name {
+    font-size: 1rem;
+  }
+
+  .course-price {
+    font-size: 1.35rem;
+  }
+
+  .remove-btn {
+    padding: 0.45rem 0.6rem;
+  }
 }
