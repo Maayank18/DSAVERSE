@@ -15,7 +15,7 @@ export default function AddCourse() {
       <div className="course-tips">
         <p className="course-tips-title">⚡ Course Upload Tips</p>
         <ul className="course-tips-list">
-          <li>Set the Course Price option or make it free.</li>
+          <li>Set the Course Price greater 0 </li>
           <li>Standard size for the course thumbnail is 1024x576.</li>
           <li>Video section controls the course overview video.</li>
           <li>Course Builder is where you create & organize a course.</li>
@@ -27,7 +27,7 @@ export default function AddCourse() {
             Information from the Additional Data section shows up on the
             course single page.
           </li>
-          <li>Make Announcements to notify any important</li>
+          <li>Make sure video length is upto 15-20 MB</li>
           <li>Notes to all enrolled students at once.</li>
         </ul>
       </div>

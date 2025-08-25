@@ -1,22 +1,127 @@
-/* CourseSlider.css */
+/* CourseSlider.css - shrink left/right padding so cards start flush left */
 
-/* Center the slider on the page */
+/* wrapper positions nav buttons and keeps layout full width */
 .course-slider-wrapper {
-  padding: 1rem;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 0; /* vertical breathing room */
   display: flex;
-  justify-content: center;
+  align-items: center;
 }
 
-/* Horizontal row of cards, wrapping as needed */
+/* keep a *small* padding so content doesn't touch the viewport edge */
+.course-slider-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px;        /* << reduced from 56px to 12px */
+}
+
+/* hide native scrollbar visually but keep functionality */
+.course-slider-container {
+  scrollbar-width: none; /* firefox */
+}
+.course-slider-container::-webkit-scrollbar {
+  display: none; /* webkit */
+}
+
+/* slider row */
 .course-slider {
   display: flex;
-  flex-wrap: wrap;
   gap: 1.5rem;
+  align-items: start;
+  box-sizing: border-box;
+  padding-bottom: 6px; /* slight offset so last row doesn't get cut */
 }
 
-/* Each “slide” is a fixed 280px column */
+/* Each slide fixed width for consistent card-by-card scroll */
 .course-slide-content {
-  flex: 0 0 300px !important;    /* stops it shrinking to 110px */
-  width: 300px !important;       /* explicit width in case */
+  flex: 0 0 300px;
+  width: 300px;
   box-sizing: border-box;
+}
+
+/* nav buttons - moved closer to the edges so they don't push content */
+.slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(6, 10, 20, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+  outline: none;
+}
+
+/* left and right placement slightly inset from edges */
+.slider-nav-left {
+  left: 6px;   /* << was 12px / container padding was 56px previously */
+}
+.slider-nav-right {
+  right: 6px;
+}
+
+.slider-nav:hover {
+  transform: translateY(-50%) scale(1.03);
+}
+
+/* disabled visual */
+.slider-nav.disabled {
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+/* responsiveness */
+@media (max-width: 1024px) {
+  .course-slide-content {
+    flex: 0 0 260px;
+    width: 260px;
+  }
+  .course-slider-container {
+    padding: 0 10px;
+  }
+  .slider-nav {
+    width: 44px;
+    height: 44px;
+  }
+  .slider-nav-left {
+    left: 6px;
+  }
+  .slider-nav-right {
+    right: 6px;
+  }
+}
+
+@media (max-width: 700px) {
+  .course-slide-content {
+    flex: 0 0 220px;
+    width: 220px;
+  }
+  .course-slider-container {
+    padding: 0 8px;
+  }
+  .slider-nav {
+    width: 40px;
+    height: 40px;
+  }
+  .slider-nav-left {
+    left: 6px;
+  }
+  .slider-nav-right {
+    right: 6px;
+  }
 }

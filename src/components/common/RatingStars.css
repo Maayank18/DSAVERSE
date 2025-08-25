@@ -1,20 +1,52 @@
+/* RatingStars.css - updated */
+
+/* Container: empty stars muted by default */
 .rating-stars {
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: #ffd700; /* gold for filled stars */
+  gap: 6px;
+  color: rgba(255, 215, 0, 0.25); /* muted gold for empty icons */
 }
 
-.rating-stars svg {
+/* Generic icon style */
+.rating-stars .star {
   cursor: default;
-  transition: transform 0.2s ease;
+  transition: transform 0.15s ease, color 0.15s ease;
+  color: inherit; /* inherit from container unless overridden by .full */
 }
 
-.rating-stars.editable svg {
+/* Size fallback */
+.rating-stars svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Force svg fill to follow currentColor (some icon svgs use fill/stroke) */
+.rating-stars svg path,
+.rating-stars svg polygon,
+.rating-stars svg circle {
+  fill: currentColor !important;
+  stroke: none !important;
+}
+
+/* Filled/half stars should be bright gold */
+.rating-stars .star.full,
+.rating-stars .star.half {
+  color: #ffd700; /* bright gold */
+}
+
+/* Empty stars remain muted (already inherited) */
+.rating-stars .star.empty {
+  /* color: rgba(255, 215, 0, 0.25); */
+  color: white;
+}
+
+/* Editable state: pointer + hover effect */
+.rating-stars.editable .star {
   cursor: pointer;
 }
 
-.rating-stars.editable svg:hover {
-  transform: scale(1.2);
-  color: #ffb400;
+.rating-stars.editable .star:hover {
+  transform: scale(1.15);
+  color: #ffbf00; /* slightly brighter on hover */
 }

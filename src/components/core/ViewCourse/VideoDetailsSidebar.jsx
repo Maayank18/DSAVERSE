@@ -248,8 +248,12 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
 
   const { token } = useSelector((state) => state.auth);
 
-  // lectures for current course
-  const currentCompleted = completedLectures[courseEntireData._id] || [];
+  // lectures for current course — ensure this is always an array
+  const currentCompleted = Array.isArray(completedLectures)
+    ? completedLectures
+    : Array.isArray(completedLectures?.[courseEntireData?._id])
+    ? completedLectures[courseEntireData._id]
+    : [];
 
   // Set active section & subsection
   useEffect(() => {
@@ -305,8 +309,9 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
   const handleCheckboxChange = async (subId) => {
     if (!token || !courseEntireData._id) return;
 
-    const prevCompleted = [...currentCompleted];
-    const wasCompleted = prevCompleted.includes(String(subId));
+    // defensive copy: ensure prevCompleted is an array
+    const prevCompleted = Array.isArray(currentCompleted) ? [...currentCompleted] : [];
+    const wasCompleted = Array.isArray(prevCompleted) && prevCompleted.includes(String(subId));
 
     const optimistic = wasCompleted
       ? prevCompleted.filter((id) => id !== String(subId))
@@ -399,7 +404,7 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
           <div className="sidebar-course-info">
             <p className="course-name">{courseEntireData?.courseName}</p>
             <p className="progress">
-              {currentCompleted.length} / {totalNoOfLectures}
+              {Array.isArray(currentCompleted) ? currentCompleted.length : 0} / {totalNoOfLectures}
             </p>
           </div>
         </div>
@@ -423,14 +428,14 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
 
               {activeStatus === section._id && (
                 <div className="subsection-container">
-                  {section.subSection.map((sub) => (
+                  {(section.subSection || []).map((sub) => (
                     <div
                       key={sub._id}
                       className={`subsection-item ${videoBarActive === sub._id ? "active" : ""}`}
                     >
                       <input
                         type="checkbox"
-                        checked={currentCompleted.includes(String(sub._id))}
+                        checked={Array.isArray(currentCompleted) && currentCompleted.includes(String(sub._id))}
                         onClick={(e) => e.stopPropagation()}
                         onChange={() => handleCheckboxChange(sub._id)}
                       />

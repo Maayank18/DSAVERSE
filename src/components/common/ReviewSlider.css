@@ -205,3 +205,44 @@
     max-height: 6.75em; /* keep 5 lines on very small screens too */
   }
 }
+
+
+/* ---- Star icon fixes (append to ReviewSlider.css) ---- */
+
+/* Ensure svg icons for stars are correctly sized */
+.review-rating svg {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+/* Prefer using currentColor for fill so color: rules control the icon color */
+.review-rating svg path,
+.review-rating svg polygon,
+.review-rating svg circle {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* Default: show empty stars muted and active ones gold.
+   Many rating wrappers add classes like .react-stars__star, .react-stars__star--active, etc.
+   These selectors cover common naming conventions; tweak if your wrapper uses different names. */
+.review-rating .react-stars__star,
+.review-rating .star {
+  color: rgba(255, 215, 0, 0.25); /* muted gold-ish for empty */
+}
+
+.review-rating .react-stars__star--active,
+.review-rating .react-stars__star--selected,
+.review-rating .star.active,
+.review-rating .star.filled {
+  color: #ffd700; /* bright gold for filled */
+}
+
+/* Fallback: if wrapper doesn't add classes, color the container gold so filled icons show gold.
+   Outline icons (FaRegStar) will still look like outlines in most cases.
+*/
+.review-rating {
+  /* don't force a color if your wrapper already handles it; this is safe default */
+  color: #ffd700;
+}

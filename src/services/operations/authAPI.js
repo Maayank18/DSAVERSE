@@ -186,19 +186,36 @@ export function login(email, password, navigate) {
   }
 }
 
+// export function logout(navigate) {
+//   return (dispatch) => {
+//     dispatch(setToken(null))
+//     dispatch(setUser(null))
+//     dispatch(resetCart())
+//     localStorage.removeItem("token")
+//     localStorage.removeItem("user")
+//     toast.success("Logged Out")
+//     navigate("/")
+//   }
+// }
+
 export function logout(navigate) {
   return (dispatch) => {
-    dispatch(setToken(null))
-    dispatch(setUser(null))
-    dispatch(resetCart())
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    toast.success("Logged Out")
-    navigate("/")
-  }
+    dispatch(setToken(null));
+    dispatch(setUser(null));
+
+    // pass silent: true to avoid the cart toast when logging out
+    // dispatch(resetCart({ silent: true }));
+
+    // remove only auth-related localStorage keys (don't call localStorage.clear())
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // single toast for logout
+    toast.success("Logged Out");
+
+    navigate("/");
+  };
 }
-
-
 
 export function getPasswordResetToken(email , setEmailSent) {
   return async(dispatch) => {

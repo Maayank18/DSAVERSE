@@ -1,5 +1,5 @@
 // import React, { useEffect, useState } from "react";
-// import ReactStars from "react-rating-stars-component";
+// import ReactStars from "../common/RatingStars";
 // import { Swiper, SwiperSlide } from "swiper/react";
 // import "swiper/css";
 // import "swiper/css/free-mode";
@@ -42,11 +42,33 @@
 //               delay: 2500,
 //               disableOnInteraction: false,
 //             }}
+//             breakpoints={{
+//               // mobile
+//               0: {
+//                 slidesPerView: 1,
+//                 spaceBetween: 12,
+//               },
+//               // small tablets
+//               640: {
+//                 slidesPerView: 2,
+//                 spaceBetween: 16,
+//               },
+//               // large tablets / small desktop
+//               920: {
+//                 slidesPerView: 3,
+//                 spaceBetween: 20,
+//               },
+//               // desktop
+//               1200: {
+//                 slidesPerView: 4,
+//                 spaceBetween: 25,
+//               },
+//             }}
 //             modules={[FreeMode, Pagination, Autoplay]}
 //             className="swiper-custom"
 //           >
 //             {reviews.map((review, i) => (
-//               <SwiperSlide key={i}>
+//               <SwiperSlide key={i} className="swiper-slide-custom">
 //                 <div className="review-card">
 //                   <div className="review-user-info">
 //                     <img
@@ -55,27 +77,27 @@
 //                           ? review?.user?.image
 //                           : `https://api.dicebear.com/5.x/initials/svg?seed=${review?.user?.firstName} ${review?.user?.lastName}`
 //                       }
-//                       alt=""
+//                       alt={`${review?.user?.firstName}`}
 //                       className="review-avatar"
 //                     />
 //                     <div className="review-user-text">
-//                       <h1 className="review-user-name">
+//                       <h3 className="review-user-name">
 //                         {`${review?.user?.firstName} ${review?.user?.lastName}`}
-//                       </h1>
-//                       <h2 className="review-course-name">{review?.course?.courseName}</h2>
+//                       </h3>
+//                       <h4 className="review-course-name">{review?.course?.courseName}</h4>
 //                     </div>
 //                   </div>
-//                   <p className="review-text">
+//                   <p className="review-text" title={review?.review}>
 //                     {review?.review.split(" ").length > truncateWords
 //                       ? `${review?.review.split(" ").slice(0, truncateWords).join(" ")} ...`
 //                       : review?.review}
 //                   </p>
 //                   <div className="review-rating">
-//                     <h3 className="review-rating-value">{review.rating.toFixed(1)}</h3>
+//                     <h3 className="review-rating-value">{Number(review.rating).toFixed(1)}</h3>
 //                     <ReactStars
 //                       count={5}
 //                       value={review.rating}
-//                       size={20}
+//                       size={18}
 //                       edit={false}
 //                       activeColor="#ffd700"
 //                       emptyIcon={<FaStar />}
@@ -97,13 +119,14 @@
 // export default ReviewSlider;
 
 
+
 import React, { useEffect, useState } from "react";
-import ReactStars from "react-rating-stars-component";
+import ReactStars from "./RatingStars";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaRegStar } from "react-icons/fa";
 import { Autoplay, FreeMode, Pagination } from "swiper/modules";
 
 import { apiConnector } from "../../services/apiconnector";
@@ -142,22 +165,18 @@ function ReviewSlider() {
               disableOnInteraction: false,
             }}
             breakpoints={{
-              // mobile
               0: {
                 slidesPerView: 1,
                 spaceBetween: 12,
               },
-              // small tablets
               640: {
                 slidesPerView: 2,
                 spaceBetween: 16,
               },
-              // large tablets / small desktop
               920: {
                 slidesPerView: 3,
                 spaceBetween: 20,
               },
-              // desktop
               1200: {
                 slidesPerView: 4,
                 spaceBetween: 25,
@@ -187,19 +206,21 @@ function ReviewSlider() {
                     </div>
                   </div>
                   <p className="review-text" title={review?.review}>
-                    {review?.review.split(" ").length > truncateWords
+                    {review?.review?.split(" ").length > truncateWords
                       ? `${review?.review.split(" ").slice(0, truncateWords).join(" ")} ...`
                       : review?.review}
                   </p>
-                  <div className="review-rating">
-                    <h3 className="review-rating-value">{Number(review.rating).toFixed(1)}</h3>
+                  <div className="review-rating" aria-hidden={false}>
+                    <h3 className="review-rating-value">{Number(review?.rating || 0).toFixed(1)}</h3>
+
+                    {/* Minimal fix: ensure numeric value and use outline + filled icons */}
                     <ReactStars
                       count={5}
-                      value={review.rating}
+                      value={Number(review?.rating || 0)}
                       size={18}
                       edit={false}
                       activeColor="#ffd700"
-                      emptyIcon={<FaStar />}
+                      emptyIcon={<FaRegStar />}
                       fullIcon={<FaStar />}
                     />
                   </div>
@@ -216,5 +237,4 @@ function ReviewSlider() {
 }
 
 export default ReviewSlider;
-
 

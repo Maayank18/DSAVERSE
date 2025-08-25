@@ -1,51 +1,41 @@
+/* src/components/core/Dashboard/Cart/RenderTotalAmount.css */
+
 .render-total-container {
-  min-width: 260px;
-  padding: 1.25rem;
-  border: 1px solid rgba(51,65,85,0.6); /* softer border */
-  background-color: rgba(30,41,59,0.65);  /* slightly translucent panel */
+  min-width: 280px;
+  padding: 1.5rem;
+  border: 1px solid #334155;
+  background-color: #1e293b;
   border-radius: 12px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  align-items: stretch;
-  justify-content: flex-start;
 }
 
-/* Make total box sticky on larger screens so it's always visible */
 @media (min-width: 1025px) {
   .render-total-container {
     position: sticky;
-    top: 110px; /* enough to avoid header overlap */
+    top: 2rem;
   }
 }
 
 .render-total-label {
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #cbd5e1; /* muted */
+  font-size: 1rem;
+  font-weight: 500;
+  color: #cbd5e1;
 }
 
 .render-total-price {
   margin: 0;
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #fef08a; /* yellow */
+  font-size: 2rem; /* Made price bigger */
+  font-weight: 700;
+  color: #fef08a;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #334155;
 }
 
-/* IconBtn likely styles the button; these helpers keep width consistent */
+/* Assuming IconBtn styles its own button, this just ensures it fills width */
 .render-total-container .w-full {
   width: 100%;
-}
-
-/* Small screen tweaks */
-@media (max-width: 1024px) {
-  .render-total-container {
-    min-width: auto;
-    padding: 1rem;
-  }
-  .render-total-price {
-    font-size: 1.5rem;
-  }
 }

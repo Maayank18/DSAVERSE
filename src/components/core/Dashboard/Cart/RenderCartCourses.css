@@ -1,82 +1,69 @@
+/* src/components/core/Dashboard/Cart/RenderCartCourses.css */
+
 .render-cart-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
   width: 100%;
 }
 
-/* Each cart item uses a 3-column grid on wide screens:
-   [thumbnail] [details] [actions/price] */
 .render-cart-item {
   display: grid;
-  grid-template-columns: 220px 1fr 160px;
-  gap: 1rem;
+  /* FIX: Adjusted grid columns for better spacing */
+  grid-template-columns: 180px 1fr auto;
+  gap: 1.25rem;
   align-items: start;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Border and spacing between items */
 .with-border {
-  border-bottom: 1px solid rgba(148,163,184,0.08); /* soft divider */
-  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.margin-top {
-  margin-top: 0.75rem;
-}
-
-/* Left block containing thumbnail + basic info (thumbnail kept in its column) */
-.render-cart-left {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
-/* Thumbnail styling */
+/* Thumbnail Styling */
 .render-cart-img {
-  width: 220px;
-  height: 140px;
+  width: 180px;
+  height: 120px;
   border-radius: 8px;
   object-fit: cover;
   background: #0b1220;
-  box-shadow: 0 6px 18px rgba(2,6,23,0.5);
-  flex-shrink: 0;
 }
 
-/* Details column */
+/* Details Column */
 .render-cart-details {
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  min-width: 0; /* allow text to ellipsize */
+  gap: 0.25rem;
 }
 
 .course-name {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #f1f5f9; /* text-richblack-5 */
+  color: #f1f5f9;
+  line-height: 1.3;
   margin: 0;
-  white-space: normal;
 }
 
 .course-category {
   font-size: 0.9rem;
-  color: #cbd5e1;
+  color: #94a3b8;
   margin: 0;
 }
 
-/* Ratings row */
 .course-rating {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.35rem;
+  margin-top: 0.5rem;
 }
 
 .rating-value {
-  color: #facc15; /* accent */
+  color: #facc15;
   font-weight: 700;
+  font-size: 1rem;
 }
 
 .rating-count {
@@ -84,7 +71,7 @@
   font-size: 0.9rem;
 }
 
-/* Right column: actions and price */
+/* Right Column: Actions and Price */
 .render-cart-right {
   display: flex;
   flex-direction: column;
@@ -93,71 +80,53 @@
   justify-self: end;
 }
 
-/* Remove button */
+/* --- IMPROVED REMOVE BUTTON --- */
 .remove-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: rgba(30,41,59,0.65); /* subtle */
-  border: 1px solid rgba(51,65,85,0.5);
-  color: #fbcfe8;
-  padding: 0.5rem 0.85rem;
+  background-color: #162236;
+  border: 1px solid #334155;
+  color: #e2e8f0;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
   cursor: pointer;
-  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.remove-btn:hover {
+  background-color: #ef4444; /* Red on hover */
+  border-color: #ef4444;
+  color: #ffffff;
 }
 
 /* Price */
 .course-price {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #fef08a;
+  text-align: right;
 }
 
-/* Responsiveness: collapse into vertical stacked layout on small screens */
-@media (max-width: 1024px) {
+/* --- RESPONSIVENESS --- */
+@media (max-width: 768px) {
   .render-cart-item {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Stack everything vertically */
+    gap: 1rem;
   }
-
-  .render-cart-left {
-    flex-direction: row;
-    gap: 0.9rem;
-  }
-
+  
   .render-cart-img {
-    width: 120px;
-    height: 88px;
+    width: 100%;
+    height: 180px; /* Make image responsive */
   }
 
   .render-cart-right {
-    align-items: flex-start;
+    flex-direction: row; /* Place button and price side-by-side */
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     margin-top: 0.5rem;
-  }
-
-  .course-price {
-    font-size: 1.5rem;
-  }
-}
-
-/* Tighten spacing on very small devices */
-@media (max-width: 420px) {
-  .render-cart-img {
-    width: 110px;
-    height: 78px;
-    border-radius: 6px;
-  }
-
-  .course-name {
-    font-size: 1rem;
-  }
-
-  .course-price {
-    font-size: 1.35rem;
-  }
-
-  .remove-btn {
-    padding: 0.45rem 0.6rem;
   }
 }
