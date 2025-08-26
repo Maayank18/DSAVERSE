@@ -1,10 +1,10 @@
 //  the temporary profile is already created we will be doing updation and deletion
-const Profile = require("../models/Profile");
-const User = require("../models/User");
-const {uploadImageToCloudinary} = require("../utils/imageUploader"); // testing changes
-const Course = require("../models/Course");
-const {convertSecondsToDuration} = require("../utils/secToDuration");
-const CourseProgress = require("../models/CourseProgress");
+const Profile = require("../../server/models/Profile");
+const User = require("../../server/models/User");
+const {uploadImageToCloudinary} = require("../../server/utils/imageUploader"); // testing changes
+const Course = require("../../server/models/Course");
+const {convertSecondsToDuration} = require("../../server/utils/secToDuration");
+const CourseProgress = require("../../server/models/CourseProgress");
 
 
 
@@ -73,20 +73,187 @@ const CourseProgress = require("../models/CourseProgress");
 //   }
 // };
 
+// exports.updateProfile = async (req, res) => {
+//   try {
+//     //  testing advice use correct format for date
+//     const { dateOfBirth = "", about = "", contactNumber, gender } = req.body;
+//     const id = req.user.id;
+
+//     if (!contactNumber || !gender || !id) {
+//       return res.status(400).json({
+//         success: false,
+//         message: " All fields are required ",
+//       });
+//     }
+
+//     console.log("User ID:", id);
+
+//     const userDetails = await User.findById(id);
+//     if (!userDetails) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+
+//     console.log("User details found:", userDetails);
+
+//     const profileId = userDetails.additionalDetails;
+//     const profileDetails = await Profile.findById(profileId);
+
+//     if (!profileDetails) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Profile not found",
+//       });
+//     }
+
+//     console.log("Profile details found:", profileDetails);
+
+//     profileDetails.dateOfBirth = dateOfBirth;
+//     profileDetails.about = about;
+//     profileDetails.contactNumber = contactNumber;
+//     profileDetails.gender = gender;
+//     await profileDetails.save();
+
+//     // <-- NEW: return the full user (populated) so client gets firstName/lastName/accountType etc.
+//     const updatedUser = await User.findById(id).populate("additionalDetails");
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Profile updated successfully",
+//       updatedUserDetails: updatedUser, // unchanged key name, but now contains full user
+//     });
+//   } catch (error) {
+//     console.error("Update Profile Error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Profile updation failed",
+//     });
+//   }
+// };
+
+// controllers/userController.js (or wherever your updateProfile lives)
+// exports.updateProfile = async (req, res) => {
+//   try {
+//     // accept firstName & lastName too (frontend sends them)
+//     const {
+//       firstName = "",
+//       lastName = "",
+//       dateOfBirth = "",
+//       about = "",
+//       contactNumber,
+//       gender,
+//     } = req.body;
+
+//     const id = req.user?.id;
+//     if (!id) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "Unauthorized",
+//       });
+//     }
+
+//     // contactNumber and gender were required in original; keep that validation
+//     if (!contactNumber || !gender) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "All fields are required",
+//       });
+//     }
+
+//     // fetch user
+//     const userDetails = await User.findById(id);
+//     if (!userDetails) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+
+//     // update user's top-level fields (if provided)
+//     let shouldSaveUser = false;
+//     if (firstName && firstName !== userDetails.firstName) {
+//       userDetails.firstName = firstName;
+//       shouldSaveUser = true;
+//     }
+//     if (lastName && lastName !== userDetails.lastName) {
+//       userDetails.lastName = lastName;
+//       shouldSaveUser = true;
+//     }
+
+//     // fetch profile document
+//     const profileId = userDetails.additionalDetails;
+//     const profileDetails = await Profile.findById(profileId);
+//     if (!profileDetails) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Profile not found",
+//       });
+//     }
+
+//     // Parse and validate dateOfBirth if provided (expecting "YYYY-MM-DD" from <input type="date">)
+//     if (dateOfBirth) {
+//       const parsedDob = new Date(dateOfBirth);
+//       if (isNaN(parsedDob.getTime())) {
+//         return res.status(400).json({
+//           success: false,
+//           message: "Invalid dateOfBirth format. Expected YYYY-MM-DD",
+//         });
+//       }
+//       profileDetails.dateOfBirth = parsedDob;
+//     }
+//     // update other profile fields
+//     profileDetails.about = about ?? profileDetails.about;
+//     profileDetails.contactNumber = contactNumber;
+//     profileDetails.gender = gender;
+
+//     // save profile (and user if needed)
+//     await profileDetails.save();
+//     if (shouldSaveUser) await userDetails.save();
+
+//     // return the full user populated with profile so client has everything
+//     const updatedUser = await User.findById(id).populate("additionalDetails");
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Profile updated successfully",
+//       data: updatedUser,
+//     });
+//   } catch (error) {
+//     console.error("Update Profile Error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Profile updation failed",
+//     });
+//   }
+// };
+
 exports.updateProfile = async (req, res) => {
   try {
-    //  testing advice use correct format for date
-    const { dateOfBirth = "", about = "", contactNumber, gender } = req.body;
-    const id = req.user.id;
+    const {
+      firstName = "",
+      lastName = "",
+      dateOfBirth = "",
+      about = "",
+      contactNumber,
+      gender,
+    } = req.body;
 
-    if (!contactNumber || !gender || !id) {
-      return res.status(400).json({
+    const id = req.user?.id;
+    if (!id) {
+      return res.status(401).json({
         success: false,
-        message: " All fields are required ",
+        message: "Unauthorized",
       });
     }
 
-    console.log("User ID:", id);
+    if (!contactNumber || !gender) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
 
     const userDetails = await User.findById(id);
     if (!userDetails) {
@@ -96,11 +263,18 @@ exports.updateProfile = async (req, res) => {
       });
     }
 
-    console.log("User details found:", userDetails);
+    let shouldSaveUser = false;
+    if (firstName && firstName !== userDetails.firstName) {
+      userDetails.firstName = firstName;
+      shouldSaveUser = true;
+    }
+    if (lastName && lastName !== userDetails.lastName) {
+      userDetails.lastName = lastName;
+      shouldSaveUser = true;
+    }
 
     const profileId = userDetails.additionalDetails;
     const profileDetails = await Profile.findById(profileId);
-
     if (!profileDetails) {
       return res.status(404).json({
         success: false,
@@ -108,21 +282,49 @@ exports.updateProfile = async (req, res) => {
       });
     }
 
-    console.log("Profile details found:", profileDetails);
+    // --- Robust DOB parsing start ---
+    if (dateOfBirth && dateOfBirth.trim() !== "") {
+      let parsedDob = new Date(dateOfBirth);
 
-    profileDetails.dateOfBirth = dateOfBirth;
-    profileDetails.about = about;
+      // If parsing failed (invalid date), try common alternate formats like DD-MM-YYYY or DD/MM/YYYY
+      if (isNaN(parsedDob.getTime())) {
+        // match DD-MM-YYYY or DD/MM/YYYY (also allow single-digit day/month)
+        const ddmmyyyy = dateOfBirth.trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+        if (ddmmyyyy) {
+          const dd = ddmmyyyy[1].padStart(2, "0");
+          const mm = ddmmyyyy[2].padStart(2, "0");
+          const yyyy = ddmmyyyy[3];
+          // convert to ISO-like YYYY-MM-DD which Date() parses reliably
+          const isoLike = `${yyyy}-${mm}-${dd}`;
+          parsedDob = new Date(isoLike);
+        }
+      }
+
+      // final validation
+      if (isNaN(parsedDob.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid dateOfBirth format. Expected YYYY-MM-DD or DD-MM-YYYY etc.",
+        });
+      }
+
+      profileDetails.dateOfBirth = parsedDob;
+    }
+    // --- Robust DOB parsing end ---
+
+    profileDetails.about = about ?? profileDetails.about;
     profileDetails.contactNumber = contactNumber;
     profileDetails.gender = gender;
-    await profileDetails.save();
 
-    // <-- NEW: return the full user (populated) so client gets firstName/lastName/accountType etc.
+    await profileDetails.save();
+    if (shouldSaveUser) await userDetails.save();
+
     const updatedUser = await User.findById(id).populate("additionalDetails");
 
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      updatedUserDetails: updatedUser, // unchanged key name, but now contains full user
+      data: updatedUser,
     });
   } catch (error) {
     console.error("Update Profile Error:", error);
@@ -132,6 +334,8 @@ exports.updateProfile = async (req, res) => {
     });
   }
 };
+
+
 
 
 

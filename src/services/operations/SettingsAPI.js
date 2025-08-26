@@ -43,32 +43,78 @@ export function updateDisplayPicture(token, formData) {
   }
 }
 
+// export function updateProfile(token, formData) {
+//   return async (dispatch) => {
+//     const toastId = toast.loading("Loading...")
+//     try {
+//       const response = await apiConnector("PUT", UPDATE_PROFILE_API, formData, {
+//         Authorization: `Bearer ${token}`,
+//       })
+//       console.log("UPDATE_PROFILE_API API RESPONSE............", response)
+
+//       if (!response.data.success) {
+//         throw new Error(response.data.message)
+//       }
+//       const userImage = response.data.updatedUserDetails.image
+//         ? response.data.updatedUserDetails.image
+//         : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.updatedUserDetails.firstName} ${response.data.updatedUserDetails.lastName}`
+//       dispatch(
+//         setUser({ ...response.data.updatedUserDetails, image: userImage })
+//       )
+//       toast.success("Profile Updated Successfully")
+//     } catch (error) {
+//       console.log("UPDATE_PROFILE_API API ERROR............", error)
+//       toast.error("Could Not Update Profile")
+//     }
+//     toast.dismiss(toastId)
+//   }
+// }
+
 export function updateProfile(token, formData) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...")
+    const toastId = toast.loading("Loading...");
     try {
-      const response = await apiConnector("PUT", UPDATE_PROFILE_API, formData, {
-        Authorization: `Bearer ${token}`,
-      })
-      console.log("UPDATE_PROFILE_API API RESPONSE............", response)
+      const response = await apiConnector(
+        "PUT",
+        UPDATE_PROFILE_API,
+        formData,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      console.log("UPDATE_PROFILE_API API RESPONSE............", response);
 
-      if (!response.data.success) {
-        throw new Error(response.data.message)
+      // ensure success
+      if (!response?.data?.success) {
+        throw new Error(response?.data?.message ?? "Profile update failed");
       }
-      const userImage = response.data.updatedUserDetails.image
-        ? response.data.updatedUserDetails.image
-        : `https://api.dicebear.com/5.x/initials/svg?seed=${response.data.updatedUserDetails.firstName} ${response.data.updatedUserDetails.lastName}`
-      dispatch(
-        setUser({ ...response.data.updatedUserDetails, image: userImage })
-      )
-      toast.success("Profile Updated Successfully")
+
+      // normalize the updated user object from various possible shapes
+      const resData = response.data;
+      const updatedUser =
+        resData?.data ?? // preferred: { data: updatedUser } (your current backend)
+        resData?.updatedUserDetails ?? // older shape you used before
+        resData?.user ?? // possible alternative
+        resData; // fallback
+
+      // compute image fallback safely (protect against undefined)
+      const userImage =
+        updatedUser?.image ??
+        `https://api.dicebear.com/5.x/initials/svg?seed=${updatedUser?.firstName ?? ""} ${updatedUser?.lastName ?? ""}`;
+
+      // persist merged user object (keeps existing fields and ensures image exists)
+      dispatch(setUser({ ...(updatedUser ?? {}), image: userImage }));
+
+      toast.success("Profile Updated Successfully");
     } catch (error) {
-      console.log("UPDATE_PROFILE_API API ERROR............", error)
-      toast.error("Could Not Update Profile")
+      console.log("UPDATE_PROFILE_API API ERROR............", error);
+      toast.error("Could Not Update Profile");
+    } finally {
+      toast.dismiss(toastId);
     }
-    toast.dismiss(toastId)
-  }
+  };
 }
+
 
 // export async function changePassword(token, formData) {
 //   const toastId = toast.loading("Loading...")

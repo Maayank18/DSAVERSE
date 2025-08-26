@@ -8,11 +8,11 @@ const {
   signup,
   sendOTP,
   changePassword,
-} = require("../controllers/Auth")
+} = require("../../api/controllers/Auth")
 const {
   resetpasswordtoken,
   resetpassword,
-} = require("../controllers/ResetPassword")
+} = require("../../api/controllers/ResetPassword")
 
 const { auth } = require("../middlewares/auth")
 

@@ -182,10 +182,10 @@
 // };
 
 import { toast } from "react-hot-toast";
-import Section from "../models/Section.js";
-import SubSection from "../models/SubSection.js";
-import Course from "../models/Course.js";
-import { uploadImageToCloudinary } from "../utils/imageUploader.js";
+import Section from "../../server/models/Section.js";
+import SubSection from "../../server/models/SubSection.js";
+import Course from "../../server/models/Course.js";
+import { uploadImageToCloudinary } from "../../server/utils/imageUploader.js";
 import { getVideoDurationInSeconds } from "get-video-duration";
 
 // helper to format duration

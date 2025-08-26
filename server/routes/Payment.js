@@ -14,7 +14,7 @@
 const express = require("express")
 const router = express.Router()
 
-const { capturePayment, verifyPayment, sendPaymentSuccessEmail } = require("../controllers/Payment")
+const { capturePayment, verifyPayment, sendPaymentSuccessEmail } = require("../../api/controllers/Payment")
 const { auth, isStudent } = require("../middlewares/auth")
 router.post("/capturePayment", auth, isStudent, capturePayment)
 router.post("/verifyPayment",auth, isStudent, verifyPayment)

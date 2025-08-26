@@ -8,7 +8,7 @@
 
 const express = require("express")
 const router = express.Router()
-const { contactUsController } = require("../controllers/ContactUs")
+const { contactUsController } = require("../../api/controllers/ContactUs")
 
 // change to "/" so mounting "/api/v1/contact" => final: /api/v1/contact
 router.post("/", contactUsController)

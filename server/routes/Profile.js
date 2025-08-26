@@ -9,7 +9,7 @@ const {
   updateDisplayPicture,
   getEnrolledCourses,
   instructorDashboard,
-} = require("../controllers/Profile");
+} = require("../../api/controllers/Profile");
 
 console.log(typeof getAllUserDetail);
 
