@@ -181,7 +181,6 @@
 //   }
 // };
 
-import { toast } from "react-hot-toast";
 import Section from "../../server/models/Section.js";
 import SubSection from "../../server/models/SubSection.js";
 import Course from "../../server/models/Course.js";
