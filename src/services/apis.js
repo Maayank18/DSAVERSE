@@ -1,15 +1,13 @@
-// const BASE_URL = process.env.REACT_APP_BASE_URL
-const dotenv = require("dotenv");
-dotenv.config();
-// const BASE_URL = "http://localhost:4000/api/v1"
-// prefer build-time env; fallback to localhost for dev
+// src/api/endpoints.js (or wherever this file is)
 const BASE_URL =
   process.env.REACT_APP_BASE_URL ||
   (process.env.NODE_ENV === "development"
     ? "http://localhost:4000/api/v1"
-    : ""); // empty in production if env not provided
+    : "");
 
-console.log("BUILD BASE URL:", process.env.REACT_APP_BASE_URL, " -> using", BASE_URL);
+console.log("BUILD BASE URL:", process.env.REACT_APP_BASE_URL, "-> using", BASE_URL);
+
+// then the rest of your exports unchanged
 
 
 // AUTH ENDPOINTS
