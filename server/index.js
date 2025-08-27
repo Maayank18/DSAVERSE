@@ -2,6 +2,9 @@
 const express = require("express");
 const app = express();
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 // middlewares
 app.use(express.json());
 
@@ -17,8 +20,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const {cloudinary, cloudinaryConnect} = require("./config/cloudinary");
 const fileUpload = require("express-fileupload");
-const dotenv = require("dotenv");
-dotenv.config();
+
 
 const PORT = process.env.PORT || 4000;
 
