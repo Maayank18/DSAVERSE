@@ -1,30 +1,3 @@
-// import React from "react"
-
-// import Course_Card from "./Course_card"
-// import "./CourseSlider.css"
-
-// const CourseSlider = ({ Courses }) => {
-//   return (
-//     <div className="course-slider-wrapper">
-//       {Courses?.length ? (
-//         <div className="course-slider">
-//           {Courses.map((course, i) => (
-//             <div className="course-slide-content" key={i}>
-//               <Course_Card course={course} />
-//             </div>
-//           ))}
-//         </div>
-//       ) : (
-//         <p className="no-course-text">No Course Found</p>
-//       )}
-//     </div>
-//   )
-// }
-
-// export default CourseSlider
-
-
-// CourseSlider.jsx
 // CourseSlider.jsx
 import React, { useRef, useState, useEffect } from "react";
 import Course_Card from "./Course_card";

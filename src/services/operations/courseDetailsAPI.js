@@ -372,34 +372,78 @@ export const deleteCourse = async (courseId, token) => {
 
 
 // get full details of a course
+// export const getFullDetailsOfCourse = async (courseId, token) => {
+//   const toastId = toast.loading("Loading...")
+//   //   dispatch(setLoading(true));
+//   let result = null
+//   try {
+//     const response = await apiConnector(
+//       "POST",
+//       GET_FULL_COURSE_DETAILS_AUTHENTICATED,
+//       {
+//         courseId,
+//       },
+//       {
+//         Authorization: `Bearer ${token}`,
+//       }
+//     )
+//     console.log("COURSE_FULL_DETAILS_API API RESPONSE............", response)
+
+//     if (!response.data.success) {
+//       throw new Error(response.data.message)
+//     }
+//     result = response?.data?.data
+//   } catch (error) {
+//     console.log("COURSE_FULL_DETAILS_API API ERROR............", error)
+//     result = error.response.data
+//     // toast.error(error.response.data.message);
+//   }
+//   toast.dismiss(toastId)
+//   //   dispatch(setLoading(false));
+//   return result
+// }
+
+// import { toast } from "react-hot-toast"
+// import { apiConnector } from "../apiconnector"
+// import { GET_FULL_COURSE_DETAILS_AUTHENTICATED } from "../apis"
+
 export const getFullDetailsOfCourse = async (courseId, token) => {
-  const toastId = toast.loading("Loading...")
-  //   dispatch(setLoading(true));
+  const toastId = toast.loading("Loading course details...")
   let result = null
+
   try {
     const response = await apiConnector(
       "POST",
       GET_FULL_COURSE_DETAILS_AUTHENTICATED,
-      {
-        courseId,
-      },
-      {
-        Authorization: `Bearer ${token}`,
-      }
+      { courseId },
+      { Authorization: `Bearer ${token}` }
     )
-    console.log("COURSE_FULL_DETAILS_API API RESPONSE............", response)
 
-    if (!response.data.success) {
-      throw new Error(response.data.message)
+    console.log("COURSE_FULL_DETAILS_API RESPONSE:", response)
+
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message || "Failed to fetch course details")
     }
-    result = response?.data?.data
+
+    result = response.data.data
   } catch (error) {
-    console.log("COURSE_FULL_DETAILS_API API ERROR............", error)
-    result = error.response.data
-    // toast.error(error.response.data.message);
+    console.error("COURSE_FULL_DETAILS_API ERROR:", error)
+
+    const message =
+      error?.response?.data?.message ||
+      error?.message ||
+      "Something went wrong while fetching course details"
+
+    toast.error(message)
+
+    result = {
+      success: false,
+      message,
+    }
+  } finally {
+    toast.dismiss(toastId)
   }
-  toast.dismiss(toastId)
-  //   dispatch(setLoading(false));
+
   return result
 }
 

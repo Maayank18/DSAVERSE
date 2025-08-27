@@ -432,10 +432,120 @@ exports.editCourse = async (req, res) => {
 
 
 
+// exports.getFullCourseDetails = async (req, res) => {
+//   try {
+//     const { courseId } = req.body;
+//     const userId = req.user.id;
+
+//     console.log(">>> getFullCourseDetails called");
+//     console.log("Course ID:", courseId);
+//     console.log("User ID:", userId);
+
+//     if (!courseId) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Course ID is required",
+//       });
+//     }
+
+//     // Populate everything deeply so subSection has videoUrl & timeDuration
+//     const courseDetails = await Course.findById(courseId)
+//       .populate({
+//         path: "instructor",
+//         populate: {
+//           path: "additionalDetails",
+//         },
+//       })
+//       .populate("category")
+//       .populate("ratingAndReviews")
+//       .populate({
+//         path: "courseContent",
+//         populate: {
+//           path: "subSection",
+//           select: "title description videoUrl timeDuration", // ✅ Only the fields we need
+//         },
+//       })
+//       .exec();
+
+//     if (!courseDetails) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Course not found",
+//       });
+//     }
+
+//     console.log("Course details fetched successfully");
+//     console.log(
+//       "First section video sample:",
+//       courseDetails.courseContent?.[0]?.subSection?.[0]?.videoUrl || "No video"
+//     );
+
+//     // Get completed lectures for this user in this course
+//     const enrolledStudent = await User.findById(userId)
+//       .select("courses coursesProgress")
+//       .populate({
+//         path: "coursesProgress",
+//         match: { courseId },
+//         select: "completedVideos",
+//       })
+//       .exec();
+
+//     let completedVideos = [];
+//     if (
+//       enrolledStudent &&
+//       enrolledStudent.coursesProgress &&
+//       enrolledStudent.coursesProgress.length > 0
+//     ) {
+//       completedVideos = enrolledStudent.coursesProgress[0].completedVideos || [];
+//     }
+
+//     console.log("Completed videos:", completedVideos);
+
+//     // Calculate total duration
+//     let totalDurationInSeconds = 0;
+//     courseDetails.courseContent.forEach((section) => {
+//       section.subSection.forEach((subSec) => {
+//         if (subSec.timeDuration) {
+//           // If already in seconds (number), use it directly
+//           if (!isNaN(subSec.timeDuration)) {
+//             totalDurationInSeconds += Number(subSec.timeDuration);
+//           } else if (typeof subSec.timeDuration === "string") {
+//             // If in mm:ss format, convert
+//             const parts = subSec.timeDuration.split(":").map(Number);
+//             if (parts.length === 2) {
+//               totalDurationInSeconds += parts[0] * 60 + parts[1];
+//             }
+//           }
+//         }
+//       });
+//     });
+
+//     console.log("Total Duration (seconds):", totalDurationInSeconds);
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Full course details fetched successfully",
+//       data: {
+//         courseDetails,
+//         completedVideos,
+//         totalDuration: totalDurationInSeconds,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("Error in getFullCourseDetails:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Error fetching full course details",
+//       error: error.message,
+//     });
+//   }
+// };
+
+
 exports.getFullCourseDetails = async (req, res) => {
   try {
-    const { courseId } = req.body;
-    const userId = req.user.id;
+    const courseId = req.body?.courseId || req.query?.courseId;
+    const userId = req.user?.id || null;
 
     console.log(">>> getFullCourseDetails called");
     console.log("Course ID:", courseId);
@@ -448,13 +558,10 @@ exports.getFullCourseDetails = async (req, res) => {
       });
     }
 
-    // Populate everything deeply so subSection has videoUrl & timeDuration
     const courseDetails = await Course.findById(courseId)
       .populate({
         path: "instructor",
-        populate: {
-          path: "additionalDetails",
-        },
+        populate: { path: "additionalDetails" },
       })
       .populate("category")
       .populate("ratingAndReviews")
@@ -462,7 +569,7 @@ exports.getFullCourseDetails = async (req, res) => {
         path: "courseContent",
         populate: {
           path: "subSection",
-          select: "title description videoUrl timeDuration", // ✅ Only the fields we need
+          select: "title description videoUrl timeDuration",
         },
       })
       .exec();
@@ -474,51 +581,47 @@ exports.getFullCourseDetails = async (req, res) => {
       });
     }
 
-    console.log("Course details fetched successfully");
-    console.log(
-      "First section video sample:",
-      courseDetails.courseContent?.[0]?.subSection?.[0]?.videoUrl || "No video"
-    );
+    console.log("Course fetched. sections:", (courseDetails.courseContent || []).length);
 
-    // Get completed lectures for this user in this course
-    const enrolledStudent = await User.findById(userId)
-      .select("courses coursesProgress")
-      .populate({
-        path: "coursesProgress",
-        match: { courseId },
-        select: "completedVideos",
-      })
-      .exec();
-
+    // safely compute completedVideos
     let completedVideos = [];
-    if (
-      enrolledStudent &&
-      enrolledStudent.coursesProgress &&
-      enrolledStudent.coursesProgress.length > 0
-    ) {
-      completedVideos = enrolledStudent.coursesProgress[0].completedVideos || [];
+    if (userId) {
+      const enrolledStudent = await User.findById(userId)
+        .select("courses coursesProgress")
+        .populate({
+          path: "coursesProgress",
+          match: { courseId },
+          select: "completedVideos",
+        })
+        .exec();
+
+      if (enrolledStudent?.coursesProgress?.length > 0) {
+        completedVideos = enrolledStudent.coursesProgress[0].completedVideos || [];
+      }
+    } else {
+      console.log("No userId provided — skipping completed videos lookup.");
     }
 
-    console.log("Completed videos:", completedVideos);
-
-    // Calculate total duration
+    // Calculate total duration (safe)
     let totalDurationInSeconds = 0;
-    courseDetails.courseContent.forEach((section) => {
-      section.subSection.forEach((subSec) => {
-        if (subSec.timeDuration) {
-          // If already in seconds (number), use it directly
-          if (!isNaN(subSec.timeDuration)) {
-            totalDurationInSeconds += Number(subSec.timeDuration);
-          } else if (typeof subSec.timeDuration === "string") {
-            // If in mm:ss format, convert
-            const parts = subSec.timeDuration.split(":").map(Number);
-            if (parts.length === 2) {
-              totalDurationInSeconds += parts[0] * 60 + parts[1];
-            }
+    const content = Array.isArray(courseDetails.courseContent) ? courseDetails.courseContent : [];
+
+    for (const section of content) {
+      const subs = Array.isArray(section.subSection) ? section.subSection : [];
+      for (const subSec of subs) {
+        const t = subSec?.timeDuration;
+        if (t == null) continue;
+
+        if (typeof t === "number" || !isNaN(t)) {
+          totalDurationInSeconds += Number(t);
+        } else if (typeof t === "string") {
+          const parts = t.split(":").map(Number);
+          if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+            totalDurationInSeconds += parts[0] * 60 + parts[1];
           }
         }
-      });
-    });
+      }
+    }
 
     console.log("Total Duration (seconds):", totalDurationInSeconds);
 
@@ -540,8 +643,6 @@ exports.getFullCourseDetails = async (req, res) => {
     });
   }
 };
-
-
 
 
 
