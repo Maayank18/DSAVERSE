@@ -413,7 +413,7 @@ export const getFullDetailsOfCourse = async (courseId, token) => {
 
   try {
     const response = await apiConnector(
-      "POST",
+      "GET",
       GET_FULL_COURSE_DETAILS_AUTHENTICATED,
       { courseId },
       { Authorization: `Bearer ${token}` }
