@@ -34,31 +34,59 @@ function CourseDetails() {
   const [response, setResponse] = useState(null);
   const [confirmationModal, setConfirmationModal] = useState(null);
 
+  // useEffect(() => {
+  //   if (!courseId) return;
+
+  //   const fetch = async () => {
+  //     try {
+  //       const res = await getFullDetailsOfCourse(courseId);
+  //       const payload = res?.data ?? res;
+  //       const data = payload?.data ?? payload;
+
+  //       if (data?.courseDetails) {
+  //         setResponse({
+  //           success: true,
+  //           ...data,
+  //         });
+  //       } else {
+  //         setResponse({ success: false, courseDetails: null });
+  //       }
+  //     } catch (error) {
+  //       console.error("getFullDetailsOfCourse error:", error);
+  //       setResponse({ success: false, courseDetails: null });
+  //     }
+  //   };
+
+  //   fetch();
+  // }, [courseId]);
   useEffect(() => {
-    if (!courseId) return;
+  if (!courseId) return;
 
-    const fetch = async () => {
-      try {
-        const res = await getFullDetailsOfCourse(courseId);
-        const payload = res?.data ?? res;
-        const data = payload?.data ?? payload;
+  const fetch = async () => {
+    try {
+      console.log("Fetching course details for id:", courseId, "tokenPresent:", Boolean(token));
+      const res = await getFullDetailsOfCourse(courseId, token); // <-- pass token here
+      console.log("getFullDetailsOfCourse raw response:", res);
+      const payload = res?.data ?? res;
+      const data = payload?.data ?? payload;
 
-        if (data?.courseDetails) {
-          setResponse({
-            success: true,
-            ...data,
-          });
-        } else {
-          setResponse({ success: false, courseDetails: null });
-        }
-      } catch (error) {
-        console.error("getFullDetailsOfCourse error:", error);
-        setResponse({ success: false, courseDetails: null });
+      if (data?.courseDetails) {
+        setResponse({
+          success: true,
+          ...data,
+        });
+      } else {
+        setResponse({ success: false, courseDetails: null, message: data?.message || "Not found" });
       }
-    };
+    } catch (error) {
+      console.error("getFullDetailsOfCourse error:", error);
+      setResponse({ success: false, courseDetails: null, message: error?.message || "fetch error" });
+    }
+  };
 
-    fetch();
-  }, [courseId]);
+  fetch();
+}, [courseId, token]); // include token so it re-fetches if token becomes available
+
 
   // --- NEW: aggregated rating & review count from the API ---
   const [avgRating, setAvgRating] = useState(0);
