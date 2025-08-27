@@ -29,12 +29,22 @@ database.dbConnect();
 
 
 app.use(cookieParser());
+// app.use(
+//     cors({
+//         origin:"http://localhost:3000", // front end ki request handler karna
+//         credentials:true,
+//     })
+// )
 app.use(
-    cors({
-        origin:"http://localhost:3000", // front end ki request handler karna
-        credentials:true,
-    })
-)
+  cors({
+    origin: [
+      "http://localhost:3000", // for local dev
+      "https://dsaverse.vercel.app" // for deployed frontend
+    ],
+    credentials: true,
+  })
+);
+
 
 app.use(
     fileUpload({
