@@ -18,8 +18,6 @@
 //         process.exit(1);
 //     })
 // }
-
-
 // config/database.js
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
