@@ -8,7 +8,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import IconBtn from "../../common/IconBtn";
 import "./VideoDetailsSidebar.css";
 
-import { setCompletedLectures } from "../../../slices/viewCourseSlice";
+import { toggleLectureCompletion, setCompletedLectures } from "../../../slices/viewCourseSlice";
 import { apiConnector } from "../../../services/apiconnector";
 
 export default function VideoDetailsSidebar({ setReviewModal }) {
@@ -31,11 +31,16 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
   const { token } = useSelector((state) => state.auth);
 
   // lectures for current course — ensure this is always an array
-  const currentCompleted = Array.isArray(completedLectures)
-    ? completedLectures
-    : Array.isArray(completedLectures?.[courseEntireData?._id])
-    ? completedLectures[courseEntireData._id]
+  // const currentCompleted = Array.isArray(completedLectures)
+  //   ? completedLectures
+  //   : Array.isArray(completedLectures?.[courseEntireData?._id])
+  //   ? completedLectures[courseEntireData._id]
+  //   : [];
+  const courseId = courseEntireData?._id;
+  const currentCompleted = Array.isArray(completedLectures?.[courseId])
+    ? completedLectures[courseId]
     : [];
+
 
   // Set active section & subsection
   useEffect(() => {
@@ -143,51 +148,59 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
   //     console.error("Failed to mark lecture as complete:", error);
   //   }
   // };
+
+
+
   const handleCheckboxChange = async (subId, checked) => {
-  if (!token || !courseEntireData._id) return;
+    if (!token || !courseEntireData._id) return;
+    const courseId = courseEntireData._id;
 
-  const prevCompleted = Array.isArray(currentCompleted) ? [...currentCompleted] : [];
-  // Create optimistic new array based on `checked`
-  const optimistic = checked
-    ? Array.from(new Set([...prevCompleted, String(subId)]))
-    : prevCompleted.filter((id) => id !== String(subId));
+    // optimistic toggle
+    dispatch(toggleLectureCompletion({ courseId, subSecId: subId }));
 
-  dispatch(setCompletedLectures({
-    courseId: courseEntireData._id,
-    lectures: optimistic,
-  }));
+    try {
+      const data = { courseId, subsectionId: subId };
+      const response = await apiConnector(
+        "POST",
+        `/course/updateCourseProgress`,
+        data,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-  try {
-    const data = { courseId: courseEntireData._id, subsectionId: subId };
-    const response = await apiConnector(
-      "POST",
-      `/course/updateCourseProgress`,
-      data,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+      console.log("UPDATE PROGRESS RESPONSE:", response?.data);
 
-    if (response?.data?.completedVideos) {
-      const normalized = response.data.completedVideos.map((id) => String(id));
-      dispatch(setCompletedLectures({
-        courseId: courseEntireData._id,
-        lectures: normalized,
-      }));
-    } else {
-      // rollback
-      dispatch(setCompletedLectures({
-        courseId: courseEntireData._id,
-        lectures: prevCompleted,
-      }));
+      if (response?.data?.completedVideos) {
+        const normalized = response.data.completedVideos.map((id) => String(id));
+        dispatch(setCompletedLectures({ courseId, lectures: normalized }));
+      } else {
+        // rollback: fetch current server state (or you can dispatch prevCompleted you recorded)
+        // Option A: fetch progress again
+        const fresh = await apiConnector(
+          "GET",
+          `/course/${courseId}/progress`,
+          null,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const normalized = (fresh?.data?.completedVideos || []).map(String);
+        dispatch(setCompletedLectures({ courseId, lectures: normalized }));
+      }
+    } catch (error) {
+      console.error("Failed to mark lecture as complete:", error);
+      // rollback: fetch fresh server state
+      try {
+        const fresh = await apiConnector(
+          "GET",
+          `/course/${courseId}/progress`,
+          null,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const normalized = (fresh?.data?.completedVideos || []).map(String);
+        dispatch(setCompletedLectures({ courseId, lectures: normalized }));
+      } catch (e) {
+        console.error("Rollback fetch failed:", e);
+      }
     }
-  } catch (error) {
-    // rollback
-    dispatch(setCompletedLectures({
-      courseId: courseEntireData._id,
-      lectures: prevCompleted,
-    }));
-    console.error("Failed to mark lecture as complete:", error);
-  }
-};
+  };
 
 
   // Close drawer on navigation (mobile)
@@ -267,12 +280,20 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
                         onClick={(e) => e.stopPropagation()}
                         onChange={() => handleCheckboxChange(sub._id)}
                       /> */}
-                      <input
+                      {/* <input
                         type="checkbox"
                         checked={Array.isArray(currentCompleted) && currentCompleted.includes(String(sub._id))}
                         onClick={(e) => e.stopPropagation()}
                         onChange={(e) => handleCheckboxChange(sub._id, e.target.checked)}
+                      /> */}
+                      <input
+                        type="checkbox"
+                        disabled={!courseEntireData?._id || !token}
+                        checked={currentCompleted.includes(String(sub._id))}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => handleCheckboxChange(sub._id, e.target.checked)}
                       />
+
 
                       <span
                         className="subsection-title"
