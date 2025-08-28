@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { setToken } from "../slices/authSlice";
+import { toast } from "react-toastify";
 
 import ConfirmationModal from "../components/common/ConfirmationModal";
 import Footer from "../components/common/Footer";
