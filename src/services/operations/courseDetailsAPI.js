@@ -372,96 +372,66 @@ export const deleteCourse = async (courseId, token) => {
 
 
 // get full details of a course
-// export const getFullDetailsOfCourse = async (courseId, token) => {
-//   const toastId = toast.loading("Loading...")
-//   //   dispatch(setLoading(true));
-//   let result = null
-//   try {
-//     const response = await apiConnector(
-//       "POST",
-//       GET_FULL_COURSE_DETAILS_AUTHENTICATED,
-//       {
-//         courseId,
-//       },
-//       {
-//         Authorization: `Bearer ${token}`,
-//       }
-//     )
-//     console.log("COURSE_FULL_DETAILS_API API RESPONSE............", response)
 
-//     if (!response.data.success) {
-//       throw new Error(response.data.message)
-//     }
-//     result = response?.data?.data
-//   } catch (error) {
-//     console.log("COURSE_FULL_DETAILS_API API ERROR............", error)
-//     result = error.response.data
-//     // toast.error(error.response.data.message);
-//   }
-//   toast.dismiss(toastId)
-//   //   dispatch(setLoading(false));
-//   return result
-// }
 
-// import { toast } from "react-hot-toast"
-// import { apiConnector } from "../apiconnector"
-// import { GET_FULL_COURSE_DETAILS_AUTHENTICATED } from "../apis"
 
-// export const getFullDetailsOfCourse = async (courseId, token) => {
-//   const toastId = toast.loading("Loading course details...")
-//   let result = null
+// export const getFullDetailsOfCourse = async (courseId, token = null) => {
+//   // Build URL (your endpoint may expect POST or GET; adjust accordingly)
+//   const url = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
 
-//   try {
-//     const response = await apiConnector(
-//       "GET",
-//       GET_FULL_COURSE_DETAILS_AUTHENTICATED,
-//       { courseId },
-//       { Authorization: `Bearer ${token}` }
-//     )
+//   // Only set Authorization header when we actually have a usable token
+//   const headers = {};
+//   const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
 
-//     console.log("COURSE_FULL_DETAILS_API RESPONSE:", response)
-
-//     if (!response?.data?.success) {
-//       throw new Error(response?.data?.message || "Failed to fetch course details")
-//     }
-
-//     result = response.data.data
-//   } catch (error) {
-//     console.error("COURSE_FULL_DETAILS_API ERROR:", error)
-
-//     const message =
-//       error?.response?.data?.message ||
-//       error?.message ||
-//       "Something went wrong while fetching course details"
-
-//     toast.error(message)
-
-//     result = {
-//       success: false,
-//       message,
-//     }
-//   } finally {
-//     toast.dismiss(toastId)
+//   if (hasToken) {
+//     headers["Authorization"] = `Bearer ${token}`;
 //   }
 
-//   return result
-// }
-
+//   // For GET, pass null body and headers
+//   return apiConnector("GET", url, null, headers);
+// };
 export const getFullDetailsOfCourse = async (courseId, token = null) => {
-  // Build URL (your endpoint may expect POST or GET; adjust accordingly)
-  const url = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
+  if (!courseId) throw new Error("courseId is required");
 
-  // Only set Authorization header when we actually have a usable token
-  const headers = {};
+  // Normalize token: treat "null", empty, undefined as no token
   const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
 
+  // Public endpoint (POST) path
+  const publicUrl = courseEndpoints.COURSE_DETAILS_API; // POST /course/getCourseDetails
+  // Authenticated (GET) endpoint path
+  const authUrl = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
+
+  // Headers for axios
+  const headers = {};
+
+  if (hasToken) headers["Authorization"] = `Bearer ${token}`;
+
+  // If we have token: try authenticated GET first
   if (hasToken) {
-    headers["Authorization"] = `Bearer ${token}`;
+    try {
+      return await apiConnector("GET", authUrl, null, headers);
+    } catch (err) {
+      // If 401 or 403 (invalid token), fallback to public endpoint
+      const status = err?.response?.status;
+      if (status === 401 || status === 403) {
+        // try fallback to public POST
+        try {
+          return await apiConnector("POST", publicUrl, { courseId });
+        } catch (err2) {
+          // bubble up the original auth error if fallback also fails
+          throw err2 || err;
+        }
+      }
+      // other errors - bubble up
+      throw err;
+    }
   }
 
-  // For GET, pass null body and headers
-  return apiConnector("GET", url, null, headers);
+  // No token: call public POST
+  return apiConnector("POST", publicUrl, { courseId });
 };
+
+
 
 
 // services/operations/courseDetailsAPI.js (or wherever it lives)
