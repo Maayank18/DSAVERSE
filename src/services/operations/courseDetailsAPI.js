@@ -407,46 +407,61 @@ export const deleteCourse = async (courseId, token) => {
 // import { apiConnector } from "../apiconnector"
 // import { GET_FULL_COURSE_DETAILS_AUTHENTICATED } from "../apis"
 
-export const getFullDetailsOfCourse = async (courseId, token) => {
-  const toastId = toast.loading("Loading course details...")
-  let result = null
+// export const getFullDetailsOfCourse = async (courseId, token) => {
+//   const toastId = toast.loading("Loading course details...")
+//   let result = null
 
-  try {
-    const response = await apiConnector(
-      "GET",
-      GET_FULL_COURSE_DETAILS_AUTHENTICATED,
-      { courseId },
-      { Authorization: `Bearer ${token}` }
-    )
+//   try {
+//     const response = await apiConnector(
+//       "GET",
+//       GET_FULL_COURSE_DETAILS_AUTHENTICATED,
+//       { courseId },
+//       { Authorization: `Bearer ${token}` }
+//     )
 
-    console.log("COURSE_FULL_DETAILS_API RESPONSE:", response)
+//     console.log("COURSE_FULL_DETAILS_API RESPONSE:", response)
 
-    if (!response?.data?.success) {
-      throw new Error(response?.data?.message || "Failed to fetch course details")
-    }
+//     if (!response?.data?.success) {
+//       throw new Error(response?.data?.message || "Failed to fetch course details")
+//     }
 
-    result = response.data.data
-  } catch (error) {
-    console.error("COURSE_FULL_DETAILS_API ERROR:", error)
+//     result = response.data.data
+//   } catch (error) {
+//     console.error("COURSE_FULL_DETAILS_API ERROR:", error)
 
-    const message =
-      error?.response?.data?.message ||
-      error?.message ||
-      "Something went wrong while fetching course details"
+//     const message =
+//       error?.response?.data?.message ||
+//       error?.message ||
+//       "Something went wrong while fetching course details"
 
-    toast.error(message)
+//     toast.error(message)
 
-    result = {
-      success: false,
-      message,
-    }
-  } finally {
-    toast.dismiss(toastId)
+//     result = {
+//       success: false,
+//       message,
+//     }
+//   } finally {
+//     toast.dismiss(toastId)
+//   }
+
+//   return result
+// }
+
+export const getFullDetailsOfCourse = async (courseId, token = null) => {
+  // Build URL (your endpoint may expect POST or GET; adjust accordingly)
+  const url = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
+
+  // Only set Authorization header when we actually have a usable token
+  const headers = {};
+  const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
+
+  if (hasToken) {
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  return result
-}
-
+  // For GET, pass null body and headers
+  return apiConnector("GET", url, null, headers);
+};
 
 
 // services/operations/courseDetailsAPI.js (or wherever it lives)

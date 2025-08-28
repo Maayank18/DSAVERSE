@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { setToken } from "../slices/authSlice";
 
 import ConfirmationModal from "../components/common/ConfirmationModal";
 import Footer from "../components/common/Footer";
@@ -25,6 +26,7 @@ import "./CourseDetails.css";
 function CourseDetails() {
   const { user } = useSelector((state) => state.profile);
   const { token } = useSelector((state) => state.auth);
+  const rawToken = token && token !== "null" ? token : null;
   const { loading } = useSelector((state) => state.profile);
   const { paymentLoading } = useSelector((state) => state.course);
   const dispatch = useDispatch();
@@ -59,13 +61,41 @@ function CourseDetails() {
 
   //   fetch();
   // }, [courseId]);
-  useEffect(() => {
+//   useEffect(() => {
+//   if (!courseId) return;
+
+//   const fetch = async () => {
+//     try {
+//       console.log("Fetching course details for id:", courseId, "tokenPresent:", Boolean(token));
+//       const res = await getFullDetailsOfCourse(courseId, token); // <-- pass token here
+//       console.log("getFullDetailsOfCourse raw response:", res);
+//       const payload = res?.data ?? res;
+//       const data = payload?.data ?? payload;
+
+//       if (data?.courseDetails) {
+//         setResponse({
+//           success: true,
+//           ...data,
+//         });
+//       } else {
+//         setResponse({ success: false, courseDetails: null, message: data?.message || "Not found" });
+//       }
+//     } catch (error) {
+//       console.error("getFullDetailsOfCourse error:", error);
+//       setResponse({ success: false, courseDetails: null, message: error?.message || "fetch error" });
+//     }
+//   };
+
+//   fetch();
+// }, [courseId, token]); // include token so it re-fetches if token becomes available
+
+useEffect(() => {
   if (!courseId) return;
 
   const fetch = async () => {
     try {
-      console.log("Fetching course details for id:", courseId, "tokenPresent:", Boolean(token));
-      const res = await getFullDetailsOfCourse(courseId, token); // <-- pass token here
+      console.log("Fetching course details for id:", courseId, "tokenPresent:", Boolean(rawToken));
+      const res = await getFullDetailsOfCourse(courseId, rawToken);
       console.log("getFullDetailsOfCourse raw response:", res);
       const payload = res?.data ?? res;
       const data = payload?.data ?? payload;
@@ -80,12 +110,28 @@ function CourseDetails() {
       }
     } catch (error) {
       console.error("getFullDetailsOfCourse error:", error);
-      setResponse({ success: false, courseDetails: null, message: error?.message || "fetch error" });
+      // If backend told us token invalid/expired, clear it
+      const status = error?.response?.status;
+      const serverMsg = error?.response?.data?.message || error?.message;
+      if (status === 401) {
+        toast.error(serverMsg || "Session expired. Please log in again.");
+        // clear client token (dispatch the auth action)
+        dispatch(setToken(null));
+        // optional: navigate("/login");
+      } else {
+        toast.error(serverMsg || "Could not load course details.");
+      }
+
+      setResponse({
+        success: false,
+        courseDetails: null,
+        message: serverMsg || "fetch error",
+      });
     }
   };
 
   fetch();
-}, [courseId, token]); // include token so it re-fetches if token becomes available
+}, [courseId, rawToken]); // rawToken instead of token
 
 
   // --- NEW: aggregated rating & review count from the API ---
