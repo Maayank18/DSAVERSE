@@ -204,37 +204,75 @@ const Catalog = () => {
   }, [catalogName]);
 
   // 2) Once we have the categoryId or slug, fetch the catalog page payload
-  useEffect(() => {
-    if (!categoryId) return;
+  // useEffect(() => {
+  //   if (!categoryId) return;
 
-    const fetchCatalogData = async () => {
-      try {
-        // getCatalogaPageData should return the axios response; we'll store res.data
-        const res = await getCatalogaPageData(categoryId);
-        console.log("Catalog payload:", res?.data ?? res);
-        // store res.data (the API's JSON body)
-        setCatalogPageData(res?.data ?? res);
-      } catch (err) {
-        console.error("Failed to load catalog page data:", err);
-        setCatalogPageData({ success: false }); // mark as failed so Error component shows
-      }
-    };
+  //   const fetchCatalogData = async () => {
+  //     try {
+  //       // getCatalogaPageData should return the axios response; we'll store res.data
+  //       const res = await getCatalogaPageData(categoryId);
+  //       console.log("Catalog payload:", res?.data ?? res);
+  //       // store res.data (the API's JSON body)
+  //       setCatalogPageData(res?.data ?? res);
+  //     } catch (err) {
+  //       console.error("Failed to load catalog page data:", err);
+  //       setCatalogPageData({ success: false }); // mark as failed so Error component shows
+  //     }
+  //   };
 
-    fetchCatalogData();
-  }, [categoryId]);
+  //   fetchCatalogData();
+  // }, [categoryId]);
+  // 2) Once we have the categoryId or slug, fetch the catalog page payload
+useEffect(() => {
+  if (!categoryId) return;
+
+  const fetchCatalogData = async () => {
+    try {
+      // getCatalogaPageData returns the API body: { success, data, message }
+      const apiBody = await getCatalogaPageData(categoryId);
+      console.log("Catalog payload (apiBody):", apiBody);
+      setCatalogPageData(apiBody); // <- IMPORTANT: store the API body, not apiBody.data
+    } catch (err) {
+      console.error("Failed to load catalog page data:", err);
+      setCatalogPageData({ success: false, message: "Failed to fetch catalog data" });
+    }
+  };
+
+  fetchCatalogData();
+}, [categoryId]);
+
 
   // 3) Loading & error guards
-  if (loading || !catalogPageData) {
-    return (
-      <div className="catalog-loading">
-        <div className="spinner" />
-      </div>
-    );
-  }
+  // if (loading || !catalogPageData) {
+  //   return (
+  //     <div className="catalog-loading">
+  //       <div className="spinner" />
+  //     </div>
+  //   );
+  // }
 
-  if (!loading && !catalogPageData.success) {
-    return <Error />;
-  }
+  // if (!loading && !catalogPageData.success) {
+  //   return <Error />;
+  // }
+  // 3) Loading & error guards
+if (loading || catalogPageData === null) {
+  return (
+    <div className="catalog-loading">
+      <div className="spinner" />
+    </div>
+  );
+}
+
+if (!loading && !catalogPageData.success) {
+  // show friendly error using API's message when available
+  return (
+    <div className="catalog-error">
+      <h2>{catalogPageData.message || "Category not found"}</h2>
+      <p>Try a different category or go back to catalog list.</p>
+    </div>
+  );
+}
+
 
   const { selectedCategory, categoryCourses, differentCategory, mostSellingCourses } =
     catalogPageData.data;
