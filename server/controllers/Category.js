@@ -7,10 +7,7 @@ const Course = require("../models/Course");
 const mongoose = require("mongoose");
 
 // helper to safely escape regex (prevents injection)
-const escapeRegExp = (string = "") => {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-};
-
+const escapeRegExp = (s = "") => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 // create category ka handler function
 
@@ -168,6 +165,125 @@ exports.showAllCategories = async (req, res) => {
 //   }
 // };
 
+// exports.categoryPageDetails = async (req, res) => {
+//   try {
+//     // Accept categoryId from body OR query (works for POST or GET)
+//     let categoryIdOrSlug = req.body?.categoryId || req.query?.categoryId;
+//     console.log("PRINTING CATEGORY ID/SLUG: ", categoryIdOrSlug);
+
+//     if (!categoryIdOrSlug) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Category ID (or slug) is required",
+//       });
+//     }
+
+//     let categoryObjectId = null;
+
+//     // If it's a valid ObjectId, use it
+//     if (mongoose.isValidObjectId(categoryIdOrSlug)) {
+//       categoryObjectId = new mongoose.Types.ObjectId(categoryIdOrSlug);
+//     } else {
+//       // Treat as slug / friendly-name: "web-development" -> "web development"
+//       // Convert hyphens to spaces and try a case-insensitive exact match.
+//       const slugToName = categoryIdOrSlug.replace(/-/g, " ").trim();
+//       const safeName = escapeRegExp(slugToName);
+//       const categoryDoc = await Category.findOne({
+//         name: { $regex: `^${safeName}$`, $options: "i" },
+//       })
+//         .lean()
+//         .exec();
+
+//       if (!categoryDoc) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "Category not found for given id/slug",
+//         });
+//       }
+
+//       categoryObjectId = categoryDoc._id;
+//     }
+
+//     // selectedCategory
+//     const selectedCategory = await Category.findById(categoryObjectId).lean().exec();
+//     if (!selectedCategory) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Category not found",
+//       });
+//     }
+
+//     // categoryCourses (published + instructor)
+//     const categoryCourses = await Course.find({
+//       category: categoryObjectId,
+//       status: "Published",
+//       instructor: { $ne: null },
+//     })
+//       .populate("instructor")
+//       .lean()
+//       .exec();
+
+//     // differentCategory: pick another category and fetch its published courses
+//     const differentCategoryDoc = await Category.findOne({
+//       _id: { $ne: categoryObjectId },
+//     })
+//       .lean()
+//       .exec();
+
+//     let differentCategory = null;
+//     if (differentCategoryDoc) {
+//       const differentCategoryCourses = await Course.find({
+//         category: differentCategoryDoc._id,
+//         status: "Published",
+//         instructor: { $ne: null },
+//       })
+//         .populate("instructor")
+//         .lean()
+//         .exec();
+
+//       differentCategory = {
+//         ...differentCategoryDoc,
+//         courses: differentCategoryCourses,
+//       };
+//     }
+
+//     // top selling: gather published courses with instructor, sort safely, pick top 10
+//     const topSellingCoursesRaw = await Course.find({
+//       status: "Published",
+//       instructor: { $ne: null },
+//     })
+//       .populate("instructor")
+//       .lean()
+//       .exec();
+
+//     topSellingCoursesRaw.sort(
+//       (a, b) => (b.studentsEnrolled?.length || 0) - (a.studentsEnrolled?.length || 0)
+//     );
+
+//     const top10Courses = topSellingCoursesRaw.slice(0, 10);
+
+//     // Return keys matching frontend expectations
+//     return res.status(200).json({
+//       success: true,
+//       data: {
+//         selectedCategory,
+//         categoryCourses,
+//         differentCategory, // includes .courses
+//         mostSellingCourses: top10Courses,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("CATEGORY PAGE DETAILS ERROR:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//       error: error.message,
+//     });
+//   }
+// };
+
+
+
 exports.categoryPageDetails = async (req, res) => {
   try {
     // Accept categoryId from body OR query (works for POST or GET)
@@ -183,14 +299,14 @@ exports.categoryPageDetails = async (req, res) => {
 
     let categoryObjectId = null;
 
-    // If it's a valid ObjectId, use it
+    // If it's a valid ObjectId string, use it directly (Mongoose will coerce)
     if (mongoose.isValidObjectId(categoryIdOrSlug)) {
-      categoryObjectId = new mongoose.Types.ObjectId(categoryIdOrSlug);
+      categoryObjectId = categoryIdOrSlug; // DO NOT call mongoose.Types.ObjectId(...) here
     } else {
       // Treat as slug / friendly-name: "web-development" -> "web development"
-      // Convert hyphens to spaces and try a case-insensitive exact match.
       const slugToName = categoryIdOrSlug.replace(/-/g, " ").trim();
       const safeName = escapeRegExp(slugToName);
+
       const categoryDoc = await Category.findOne({
         name: { $regex: `^${safeName}$`, $options: "i" },
       })
@@ -204,7 +320,7 @@ exports.categoryPageDetails = async (req, res) => {
         });
       }
 
-      categoryObjectId = categoryDoc._id;
+      categoryObjectId = categoryDoc._id; // this will be either ObjectId or string - both ok
     }
 
     // selectedCategory
