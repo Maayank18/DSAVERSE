@@ -31,7 +31,12 @@ export default function ViewCourse() {
     ) {
       dispatch(setCourseSectionData(courseData.courseDetails.courseContent))
       dispatch(setEntireCourseData(courseData.courseDetails))
-      dispatch(setCompletedLectures(courseData.completedVideos))
+      // dispatch(setCompletedLectures(courseData.completedVideos))
+      dispatch(setCompletedLectures({
+        courseId: courseData.courseDetails._id,
+        lectures: (courseData.completedVideos || []).map(id => String(id))
+      }));
+
 
       let lectures = 0
       courseData.courseDetails.courseContent.forEach((sec) => {
