@@ -63,12 +63,12 @@ useEffect(() => {
       const status = error?.response?.status;
       const serverMsg = error?.response?.data?.message || error?.message;
       if (status === 401) {
-        toast.error(serverMsg || "Session expired. Please log in again.");
+        // toast.error(serverMsg || "Session expired. Please log in again.");
         // clear client token (dispatch the auth action)
         dispatch(setToken(null));
         // optional: navigate("/login");
       } else {
-        toast.error(serverMsg || "Could not load course details.");
+        // toast.error(serverMsg || "Could not load course details.");
       }
 
       setResponse({
