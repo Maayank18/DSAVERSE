@@ -81,6 +81,7 @@
 // server/index.js (replace your current file with this)
 const express = require("express");
 const app = express();
+const database = require("./config/database");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -95,7 +96,6 @@ const paymentRoutes = require("./routes/Payment");
 const courseRoutes = require("./routes/Course");
 const contactRoutes = require("./routes/Contact");
 
-const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 // const cors = require("cors"); // not used for now
 const {cloudinary, cloudinaryConnect} = require("./config/cloudinary");
