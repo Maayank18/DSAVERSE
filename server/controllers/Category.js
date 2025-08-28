@@ -185,7 +185,7 @@ exports.categoryPageDetails = async (req, res) => {
 
     // If it's a valid ObjectId, use it
     if (mongoose.isValidObjectId(categoryIdOrSlug)) {
-      categoryObjectId = mongoose.Types.ObjectId(categoryIdOrSlug);
+      categoryObjectId = new mongoose.Types.ObjectId(categoryIdOrSlug);
     } else {
       // Treat as slug / friendly-name: "web-development" -> "web development"
       // Convert hyphens to spaces and try a case-insensitive exact match.
