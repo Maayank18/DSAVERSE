@@ -375,63 +375,21 @@ export const deleteCourse = async (courseId, token) => {
 
 
 
-// export const getFullDetailsOfCourse = async (courseId, token = null) => {
-//   // Build URL (your endpoint may expect POST or GET; adjust accordingly)
-//   const url = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
-
-//   // Only set Authorization header when we actually have a usable token
-//   const headers = {};
-//   const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
-
-//   if (hasToken) {
-//     headers["Authorization"] = `Bearer ${token}`;
-//   }
-
-//   // For GET, pass null body and headers
-//   return apiConnector("GET", url, null, headers);
-// };
 export const getFullDetailsOfCourse = async (courseId, token = null) => {
-  if (!courseId) throw new Error("courseId is required");
+  // Build URL (your endpoint may expect POST or GET; adjust accordingly)
+  const url = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
 
-  // Normalize token: treat "null", empty, undefined as no token
+  // Only set Authorization header when we actually have a usable token
+  const headers = {};
   const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
 
-  // Public endpoint (POST) path
-  const publicUrl = courseEndpoints.COURSE_DETAILS_API; // POST /course/getCourseDetails
-  // Authenticated (GET) endpoint path
-  const authUrl = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
-
-  // Headers for axios
-  const headers = {};
-
-  if (hasToken) headers["Authorization"] = `Bearer ${token}`;
-
-  // If we have token: try authenticated GET first
   if (hasToken) {
-    try {
-      return await apiConnector("GET", authUrl, null, headers);
-    } catch (err) {
-      // If 401 or 403 (invalid token), fallback to public endpoint
-      const status = err?.response?.status;
-      if (status === 401 || status === 403) {
-        // try fallback to public POST
-        try {
-          return await apiConnector("POST", publicUrl, { courseId });
-        } catch (err2) {
-          // bubble up the original auth error if fallback also fails
-          throw err2 || err;
-        }
-      }
-      // other errors - bubble up
-      throw err;
-    }
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
-  // No token: call public POST
-  return apiConnector("POST", publicUrl, { courseId });
+  // For GET, pass null body and headers
+  return apiConnector("GET", url, null, headers);
 };
-
-
 
 
 // services/operations/courseDetailsAPI.js (or wherever it lives)
