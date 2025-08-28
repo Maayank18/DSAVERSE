@@ -185,7 +185,7 @@ const Catalog = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await apiConnector("GET", categories.COURSE_CATEGORIES_API);
+        const res = await apiConnector("GET", categories.CATEGORIES_API);
         // res.data.data should be an array of categories
         const match = res?.data?.data?.find(
           (ct) => slugify(ct.name) === catalogName
@@ -228,10 +228,26 @@ useEffect(() => {
 
   const fetchCatalogData = async () => {
     try {
-      // getCatalogaPageData returns the API body: { success, data, message }
-      const apiBody = await getCatalogaPageData(categoryId);
-      console.log("Catalog payload (apiBody):", apiBody);
-      setCatalogPageData(apiBody); // <- IMPORTANT: store the API body, not apiBody.data
+      // getCatalogaPageData returns either:
+      //  - { success: true, data: {...} }   (preferred)
+      //  - or sometimes the API inner data object {...} (older/unwrapped)
+      let apiBody = await getCatalogaPageData(categoryId);
+      console.log("Catalog payload (raw):", apiBody);
+
+      // Normalise: if apiBody has no `success` but looks like the inner data,
+      // wrap it so we always have { success, data } shape.
+      if (apiBody && typeof apiBody.success === "undefined") {
+        // check for a likely inner-data shape (selectedCategory exists)
+        if (apiBody.selectedCategory || apiBody.categoryCourses || apiBody.mostSellingCourses) {
+          apiBody = { success: true, data: apiBody };
+          console.log("Catalog payload: normalized to apiBody with success:", apiBody);
+        } else {
+          // it's probably an error object from axios (error.response.data)
+          apiBody = { success: false, message: apiBody?.message || "Could not fetch catalog data" };
+        }
+      }
+
+      setCatalogPageData(apiBody);
     } catch (err) {
       console.error("Failed to load catalog page data:", err);
       setCatalogPageData({ success: false, message: "Failed to fetch catalog data" });
