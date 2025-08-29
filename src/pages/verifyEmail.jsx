@@ -33,7 +33,8 @@ function VerifyEmail() {
     const sendInitialOtp = async () => {
       try {
         setSending(true);
-        await dispatch(sendOtp(signupData.email, navigate, true, false)).unwrap(); // showToast = false
+        // await dispatch(sendOtp(signupData.email, navigate, true, false)).unwrap(); // showToast = false
+        dispatch(sendOtp(signupData.email, navigate, true, false));
         setResendCooldown(30); // Start cooldown after initial send
       } catch (err) {
         console.error("Initial OTP send failed:", err);

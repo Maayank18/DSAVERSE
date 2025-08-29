@@ -14,33 +14,58 @@ const {
   RESETPASSWORD_API,
 } = endpoints
 
+// export function sendOtp(email, navigate, checkUserPresent = true, showToast = true) {
+//   return async (dispatch) => {
+//     const toastId = showToast ? toast.loading("Loading...") : null;
+//     dispatch(setLoading(true));
+//     try {
+//       const response = await apiConnector("POST", SENDOTP_API, {
+//         email,
+//         checkUserPresent,
+//       });
+
+//       console.log("SENDOTP API RESPONSE............", response);
+
+//       if (!response.data.success) {
+//         throw new Error(response.data.message);
+//       }
+
+//       if (showToast) toast.success("OTP Sent Successfully");
+//       navigate("/verify-email");
+//     } catch (error) {
+//       console.log("SENDOTP API ERROR............", error);
+//       if (showToast) toast.error("Could Not Send OTP");
+//     } finally {
+//       dispatch(setLoading(false));
+//       if (showToast && toastId) toast.dismiss(toastId);
+//     }
+//   };
+// }
 export function sendOtp(email, navigate, checkUserPresent = true, showToast = true) {
   return async (dispatch) => {
     const toastId = showToast ? toast.loading("Loading...") : null;
     dispatch(setLoading(true));
     try {
-      const response = await apiConnector("POST", SENDOTP_API, {
-        email,
-        checkUserPresent,
-      });
+      const response = await apiConnector("POST", SENDOTP_API, { email, checkUserPresent });
 
-      console.log("SENDOTP API RESPONSE............", response);
-
-      if (!response.data.success) {
-        throw new Error(response.data.message);
-      }
+      if (!response.data.success) throw new Error(response.data.message);
 
       if (showToast) toast.success("OTP Sent Successfully");
       navigate("/verify-email");
+
+      // return response so callers can await the result
+      return response;
     } catch (error) {
-      console.log("SENDOTP API ERROR............", error);
       if (showToast) toast.error("Could Not Send OTP");
+      // re-throw so callers can catch it
+      throw error;
     } finally {
       dispatch(setLoading(false));
       if (showToast && toastId) toast.dismiss(toastId);
     }
   };
 }
+
 
 
 
