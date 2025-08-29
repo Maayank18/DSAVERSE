@@ -20,21 +20,21 @@ const otpSchema = new mongoose.Schema({
 });
 
 // a function to send email
-// async function sendVerificationEmail( email, otp){
-//     try{
+async function sendVerificationEmail( email, otp){
+    try{
 
-//         const mailResponse = await mailSender(email,"verification mail from mayank ",otp);
-//         console.log("email send successfully", mailResponse);
+        const mailResponse = await mailSender(email,"verification mail from mayank ",otp);
+        console.log("email send successfully", mailResponse);
 
-//     }catch(error){
-//         console.log("error while sending the mail : " , error);
-//         throw error;
-//     }
-// }
+    }catch(error){
+        console.log("error while sending the mail : " , error);
+        throw error;
+    }
+}
 
 // using pre middle ware run before saving
-// otpSchema.pre("save", async function(next){
-//     await sendVerificationEmail(this.email, this.otp);
-// });
+otpSchema.pre("save", async function(next){
+    await sendVerificationEmail(this.email, this.otp);
+});
 
 module.exports = mongoose.model("OTP",otpSchema);

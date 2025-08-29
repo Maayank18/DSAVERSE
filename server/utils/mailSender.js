@@ -1,34 +1,41 @@
-// // use node mailer for sending the mail
-// const nodemailer = require("nodemailer");
+// use node mailer for sending the mail
+const nodemailer = require("nodemailer");
 
 
-// // from here we can send our otp to our mail
-// const mailSender = async (email, title, body) => {
-//     try{
-//         let transporter = nodemailer.createTransport({
-//             host:process.env.MAIL_HOST,
-//             auth:{
-//                 user: process.env.MAIL_USER,
-//                 pass:process.env.MAIL_PASS,
-//             }
-//         })
+// from here we can send our otp to our mail
+const mailSender = async (email, title, body) => {
+    try{
+        let transporter = nodemailer.createTransport({
+            host:process.env.MAIL_HOST,
+            auth:{
+                user: process.env.MAIL_USER,
+                pass:process.env.MAIL_PASS,
+            }
+        })
 
-//         let info = transporter.sendMail({
-//             from:"Mayank",
-//             to:`${email}`,
-//             subject:`${title}`,
-//             html:`${body}`,
-//         })
+        let info = transporter.sendMail({
+            from:"Mayank",
+            to:`${email}`,
+            subject:`${title}`,
+            html:`${body}`,
+        })
 
-//         console.log(info);
-//         return info;
+        console.log(info);
+        return info;
 
-//     }catch(error){
-//         console.log(error.message);
-//     }
-// }
+    }catch(error){
+        console.log(error.message);
+    }
+}
 
-// module.exports = mailSender;
+module.exports = mailSender;
+
+
+
+
+
+
+
 
 // const nodemailer = require("nodemailer");
 
@@ -65,55 +72,61 @@
 
 
 
+
+
+
+
+
+
 // utils/mailSender.js
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 
-let transporter;
+// let transporter;
 
-function initTransporter() {
-  if (transporter) return transporter;
+// function initTransporter() {
+//   if (transporter) return transporter;
 
-  transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: Number(process.env.SMTP_PORT) || 465,
-    secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : true,
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASS,
-    },
-  });
+//   transporter = nodemailer.createTransport({
+//     host: process.env.SMTP_HOST || "smtp.gmail.com",
+//     port: Number(process.env.SMTP_PORT) || 465,
+//     secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : true,
+//     auth: {
+//       user: process.env.MAIL_USER,
+//       pass: process.env.MAIL_PASS,
+//     },
+//   });
 
-  // verify once on init to surface auth/config issues early
-  transporter.verify()
-    .then(() => console.log("✅ SMTP transporter verified and ready"))
-    .catch((err) => console.error("❌ SMTP verify failed:", err && err.message ? err.message : err));
+//   // verify once on init to surface auth/config issues early
+//   transporter.verify()
+//     .then(() => console.log("✅ SMTP transporter verified and ready"))
+//     .catch((err) => console.error("❌ SMTP verify failed:", err && err.message ? err.message : err));
 
-  return transporter;
-}
+//   return transporter;
+// }
 
-const mailSender = async (email, title, body) => {
-  try {
-    const t = initTransporter();
+// const mailSender = async (email, title, body) => {
+//   try {
+//     const t = initTransporter();
 
-    const info = await t.sendMail({
-      from: `"DSAverse" <${process.env.MAIL_USER}>`,
-      to: email,
-      subject: title,
-      html: body,
-    });
+//     const info = await t.sendMail({
+//       from: `"DSAverse" <${process.env.MAIL_USER}>`,
+//       to: email,
+//       subject: title,
+//       html: body,
+//     });
 
-    console.log("✅ Email send attempted:", {
-      messageId: info.messageId,
-      accepted: info.accepted,
-      rejected: info.rejected,
-      response: info.response,
-    });
+//     console.log("✅ Email send attempted:", {
+//       messageId: info.messageId,
+//       accepted: info.accepted,
+//       rejected: info.rejected,
+//       response: info.response,
+//     });
 
-    return info;
-  } catch (error) {
-    console.error("❌ SEND OTP ERROR (mailSender):", error && error.message ? error.message : error);
-    throw error;
-  }
-};
+//     return info;
+//   } catch (error) {
+//     console.error("❌ SEND OTP ERROR (mailSender):", error && error.message ? error.message : error);
+//     throw error;
+//   }
+// };
 
-module.exports = mailSender;
+// module.exports = mailSender;
