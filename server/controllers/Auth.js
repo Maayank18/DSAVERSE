@@ -12,68 +12,142 @@ require("dotenv").config();
 // -> check user exist or not -> yes return yes and if no ->actual otp generate
 // -> that should be unique -> storing otp in db and send the response
 
+// exports.sendOTP = async (req, res) => {
+//   try {
+//     // ✅ fetch email and checkUserPresent flag from body
+//     const { email, checkUserPresent } = req.body;
+
+//     // ✅ check if user exists
+//     const checkUserExist = await User.findOne({ email });
+
+//     // ✅ block or allow based on checkUserPresent logic
+//     if (checkUserPresent && checkUserExist) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "User already exists",
+//       });
+//     }
+
+//     // if (!checkUserPresent && !checkUserExist) {
+//     //   return res.status(401).json({
+//     //     success: false,
+//     //     message: "User not found",
+//     //   });
+//     // }
+
+//     // ✅ generate OTP
+//     let otp = otpGenerator.generate(6, {
+//       upperCaseAlphabets: false,
+//       lowerCaseAlphabets: false,
+//       specialChars: false,
+//     });
+
+//     console.log("OTP generated is : ", otp);
+
+//     // ✅ ensure OTP is unique in the DB
+//     let result = await OTP.findOne({ otp:otp });
+//     while (result) {
+//       otp = otpGenerator.generate(6, {
+//         upperCaseAlphabets: false,
+//         lowerCaseAlphabets: false,
+//         specialChars: false,
+//       });
+//       result = await OTP.findOne({ otp:otp }); // checking
+//     }
+
+//     // ✅ save OTP in DB
+//     const otpPayload = { email, otp };
+//     const otpEntry = await OTP.create(otpPayload);
+//     console.log("OTP saved in DB:", otpEntry);
+
+//     // ✅ return success
+//     return res.status(200).json({
+//       success: true,
+//       message: "OTP sent successfully",
+//       otp, // remove this in production
+//     });
+//   } catch (error) {
+//     console.log("SEND OTP ERROR:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
 exports.sendOTP = async (req, res) => {
   try {
-    // ✅ fetch email and checkUserPresent flag from body
     const { email, checkUserPresent } = req.body;
-
-    // ✅ check if user exists
-    const checkUserExist = await User.findOne({ email });
-
-    // ✅ block or allow based on checkUserPresent logic
-    if (checkUserPresent && checkUserExist) {
-      return res.status(401).json({
-        success: false,
-        message: "User already exists",
-      });
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
     }
 
-    // if (!checkUserPresent && !checkUserExist) {
-    //   return res.status(401).json({
-    //     success: false,
-    //     message: "User not found",
-    //   });
-    // }
+    // normalize email to avoid case/space mismatch
+    const normalizedEmail = String(email).trim().toLowerCase();
 
-    // ✅ generate OTP
+    // check user exists if required
+    const checkUserExist = await User.findOne({ email: normalizedEmail });
+    if (checkUserPresent && checkUserExist) {
+      return res.status(401).json({ success: false, message: "User already exists" });
+    }
+
+    // cooldown: don't create a new OTP if one was created recently
+    const COOLDOWN_MS = 30 * 1000; // 30 seconds (adjust as needed)
+    const recentOtp = await OTP.findOne({ email: normalizedEmail }).sort({ createdAt: -1 });
+
+    if (recentOtp) {
+      const age = Date.now() - new Date(recentOtp.createdAt).getTime();
+      if (age < COOLDOWN_MS) {
+        console.log(`Reusing recent OTP for ${normalizedEmail}, age=${age}ms`);
+        // For development you could send the OTP back; in production DO NOT return otp
+        return res.status(200).json({
+          success: true,
+          message: "OTP already sent recently. Please wait before requesting another.",
+          // otp: recentOtp.otp  // do NOT return OTP in production
+        });
+      }
+    }
+
+    // generate new OTP
     let otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
       specialChars: false,
     });
+    console.log("Generated OTP:", otp);
 
-    console.log("OTP generated is : ", otp);
-
-    // ✅ ensure OTP is unique in the DB
-    let result = await OTP.findOne({ otp:otp });
-    while (result) {
+    // optional: ensure uniqueness across DB if you must (not strictly necessary)
+    // You can skip the uniqueness loop — collisions are rare for 6-digit numbers.
+    let duplicate = await OTP.findOne({ otp });
+    while (duplicate) {
       otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
         specialChars: false,
       });
-      result = await OTP.findOne({ otp:otp }); // checking
+      duplicate = await OTP.findOne({ otp });
     }
 
-    // ✅ save OTP in DB
-    const otpPayload = { email, otp };
-    const otpEntry = await OTP.create(otpPayload);
-    console.log("OTP saved in DB:", otpEntry);
+    // upsert a single OTP document per email (overwrite existing or create new)
+    const otpEntry = await OTP.findOneAndUpdate(
+      { email: normalizedEmail },
+      { $set: { otp, createdAt: new Date() } },
+      { upsert: true, new: true }
+    );
 
-    // ✅ return success
+    console.log("OTP upserted in DB:", otpEntry);
+
+    // send email logic here (not shown)
     return res.status(200).json({
       success: true,
       message: "OTP sent successfully",
-      otp, // remove this in production
+      // otp // remove in production
     });
   } catch (error) {
     console.log("SEND OTP ERROR:", error);
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 
 
