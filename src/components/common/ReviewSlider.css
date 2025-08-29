@@ -1,7 +1,9 @@
+/* Container & wrapper */
 .review-slider-container {
-  color: white;
+  position: relative;
   width: 100%;
   box-sizing: border-box;
+  color: white;
 }
 
 .review-slider-wrapper {
@@ -9,21 +11,47 @@
   max-width: 1200px;
   padding: 0 1rem;
   height: auto;
-}
-
-/* Ensure slides stretch properly */
-.swiper-custom .swiper-wrapper,
-.swiper-custom .swiper-slide {
-  align-items: stretch;
-}
-
-.swiper-slide-custom {
   display: flex;
-  height: 100%;
+  align-items: center;
   box-sizing: border-box;
 }
 
-/* Card */
+/* scrolling area */
+.review-slider-container-inner {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px;
+}
+
+/* hide visual scrollbar */
+.review-slider-container-inner {
+  scrollbar-width: none;
+}
+.review-slider-container-inner::-webkit-scrollbar {
+  display: none;
+}
+
+/* slider row */
+.review-slider {
+  display: flex;
+  gap: 1.25rem;
+  align-items: stretch;
+  box-sizing: border-box;
+  padding-bottom: 6px;
+}
+
+/* slide content size (controls scrolling step) */
+.review-slide-content {
+  flex: 0 0 320px;
+  width: 320px;
+  box-sizing: border-box;
+}
+
+/* card */
 .review-card {
   display: flex;
   flex-direction: column;
@@ -35,12 +63,12 @@
   border-radius: 8px;
   height: 100%;
   box-sizing: border-box;
-  min-height: 120px;
+  min-height: 140px;
   max-width: 100%;
   overflow: hidden;
 }
 
-/* User info row */
+/* user info row */
 .review-user-info {
   display: flex;
   align-items: center;
@@ -81,15 +109,15 @@
   text-overflow: ellipsis;
 }
 
-/* Review text (cross-browser multiline clamp without webkit) */
+/* Review text */
 .review-text {
   font-weight: 500;
   color: #d1d5db;
   margin: 0;
-  line-height: 1.35;           /* baseline for calculating line heights */
-  max-height: 4.05em;         /* 3 lines * 1.35 line-height => 3 * 1.35em = 4.05em */
+  line-height: 1.35;
+  max-height: 4.05em;
   overflow: hidden;
-  text-overflow: ellipsis;    /* single-line fallback (useful when only 1 line fits) */
+  text-overflow: ellipsis;
   display: block;
   word-wrap: break-word;
 }
@@ -99,7 +127,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: auto; /* push rating to the bottom if card grows */
+  margin-top: auto;
 }
 
 .review-rating-value {
@@ -116,107 +144,80 @@
   padding: 2rem 0;
 }
 
-/* Responsive tweaks */
-@media (max-width: 920px) {
-  .review-slider-wrapper {
-    margin: 30px auto;
-  }
+/* Nav buttons (same visual style as CourseSlider) */
+.slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(6, 10, 20, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+  outline: none;
+}
 
-  .review-card {
-    padding: 0.85rem;
-    min-height: 140px;
-  }
+.slider-nav-left {
+  left: 6px;
+}
+.slider-nav-right {
+  right: 6px;
+}
 
-  .review-avatar {
-    width: 36px;
-    height: 36px;
-  }
+.slider-nav:hover {
+  transform: translateY(-50%) scale(1.03);
+}
 
-  .review-user-name {
-    font-size: 0.9rem;
-  }
+.slider-nav.disabled {
+  opacity: 0.32;
+  pointer-events: none;
+}
 
-  .review-course-name {
-    font-size: 0.78rem;
+/* Responsive sizes */
+@media (max-width: 1024px) {
+  .review-slide-content {
+    flex: 0 0 280px;
+    width: 280px;
   }
-
-  /* allow one extra line on medium screens: 4 lines */
-  .review-text {
-    max-height: 5.4em; /* 4 * 1.35em = 5.4em */
+  .review-slider-container-inner {
+    padding: 0 10px;
+  }
+  .slider-nav {
+    width: 44px;
+    height: 44px;
   }
 }
 
-@media (max-width: 640px) {
-  .review-slider-wrapper {
-    margin: 20px auto;
-    padding: 0 0.75rem;
+@media (max-width: 700px) {
+  .review-slide-content {
+    flex: 0 0 220px;
+    width: 220px;
   }
-
-  .review-card {
-    padding: 0.8rem;
-    min-height: 140px;
-    border-radius: 10px;
+  .review-slider-container-inner {
+    padding: 0 8px;
   }
-
-  .review-avatar {
-    width: 36px;
-    height: 36px;
-  }
-
-  .review-user-name {
-    font-size: 0.9rem;
-  }
-
-  .review-course-name {
-    font-size: 0.75rem;
-  }
-
-  /* allow up to 5 lines on small screens */
-  .review-text {
-    max-height: 6.75em; /* 5 * 1.35em = 6.75em */
+  .slider-nav {
+    width: 40px;
+    height: 40px;
   }
 }
 
-@media (max-width: 420px) {
-  .review-slider-wrapper {
-    margin: 18px auto;
-    padding: 0 0.5rem;
-  }
-
-  .review-card {
-    padding: 0.7rem;
-    min-height: 150px;
-  }
-
-  .review-avatar {
-    width: 34px;
-    height: 34px;
-  }
-
-  .review-user-name {
-    font-size: 0.88rem;
-  }
-
-  .review-course-name {
-    font-size: 0.72rem;
-  }
-
-  .review-text {
-    max-height: 6.75em; /* keep 5 lines on very small screens too */
-  }
-}
-
-
-/* ---- Star icon fixes (append to ReviewSlider.css) ---- */
-
-/* Ensure svg icons for stars are correctly sized */
+/* star icon styling (keeps existing star rules) */
 .review-rating svg {
   width: 18px;
   height: 18px;
   vertical-align: middle;
 }
 
-/* Prefer using currentColor for fill so color: rules control the icon color */
 .review-rating svg path,
 .review-rating svg polygon,
 .review-rating svg circle {
@@ -224,25 +225,6 @@
   stroke: none;
 }
 
-/* Default: show empty stars muted and active ones gold.
-   Many rating wrappers add classes like .react-stars__star, .react-stars__star--active, etc.
-   These selectors cover common naming conventions; tweak if your wrapper uses different names. */
-.review-rating .react-stars__star,
-.review-rating .star {
-  color: rgba(255, 215, 0, 0.25); /* muted gold-ish for empty */
-}
-
-.review-rating .react-stars__star--active,
-.review-rating .react-stars__star--selected,
-.review-rating .star.active,
-.review-rating .star.filled {
-  color: #ffd700; /* bright gold for filled */
-}
-
-/* Fallback: if wrapper doesn't add classes, color the container gold so filled icons show gold.
-   Outline icons (FaRegStar) will still look like outlines in most cases.
-*/
 .review-rating {
-  /* don't force a color if your wrapper already handles it; this is safe default */
   color: #ffd700;
 }
