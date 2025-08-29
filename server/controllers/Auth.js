@@ -12,68 +12,68 @@ require("dotenv").config();
 // -> check user exist or not -> yes return yes and if no ->actual otp generate
 // -> that should be unique -> storing otp in db and send the response
 
-// exports.sendOTP = async (req, res) => {
-//   try {
-//     // ✅ fetch email and checkUserPresent flag from body
-//     const { email, checkUserPresent } = req.body;
+exports.sendOTP = async (req, res) => {
+  try {
+    // ✅ fetch email and checkUserPresent flag from body
+    const { email, checkUserPresent } = req.body;
 
-//     // ✅ check if user exists
-//     const checkUserExist = await User.findOne({ email });
+    // ✅ check if user exists
+    const checkUserExist = await User.findOne({ email });
 
-//     // ✅ block or allow based on checkUserPresent logic
-//     if (checkUserPresent && checkUserExist) {
-//       return res.status(401).json({
-//         success: false,
-//         message: "User already exists",
-//       });
-//     }
+    // ✅ block or allow based on checkUserPresent logic
+    if (checkUserPresent && checkUserExist) {
+      return res.status(401).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
 
-//     // if (!checkUserPresent && !checkUserExist) {
-//     //   return res.status(401).json({
-//     //     success: false,
-//     //     message: "User not found",
-//     //   });
-//     // }
+    // if (!checkUserPresent && !checkUserExist) {
+    //   return res.status(401).json({
+    //     success: false,
+    //     message: "User not found",
+    //   });
+    // }
 
-//     // ✅ generate OTP
-//     let otp = otpGenerator.generate(6, {
-//       upperCaseAlphabets: false,
-//       lowerCaseAlphabets: false,
-//       specialChars: false,
-//     });
+    // ✅ generate OTP
+    let otp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    });
 
-//     console.log("OTP generated is : ", otp);
+    console.log("OTP generated is : ", otp);
 
-//     // ✅ ensure OTP is unique in the DB
-//     let result = await OTP.findOne({ otp:otp });
-//     while (result) {
-//       otp = otpGenerator.generate(6, {
-//         upperCaseAlphabets: false,
-//         lowerCaseAlphabets: false,
-//         specialChars: false,
-//       });
-//       result = await OTP.findOne({ otp:otp }); // checking
-//     }
+    // ✅ ensure OTP is unique in the DB
+    let result = await OTP.findOne({ otp:otp });
+    while (result) {
+      otp = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        lowerCaseAlphabets: false,
+        specialChars: false,
+      });
+      result = await OTP.findOne({ otp:otp }); // checking
+    }
 
-//     // ✅ save OTP in DB
-//     const otpPayload = { email, otp };
-//     const otpEntry = await OTP.create(otpPayload);
-//     console.log("OTP saved in DB:", otpEntry);
+    // ✅ save OTP in DB
+    const otpPayload = { email, otp };
+    const otpEntry = await OTP.create(otpPayload);
+    console.log("OTP saved in DB:", otpEntry);
 
-//     // ✅ return success
-//     return res.status(200).json({
-//       success: true,
-//       message: "OTP sent successfully",
-//       otp, // remove this in production
-//     });
-//   } catch (error) {
-//     console.log("SEND OTP ERROR:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
+    // ✅ return success
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent successfully",
+      otp, // remove this in production
+    });
+  } catch (error) {
+    console.log("SEND OTP ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 
 
@@ -156,71 +156,71 @@ require("dotenv").config();
 
 
 // controllers/authController.js (replace sendOTP with this)
-exports.sendOTP = async (req, res) => {
-  try {
-    const { email, checkUserPresent } = req.body;
-    if (!email) return res.status(400).json({ success:false, message:"Email is required" });
+// exports.sendOTP = async (req, res) => {
+//   try {
+//     const { email, checkUserPresent } = req.body;
+//     if (!email) return res.status(400).json({ success:false, message:"Email is required" });
 
-    const normalizedEmail = String(email).trim().toLowerCase();
+//     const normalizedEmail = String(email).trim().toLowerCase();
 
-    // optional: check existing user
-    const checkUserExist = await User.findOne({ email: normalizedEmail });
-    if (checkUserPresent && checkUserExist) {
-      return res.status(401).json({ success:false, message:"User already exists" });
-    }
+//     // optional: check existing user
+//     const checkUserExist = await User.findOne({ email: normalizedEmail });
+//     if (checkUserPresent && checkUserExist) {
+//       return res.status(401).json({ success:false, message:"User already exists" });
+//     }
 
-    // cooldown (30s)
-    const COOLDOWN_MS = 30 * 1000;
-    const recentOtp = await OTP.findOne({ email: normalizedEmail }).sort({ createdAt: -1 });
-    if (recentOtp) {
-      const age = Date.now() - new Date(recentOtp.createdAt).getTime();
-      if (age < COOLDOWN_MS) {
-        return res.status(200).json({
-          success: true,
-          message: "OTP already sent recently",
-          ...(process.env.NODE_ENV !== "production" ? { otp: recentOtp.otp } : {})
-        });
-      }
-    }
+//     // cooldown (30s)
+//     const COOLDOWN_MS = 30 * 1000;
+//     const recentOtp = await OTP.findOne({ email: normalizedEmail }).sort({ createdAt: -1 });
+//     if (recentOtp) {
+//       const age = Date.now() - new Date(recentOtp.createdAt).getTime();
+//       if (age < COOLDOWN_MS) {
+//         return res.status(200).json({
+//           success: true,
+//           message: "OTP already sent recently",
+//           ...(process.env.NODE_ENV !== "production" ? { otp: recentOtp.otp } : {})
+//         });
+//       }
+//     }
 
-    // generate OTP
-    let otp = otpGenerator.generate(6, { upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false });
+//     // generate OTP
+//     let otp = otpGenerator.generate(6, { upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false });
 
-    // optional collision avoidance
-    while (await OTP.findOne({ otp })) {
-      otp = otpGenerator.generate(6, { upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false });
-    }
+//     // optional collision avoidance
+//     while (await OTP.findOne({ otp })) {
+//       otp = otpGenerator.generate(6, { upperCaseAlphabets:false, lowerCaseAlphabets:false, specialChars:false });
+//     }
 
-    // upsert OTP doc
-    const otpEntry = await OTP.findOneAndUpdate(
-      { email: normalizedEmail },
-      { $set: { otp, createdAt: new Date() } },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+//     // upsert OTP doc
+//     const otpEntry = await OTP.findOneAndUpdate(
+//       { email: normalizedEmail },
+//       { $set: { otp, createdAt: new Date() } },
+//       { upsert: true, new: true, setDefaultsOnInsert: true }
+//     );
 
-    console.log("[sendOTP] OTP upserted:", otpEntry._id);
+//     console.log("[sendOTP] OTP upserted:", otpEntry._id);
 
-    // === SEND EMAIL EXPLICITLY HERE ===
-    try {
-      const mailResponse = await mailSender(normalizedEmail, "Your verification code", `Your OTP is: ${otp}`);
-      console.log("[sendOTP] mailResponse:", mailResponse);
-      // success response (in dev include otp)
-      return res.status(200).json({
-        success: true,
-        message: "OTP sent successfully",
-        ...(process.env.NODE_ENV !== "production" ? { otp } : {})
-      });
-    } catch (mailErr) {
-      console.error("[sendOTP] mail send failed:", mailErr);
-      // rollback OTP so DB doesn't contain an undelivered OTP
-      await OTP.deleteOne({ _id: otpEntry._id }).catch(() => {});
-      return res.status(500).json({ success: false, message: "Failed to send OTP email" });
-    }
-  } catch (err) {
-    console.error("[sendOTP] ERROR:", err);
-    return res.status(500).json({ success:false, message: err.message });
-  }
-};
+//     // === SEND EMAIL EXPLICITLY HERE ===
+//     try {
+//       const mailResponse = await mailSender(normalizedEmail, "Your verification code", `Your OTP is: ${otp}`);
+//       console.log("[sendOTP] mailResponse:", mailResponse);
+//       // success response (in dev include otp)
+//       return res.status(200).json({
+//         success: true,
+//         message: "OTP sent successfully",
+//         ...(process.env.NODE_ENV !== "production" ? { otp } : {})
+//       });
+//     } catch (mailErr) {
+//       console.error("[sendOTP] mail send failed:", mailErr);
+//       // rollback OTP so DB doesn't contain an undelivered OTP
+//       await OTP.deleteOne({ _id: otpEntry._id }).catch(() => {});
+//       return res.status(500).json({ success: false, message: "Failed to send OTP email" });
+//     }
+//   } catch (err) {
+//     console.error("[sendOTP] ERROR:", err);
+//     return res.status(500).json({ success:false, message: err.message });
+//   }
+// };
 
 
 
