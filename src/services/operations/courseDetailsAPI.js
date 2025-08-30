@@ -392,23 +392,52 @@ export const deleteCourse = async (courseId, token) => {
 //   return apiConnector("GET", url, null, headers);
 // };
 
+// export const getFullDetailsOfCourse = async (courseId, token = null) => {
+//   // detect usable token
+//   const hasToken =
+//     token && typeof token === "string" && token.trim() !== "" && token !== "null";
+
+//   if (hasToken) {
+//     // Logged-in user: call authenticated GET endpoint with Authorization header
+//     const endpointAuth = courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED;
+//     const url = `${endpointAuth}?courseId=${courseId}`;
+//     const headers = { Authorization: `Bearer ${token}` };
+//     return apiConnector("GET", url, null, headers);
+//   } else {
+//     // Guest: call public POST endpoint (router.post("/getCourseDetails", ...))
+//     const endpointPublic = courseEndpoints.GET_COURSE_DETAILS_NOT_AUTHENTICATED;
+//     const url = endpointPublic;
+//     const body = { courseId };
+//     // No Authorization header for public request
+//     return apiConnector("POST", url, body, {});
+//   }
+// };
+
 export const getFullDetailsOfCourse = async (courseId, token = null) => {
-  // detect usable token
+  if (!courseId) throw new Error("courseId is required in getFullDetailsOfCourse");
+
   const hasToken =
     token && typeof token === "string" && token.trim() !== "" && token !== "null";
 
+  // defensive: ensure endpoints exist (gives clearer error if names are wrong)
+  const endpointAuth = courseEndpoints?.GET_FULL_COURSE_DETAILS_AUTHENTICATED;
+  const endpointPublic = courseEndpoints?.GET_COURSE_DETAILS_NOT_AUTHENTICATED;
+
   if (hasToken) {
-    // Logged-in user: call authenticated GET endpoint with Authorization header
-    const endpointAuth = courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED;
+    if (!endpointAuth) {
+      throw new Error("Authenticated endpoint not configured: courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED is missing");
+    }
     const url = `${endpointAuth}?courseId=${courseId}`;
     const headers = { Authorization: `Bearer ${token}` };
+    console.log("[getFullDetailsOfCourse] calling AUTH GET:", url);
     return apiConnector("GET", url, null, headers);
   } else {
-    // Guest: call public POST endpoint (router.post("/getCourseDetails", ...))
-    const endpointPublic = courseEndpoints.GET_COURSE_DETAILS_NOT_AUTHENTICATED;
+    if (!endpointPublic) {
+      throw new Error("Public endpoint not configured: courseEndpoints.GET_COURSE_DETAILS_NOT_AUTHENTICATED is missing");
+    }
     const url = endpointPublic;
     const body = { courseId };
-    // No Authorization header for public request
+    console.log("[getFullDetailsOfCourse] calling PUBLIC POST:", url, body);
     return apiConnector("POST", url, body, {});
   }
 };
