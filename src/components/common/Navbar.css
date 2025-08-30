@@ -433,3 +433,12 @@
     display: none !important;
   }
 }
+
+/* hide the top cart icon on mobile; keep it visible on desktop */
+@media screen and (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}

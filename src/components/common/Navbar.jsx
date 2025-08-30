@@ -479,8 +479,9 @@ function Navbar() {
         </nav>
 
         <div className="navbar-auth">
+          {/* TOP CART: visible on desktop, hidden on mobile via CSS class hide-on-mobile */}
           {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
-            <Link to="/dashboard/cart" className="cart-icon">
+            <Link to="/dashboard/cart" className="cart-icon hide-on-mobile">
               <AiOutlineShoppingCart className="icon" />
               {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
             </Link>
@@ -572,11 +573,18 @@ function Navbar() {
           <div className="mobile-menu-divider" />
 
           <div className="mobile-account">
-            {/* 
-              MOBILE CHANGE: Cart, Profile and Dashboard links removed from mobile hamburger.
-              We only show auth buttons (login/signup) when user is not logged in.
-              If token !== null (user logged in) we render nothing here (no profile/dashboard/cart).
-            */}
+            {/* MOBILE: show cart inside the hamburger (only here) */}
+            {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
+              <Link
+                to="/dashboard/cart"
+                className="mobile-account-row"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <AiOutlineShoppingCart /> <span style={{ marginLeft: 8 }}>Cart</span>
+                {totalItems > 0 && <span className="cart-count-inline">{totalItems}</span>}
+              </Link>
+            )}
+
             {token === null ? (
               <div className="mobile-auth-buttons">
                 <Link to="/login" onClick={() => setIsMenuOpen(false)} className="mobile-auth">
@@ -595,3 +603,4 @@ function Navbar() {
 }
 
 export default Navbar;
+
