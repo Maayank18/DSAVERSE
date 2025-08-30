@@ -21,12 +21,22 @@
   padding: 0 1rem;
 }
 
-.course-price {
+/* .course-price {
   text-align: center;
   font-size: 1.75rem;
   font-weight: 600;
   padding-bottom: 1rem;
+} */
+.course-price {
+  display: block;
+  width: 100%;
+  text-align: center;   /* center text inside full-width block */
+  font-size: 1.75rem;
+  font-weight: 600;
+  padding-bottom: 1rem;
+  margin: 0;             /* remove any inherited margin */
 }
+
 
 .course-buttons {
   display: flex;
