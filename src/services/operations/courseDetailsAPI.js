@@ -399,13 +399,13 @@ export const getFullDetailsOfCourse = async (courseId, token = null) => {
 
   if (hasToken) {
     // Logged-in user: call authenticated GET endpoint with Authorization header
-    const endpointAuth = GET_FULL_COURSE_DETAILS_AUTHENTICATED;
+    const endpointAuth = courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED;
     const url = `${endpointAuth}?courseId=${courseId}`;
     const headers = { Authorization: `Bearer ${token}` };
     return apiConnector("GET", url, null, headers);
   } else {
     // Guest: call public POST endpoint (router.post("/getCourseDetails", ...))
-    const endpointPublic = GET_COURSE_DETAILS_NOT_AUTHENTICATED;
+    const endpointPublic = courseEndpoints.GET_COURSE_DETAILS_NOT_AUTHENTICATED;
     const url = endpointPublic;
     const body = { courseId };
     // No Authorization header for public request
