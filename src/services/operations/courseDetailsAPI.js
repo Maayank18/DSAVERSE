@@ -376,21 +376,21 @@ export const deleteCourse = async (courseId, token) => {
 
 
 
-// export const getFullDetailsOfCourse = async (courseId, token = null) => {
-//   // Build URL (your endpoint may expect POST or GET; adjust accordingly)
-//   const url = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
+export const getFullDetailsOfCourse = async (courseId, token = null) => {
+  // Build URL (your endpoint may expect POST or GET; adjust accordingly)
+  const url = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
 
-//   // Only set Authorization header when we actually have a usable token
-//   const headers = {};
-//   const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
+  // Only set Authorization header when we actually have a usable token
+  const headers = {};
+  const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
 
-//   if (hasToken) {
-//     headers["Authorization"] = `Bearer ${token}`;
-//   }
+  if (hasToken) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
 
-//   // For GET, pass null body and headers
-//   return apiConnector("GET", url, null, headers);
-// };
+  // For GET, pass null body and headers
+  return apiConnector("GET", url, null, headers);
+};
 
 // export const getFullDetailsOfCourse = async (courseId, token = null) => {
 //   // detect usable token
@@ -442,31 +442,31 @@ export const deleteCourse = async (courseId, token) => {
 //   }
 // };
 
-export const getFullDetailsOfCourse = async (courseId, token = null) => {
-  if (!courseId) {
-    throw new Error("getFullDetailsOfCourse: courseId is required");
-  }
+// export const getFullDetailsOfCourse = async (courseId, token = null) => {
+//   if (!courseId) {
+//     throw new Error("getFullDetailsOfCourse: courseId is required");
+//   }
 
-  const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
+//   const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
 
-  const endpointAuth = courseEndpoints?.GET_FULL_COURSE_DETAILS_AUTHENTICATED;
-  const endpointPublic = courseEndpoints?.GET_COURSE_DETAILS_NOT_AUTHENTICATED;
+//   const endpointAuth = courseEndpoints?.GET_FULL_COURSE_DETAILS_AUTHENTICATED;
+//   const endpointPublic = courseEndpoints?.GET_COURSE_DETAILS_NOT_AUTHENTICATED;
 
-  if (hasToken) {
-    if (!endpointAuth) {
-      throw new Error("courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED is not configured");
-    }
-    const url = `${endpointAuth}?courseId=${courseId}`;
-    console.info("[getFullDetailsOfCourse] AUTH GET ->", url);
-    return apiConnector("GET", url, null, { Authorization: `Bearer ${token}` });
-  } else {
-    if (!endpointPublic) {
-      throw new Error("courseEndpoints.GET_COURSE_DETAILS_NOT_AUTHENTICATED is not configured");
-    }
-    console.info("[getFullDetailsOfCourse] PUBLIC POST ->", endpointPublic, { courseId });
-    return apiConnector("POST", endpointPublic, { courseId }, {});
-  }
-};
+//   if (hasToken) {
+//     if (!endpointAuth) {
+//       throw new Error("courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED is not configured");
+//     }
+//     const url = `${endpointAuth}?courseId=${courseId}`;
+//     console.info("[getFullDetailsOfCourse] AUTH GET ->", url);
+//     return apiConnector("GET", url, null, { Authorization: `Bearer ${token}` });
+//   } else {
+//     if (!endpointPublic) {
+//       throw new Error("courseEndpoints.GET_COURSE_DETAILS_NOT_AUTHENTICATED is not configured");
+//     }
+//     console.info("[getFullDetailsOfCourse] PUBLIC POST ->", endpointPublic, { courseId });
+//     return apiConnector("POST", endpointPublic, { courseId }, {});
+//   }
+// };
 
 
 // services/operations/courseDetailsAPI.js (or wherever it lives)

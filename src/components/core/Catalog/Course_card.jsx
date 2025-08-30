@@ -38,7 +38,11 @@
 //   }, [course?._id]);
 
 //   return (
-//     <Link to={`/courses/${course._id}`} className="course-card-link">
+//     <Link
+//       to={`/course/${course._id}`}                // <- ensure this matches your route
+//       // state={{ coursePreview: course }}           // <- pass preview data for guests
+//       className="course-card-link"
+//     >
 //       <div className="course-card">
 //         <div className="thumbnail-container">
 //           <div className="thumbnail-img">
@@ -68,6 +72,7 @@
 
 // export default Course_Card;
 
+
 // components/core/Course_Card.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -81,7 +86,11 @@ const Course_Card = ({ course }) => {
   const [reviewCount, setReviewCount] = useState(0);
 
   useEffect(() => {
-    if (!course?._id) return;
+    // quick guard/log to ensure course is what we expect
+    if (!course?._id) {
+      console.warn("Course_Card: no course._id", course);
+      return;
+    }
 
     const fetchAverageRating = async () => {
       try {
@@ -109,8 +118,8 @@ const Course_Card = ({ course }) => {
 
   return (
     <Link
-      to={`/course/${course._id}`}                // <- ensure this matches your route
-      state={{ coursePreview: course }}           // <- pass preview data for guests
+      to={`/course/${course?._id}`}                 /* ensure this matches your Route */
+      state={{ coursePreview: course }}             /* pass preview so CourseDetails can render immediately */
       className="course-card-link"
     >
       <div className="course-card">
@@ -129,9 +138,7 @@ const Course_Card = ({ course }) => {
               {typeof avgReviewCount === "number" ? avgReviewCount.toFixed(1) : "0.0"}
             </span>
             <RatingStars Review_Count={avgReviewCount} />
-            <span className="course-card-rating-label">
-              ({reviewCount} Ratings)
-            </span>
+            <span className="course-card-rating-label">({reviewCount} Ratings)</span>
           </div>
           <p className="course-card-price">Rs. {course?.price}</p>
         </div>
