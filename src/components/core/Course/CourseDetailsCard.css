@@ -22,6 +22,7 @@
 }
 
 .course-price {
+  text-align: center;
   font-size: 1.75rem;
   font-weight: 600;
   padding-bottom: 1rem;
