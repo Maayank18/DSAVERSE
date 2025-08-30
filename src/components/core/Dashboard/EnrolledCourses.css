@@ -1,9 +1,5 @@
-/* EnrolledCourses.css - responsive version without any -webkit prefixed clamping */
-
-/* wrapper & heading */
 .enrolled-wrapper {
   color: #f1f5f9;
-  padding: 0 12px;
 }
 
 .enrolled-heading {
@@ -11,29 +7,22 @@
   margin-bottom: 1rem;
 }
 
-/* table container */
 .enrolled-table {
   margin-top: 2rem;
   margin-bottom: 2rem;
-  width: 100%;
 }
 
-/* header */
+/* Header */
 .enrolled-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   background-color: #334155;
   padding: 0.75rem 1rem;
   font-weight: 600;
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
-/* keep columns readable on small screens */
-.enrolled-header .col-course { flex: 1 1 auto; min-width: 0; }
-.enrolled-header .col-progress { width: 220px; text-align: left; }
-
-/* row */
+/* Row */
 .enrolled-row {
   display: flex;
   justify-content: space-between;
@@ -41,73 +30,60 @@
   border: 1px solid #1e293b;
   padding: 1rem;
   gap: 1rem;
-  background: #071025;
-  margin-top: 0.5rem;
-  border-radius: 0.25rem;
-  box-sizing: border-box;
 }
 
-/* left side: thumbnail + info */
+.last-row {
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+/* Left side: Thumbnail + info */
 .course-left {
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex: 1 1 auto;
+  flex: 1;
   cursor: pointer;
   min-width: 0;
 }
 
-/* thumbnail container - desktop */
 .thumbnail-wrapper {
-  width: 200px;
-  aspect-ratio: 16 / 9;
+  width: 200px;            /* thumbnail width (adjust here) */
+  aspect-ratio: 16 / 9;    /* always proportional */
   flex-shrink: 0;
-  display: block;
-  max-width: 200px;
-  overflow: hidden;
-  border-radius: 0.5rem;
-  background: #0b1220;
 }
 
-/* image */
 .course-thumbnail {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
+  object-fit: cover;        /* fills box nicely */
   border-radius: 0.5rem;
 }
 
-/* info */
 .course-info {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.15rem;   /* 🔹 reduced from 0.5rem or 0.3rem → smaller gap */
   min-width: 0;
-  overflow: hidden;
 }
 
 .course-title {
   font-weight: 600;
   font-size: 1rem;
-  line-height: 1.2rem;
-  margin: 0;
-  color: #ffffff;
-  word-break: break-word;
+  line-height: 1.2rem;   /* tighter spacing */
+  margin: 0;             /* remove default margin */
 }
 
-/* default: single-line description with ellipsis on desktop */
 .course-desc {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #cbd5e1;
-  line-height: 1.2rem;
-  margin: 0;
+  line-height: 1.1rem;   /* reduced line height */
+  margin: 0;             /* remove default margin */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* progress */
+/* Right side: Progress */
 .course-progress {
   width: 220px;
   display: flex;
@@ -115,9 +91,7 @@
   gap: 0.5rem;
   flex-shrink: 0;
   text-align: left;
-  margin-left: 0;
-  min-width: 160px;
-  box-sizing: border-box;
+  margin-left: -10px;    /* shifts progress text slightly left */
 }
 
 .course-progress p {
@@ -126,96 +100,19 @@
   margin: 0;
 }
 
-.course-progress .react-progress-bar {
-  width: 100%;
-}
-
-/* responsive adjustments */
-@media (max-width: 1024px) {
-  .thumbnail-wrapper { width: 160px; max-width: 160px; }
-  .enrolled-header .col-progress { width: 180px; }
-  .course-progress { width: 180px; min-width: 140px; }
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  /* stack layout */
   .enrolled-row {
     flex-direction: column;
-    align-items: stretch;
-    padding: 0.75rem;
-    gap: 12px;
+    align-items: flex-start;
   }
 
-  .enrolled-header {
-    flex-direction: row;
-    gap: 12px;
-  }
-
-  /* thumbnail becomes full width with fixed height */
-  .thumbnail-wrapper {
-    width: 100%;
-    max-width: 100%;
-    aspect-ratio: auto;
-    height: 160px;
-    border-radius: 0.5rem;
-    overflow: hidden;
-  }
-
-  .course-thumbnail {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* info below thumbnail */
-  .course-info {
-    padding: 0 4px;
-  }
-
-  .course-title {
-    font-size: 1.05rem;
-    line-height: 1.3;
-    margin-top: 6px;
-  }
-
-  /* Non-webkit multi-line clamp replacement:
-     Use line-height and max-height to visually limit the number of lines.
-     This avoids -webkit-line-clamp entirely. */
-  .course-desc {
-    white-space: normal;          /* allow wrapping */
-    display: block;
-    line-height: 1.2rem;          /* consistent line height */
-    max-height: calc(1.2rem * 3); /* show up to 3 lines */
-    overflow: hidden;             /* hide the rest */
-    text-overflow: ellipsis;
-    word-break: break-word;
-  }
-
-  /* progress becomes full width */
   .course-progress {
     width: 100%;
-    margin-top: 8px;
-    min-width: 0;
+    margin-top: 0.75rem;
   }
 
-  /* hide header progress label on very small screens to save space */
-  .enrolled-header .col-progress { display: none; }
+  .thumbnail-wrapper {
+    width: 100%; /* full width thumbnail on small screens */
+  }
 }
-
-@media (max-width: 420px) {
-  .thumbnail-wrapper { height: 140px; }
-  .course-title { font-size: 1rem; }
-  .course-desc { max-height: calc(1.2rem * 4); } /* allow up to 4 lines on tiny screens */
-  .course-progress p { font-size: 0.85rem; }
-}
-
-/* small visual polish */
-.enrolled-empty {
-  color: #cbd5e1;
-  padding: 1rem 0;
-}
-
-/* loader */
-.enrolled-loader { display:flex; justify-content:center; padding: 2rem 0; }
-.spinner { width:36px; height:36px; border-radius:50%; border:4px solid rgba(255,255,255,0.08); border-top-color: #ffd60a; animation: spin 1s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
