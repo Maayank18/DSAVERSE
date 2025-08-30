@@ -202,7 +202,7 @@ const CourseSlider = ({ Courses }) => {
       <div className="course-slider-container" ref={containerRef}>
         <div className="course-slider" ref={sliderRef}>
           {Courses.map((course, i) => (
-            <div className="course-slide-content" key={i}>
+            <div className="course-slide-content" key={course?._id ?? i}>
               <Course_Card course={course} />
             </div>
           ))}

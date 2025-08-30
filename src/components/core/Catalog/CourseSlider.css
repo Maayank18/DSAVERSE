@@ -1,17 +1,24 @@
-/* CourseSlider.css - updated so nav buttons don't block swipe on mobile
-   (no -webkit properties, touch-action enabled, visual look preserved) */
+/* CourseSlider.css
+   - Touch-friendly scroller
+   - Buttons visible & clickable on desktop + mobile
+   - Minimal changes from your original styles
+*/
 
 /* wrapper positions nav buttons and keeps layout full width */
 .course-slider-wrapper {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  padding: 0.65rem 0; /* vertical breathing room */
+  padding: 0.65rem 0;
   display: flex;
   align-items: center;
+
+  /* allow nav buttons to be visible outside the scroller */
+  overflow: visible;
 }
 
 /* scroller: allow horizontal panning on touch devices */
+/* Reserve edge padding so first/last cards are not covered by nav buttons */
 .course-slider-container {
   overflow-x: auto;
   overflow-y: hidden;
@@ -20,12 +27,11 @@
   scroll-behavior: smooth;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 12px;        /* << reduced from 56px to 12px */
-  overscroll-behavior-x: contain;
-}
 
-/* hide native scrollbar in Firefox (keeps functionality) */
-.course-slider-container {
+  /* Reserve room for nav buttons at edges */
+  padding: 0 56px;
+
+  overscroll-behavior-x: contain;
   scrollbar-width: none; /* firefox */
 }
 
@@ -35,7 +41,7 @@
   gap: 1.5rem;
   align-items: start;
   box-sizing: border-box;
-  padding-bottom: 6px; /* slight offset so last row doesn't get cut */
+  padding-bottom: 6px;
 }
 
 /* Each slide fixed width for consistent card-by-card scroll */
@@ -45,36 +51,35 @@
   box-sizing: border-box;
 }
 
-/* NAV: outer positioned element (visual container) */
-/* IMPORTANT: this outer container is pointer-events: none so touches pass to the scroller.
-   The actual clickable button (slider-control) inside has pointer-events enabled. */
+/* NAV: outer positioned element (visual container).
+   Outer container typically does not intercept pointer events so swipes pass through.
+*/
 .slider-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 60;
+  z-index: 120;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 48px;
   height: 48px;
-  /* outer container keeps layout/visual space but doesn't catch pointer events */
+
+  /* default: outer container doesn't block swipes — inner control is clickable */
   pointer-events: none;
 }
 
-/* keep left/right placement slightly inset from edges */
+/* left/right placement; use safe-area for devices with notches */
 .slider-nav-left {
-  left: 6px;
+  left: env(safe-area-inset-left, 12px);
 }
 .slider-nav-right {
-  right: 6px;
+  right: env(safe-area-inset-right, 12px);
 }
 
-/* Actual clickable control styled to match original design.
-   This is the element that receives pointer events. */
+/* Clickable inner control (the visible button) */
 .slider-control {
-  /* make this the visual button (same look as previous .slider-nav) */
-  pointer-events: auto;
+  pointer-events: auto; /* receives clicks/taps */
   width: 100%;
   height: 100%;
   display: inline-flex;
@@ -89,21 +94,20 @@
   backdrop-filter: blur(4px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.45);
   outline: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+
+  /* help mobile register taps without interfering with pan intent */
+  touch-action: manipulation;
 }
 
-/* hover / press styles only apply on the inner control */
 .slider-control:hover {
   transform: scale(1.03);
 }
 
-/* disabled visual - applied on outer container and inner control */
+/* disabled styles */
 .slider-nav.disabled .slider-control,
 .slider-control:disabled {
   opacity: 0.32;
-  pointer-events: none; /* inner control disabled stops clicks */
+  pointer-events: none;
 }
 
 /* responsiveness */
@@ -113,7 +117,7 @@
     width: 260px;
   }
   .course-slider-container {
-    padding: 0 10px;
+    padding: 0 48px;
   }
   .slider-nav {
     width: 44px;
@@ -121,22 +125,41 @@
   }
 }
 
+/* Mobile tweaks */
 @media (max-width: 700px) {
   .course-slide-content {
     flex: 0 0 220px;
     width: 220px;
   }
+
+  /* keep some padding so cards don't sit under the buttons */
   .course-slider-container {
-    padding: 0 8px;
+    padding: 0 40px;
   }
+
   .slider-nav {
     width: 40px;
     height: 40px;
+
+    /* make outer small container accept pointer events on mobile for reliable taps */
+    pointer-events: auto;
   }
+
   .slider-nav-left {
-    left: 6px;
+    left: 8px;
   }
   .slider-nav-right {
-    right: 6px;
+    right: 8px;
   }
+
+  /* keep inner control big enough to be tappable */
+  .slider-control {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* optional: hide firefox scrollbar without removing functionality */
+.course-slider-container::-webkit-scrollbar {
+  display: none;
 }

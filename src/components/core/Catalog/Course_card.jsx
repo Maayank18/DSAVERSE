@@ -1,3 +1,73 @@
+// // components/core/Course_Card.jsx
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import RatingStars from "../../common/RatingStars";
+// import { apiConnector } from "../../../services/apiconnector";
+// import { ratingsEndpoints } from "../../../services/apis";
+// import "./Course_Card.css";
+
+// const Course_Card = ({ course }) => {
+//   const [avgReviewCount, setAvgReviewCount] = useState(0);
+//   const [reviewCount, setReviewCount] = useState(0);
+
+//   useEffect(() => {
+//     if (!course?._id) return;
+
+//     const fetchAverageRating = async () => {
+//       try {
+//         const url = `${ratingsEndpoints.GET_AVERAGE_RATING_API}?courseId=${course._id}`;
+//         const response = await apiConnector("GET", url);
+
+//         if (response?.data?.success) {
+//           const rating = Number(response.data.averageRating) || 0;
+//           const count = Number(response.data.reviewCount) || 0;
+//           setAvgReviewCount(rating);
+//           setReviewCount(count);
+//         } else {
+//           setAvgReviewCount(0);
+//           setReviewCount(0);
+//         }
+//       } catch (error) {
+//         console.error("Could not fetch average rating for course:", course._id, error);
+//         setAvgReviewCount(0);
+//         setReviewCount(0);
+//       }
+//     };
+
+//     fetchAverageRating();
+//   }, [course?._id]);
+
+//   return (
+//     <Link to={`/courses/${course._id}`} className="course-card-link">
+//       <div className="course-card">
+//         <div className="thumbnail-container">
+//           <div className="thumbnail-img">
+//             <img src={course?.thumbnail} alt="Course Thumbnail" />
+//           </div>
+//         </div>
+//         <div className="course-card-info">
+//           <p className="course-card-title">{course?.courseName}</p>
+//           <p className="course-card-instructor">
+//             {course?.instructor?.firstName} {course?.instructor?.lastName}
+//           </p>
+//           <div className="course-card-rating-row">
+//             <span className="course-card-rating-count">
+//               {typeof avgReviewCount === "number" ? avgReviewCount.toFixed(1) : "0.0"}
+//             </span>
+//             <RatingStars Review_Count={avgReviewCount} />
+//             <span className="course-card-rating-label">
+//               ({reviewCount} Ratings)
+//             </span>
+//           </div>
+//           <p className="course-card-price">Rs. {course?.price}</p>
+//         </div>
+//       </div>
+//     </Link>
+//   );
+// };
+
+// export default Course_Card;
+
 // components/core/Course_Card.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -38,7 +108,11 @@ const Course_Card = ({ course }) => {
   }, [course?._id]);
 
   return (
-    <Link to={`/courses/${course._id}`} className="course-card-link">
+    <Link
+      to={`/course/${course._id}`}                // <- ensure this matches your route
+      state={{ coursePreview: course }}           // <- pass preview data for guests
+      className="course-card-link"
+    >
       <div className="course-card">
         <div className="thumbnail-container">
           <div className="thumbnail-img">
@@ -67,4 +141,3 @@ const Course_Card = ({ course }) => {
 };
 
 export default Course_Card;
-

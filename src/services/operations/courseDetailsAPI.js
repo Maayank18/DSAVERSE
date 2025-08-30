@@ -20,6 +20,7 @@ const {
   GET_ALL_INSTRUCTOR_COURSES_API,
   DELETE_COURSE_API,
   GET_FULL_COURSE_DETAILS_AUTHENTICATED,
+  GET_COURSE_DETAILS_NOT_AUTHENTICATED,
   CREATE_RATING_API,
   LECTURE_COMPLETION_API,
 } = courseEndpoints
@@ -375,20 +376,41 @@ export const deleteCourse = async (courseId, token) => {
 
 
 
-export const getFullDetailsOfCourse = async (courseId, token = null) => {
-  // Build URL (your endpoint may expect POST or GET; adjust accordingly)
-  const url = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
+// export const getFullDetailsOfCourse = async (courseId, token = null) => {
+//   // Build URL (your endpoint may expect POST or GET; adjust accordingly)
+//   const url = `${courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED}?courseId=${courseId}`;
 
-  // Only set Authorization header when we actually have a usable token
-  const headers = {};
-  const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
+//   // Only set Authorization header when we actually have a usable token
+//   const headers = {};
+//   const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
+
+//   if (hasToken) {
+//     headers["Authorization"] = `Bearer ${token}`;
+//   }
+
+//   // For GET, pass null body and headers
+//   return apiConnector("GET", url, null, headers);
+// };
+
+export const getFullDetailsOfCourse = async (courseId, token = null) => {
+  // detect usable token
+  const hasToken =
+    token && typeof token === "string" && token.trim() !== "" && token !== "null";
 
   if (hasToken) {
-    headers["Authorization"] = `Bearer ${token}`;
+    // Logged-in user: call authenticated GET endpoint with Authorization header
+    const endpointAuth = GET_FULL_COURSE_DETAILS_AUTHENTICATED;
+    const url = `${endpointAuth}?courseId=${courseId}`;
+    const headers = { Authorization: `Bearer ${token}` };
+    return apiConnector("GET", url, null, headers);
+  } else {
+    // Guest: call public POST endpoint (router.post("/getCourseDetails", ...))
+    const endpointPublic = GET_COURSE_DETAILS_NOT_AUTHENTICATED;
+    const url = endpointPublic;
+    const body = { courseId };
+    // No Authorization header for public request
+    return apiConnector("POST", url, body, {});
   }
-
-  // For GET, pass null body and headers
-  return apiConnector("GET", url, null, headers);
 };
 
 
