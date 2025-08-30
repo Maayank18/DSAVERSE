@@ -404,3 +404,32 @@
     font-size: 12px;
   }
 }
+
+
+
+
+
+
+
+
+
+
+/* Hide Profile & Dashboard from the mobile hamburger menu only */
+@media (max-width: 768px) {
+  /* target links inside the mobile menu - adjust #mobile-menu if your id is different */
+  #mobile-menu a[href="/dashboard"],
+  #mobile-menu a[href="/dashboard/profile"],
+  /* cover possible trailing slash variants */
+  #mobile-menu a[href="/dashboard/"],
+  #mobile-menu a[href="/dashboard/profile/"] {
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* if the links have a wrapping .mobile-account-row class use this too (failsafe) */
+  #mobile-menu .mobile-account-row[href="/dashboard"],
+  #mobile-menu .mobile-account-row[href="/dashboard/profile"] {
+    display: none !important;
+  }
+}
