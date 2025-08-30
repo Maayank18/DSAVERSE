@@ -1,20 +1,20 @@
-/* EditProfile.css */
+/* EditProfile.css (updated) */
 
 /* Make the form container span wider but still look centered */
 .profile-form {
-  margin: 40px auto;           /* auto horizontally centers when width is set */
+  margin: 40px auto;
   padding: 36px;
-  max-width: 1200px;           /* keeps it readable on large screens */
+  max-width: 1200px;
   width: 100%;
   background-color: #1f2128;
   border: 1px solid #3d4048;
   border-radius: 14px;
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.4);
 
-  display: flex;               /* enable flexbox */
-  flex-direction: column;      /* stack form content vertically */
+  display: flex;
+  flex-direction: column;
 
-  /* changed: allow form content to stretch full width (prevents inner card centering causing squeeze) */
+  /* allow form content to stretch full width */
   align-items: stretch;
   box-sizing: border-box;
 }
@@ -33,10 +33,7 @@
   box-sizing: border-box;
 }
 
-/* Make each field share row width equally
-   Updated to allow shrinking on narrow viewports:
-   - flex: 1 1 0 allows grow + shrink and avoids a forced basis
-   - min-width: 0 is essential so flex items can shrink below their content width */
+/* Make each field share row width equally */
 .form-row .form-group {
   flex: 1 1 0;
   min-width: 0;
@@ -72,7 +69,7 @@ select.input {
   color: #eaeaea;
   transition: border-color 0.3s, background-color 0.3s;
 
-  /* allow long values to wrap if necessary and avoid overflow */
+  /* avoid overflow from long content */
   min-width: 0;
   word-break: break-word;
   overflow-wrap: break-word;
@@ -106,6 +103,7 @@ select.input {
   gap: 16px;
   margin-top: 32px;
   box-sizing: border-box;
+  align-items: center;      /* centers buttons vertically in row */
 }
 
 /* Buttons */
@@ -119,6 +117,7 @@ select.input {
   border: none;
   transition: background-color 0.3s;
   box-sizing: border-box;
+  min-height: 44px;        /* accessible target, but not huge */
 }
 
 .cancel-btn {
@@ -130,18 +129,108 @@ select.input {
   background-color: #50535c;
 }
 
-/* --------------------------
-   Responsive tweaks for small/mobile viewports
-   -------------------------- */
+/* ---------- Avatar / "Change Profile Picture" area ---------- */
+/* Generic selectors to match common class names used in the project */
+.profile-form .avatar-card,
+.profile-form .profile-picture-card,
+.profile-form .profile-picture-wrapper,
+.profile-form .profile-pic-card,
+.profile-picture-card,
+.avatar-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;     /* allow buttons to wrap under avatar on narrow screens */
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;    /* ensure nothing bleeds out of card */
+  padding: 12px;       /* compact padding */
+  border-radius: 10px;
+}
+
+/* Avatar image sizing — keeps it fixed and prevents layout forcing */
+.profile-form .avatar-card img,
+.profile-picture-card img,
+.avatar-card img,
+.profile-picture-wrapper img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+/* Actions container (select + upload) — allow it to shrink */
+.profile-form .avatar-card .actions,
+.profile-form .profile-picture-card .actions,
+.avatar-card .actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Keep buttons single-line & compact */
+.profile-form .avatar-card .actions .btn,
+.profile-form .avatar-card .actions .IconBtn,
+.profile-picture-card .btn,
+.avatar-card .btn {
+  white-space: nowrap;
+  flex: 0 0 auto;
+  padding: 8px 12px;
+}
+
+/* ---------- Delete Account / Danger Card fixes ---------- */
+/* Generic selectors so the rule applies even if your classnames differ */
+.delete-account-card,
+.delete-card,
+.danger-card,
+.delete-account {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-direction: row;         /* keep icon + text side-by-side */
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 24px;               /* comfortable padding on desktop */
+  border-radius: 12px;
+}
+
+/* Icon inside delete card (limits the icon size so it doesn't force big height) */
+.delete-account-card .icon,
+.delete-card .icon,
+.danger-card .icon,
+.delete-account .icon {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+/* Make the text/content area of the delete card use remaining width */
+.delete-account-card .content,
+.delete-card .content,
+.danger-card .content,
+.delete-account .content {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* ---------- Responsive tweaks for small/mobile viewports ---------- */
 @media (max-width: 480px) {
   .profile-form {
-    padding: 16px;     /* reduce padding so inner content has more space */
+    padding: 16px;
     margin: 20px auto;
     border-radius: 10px;
   }
 
   .form-row {
-    gap: 12px;         /* smaller gaps on narrow screens */
+    gap: 12px;
   }
 
   .label {
@@ -159,9 +248,18 @@ select.input {
     min-height: 120px;
   }
 
-  /* Make action buttons stack nicely and use full width */
+  /* Buttons: smaller padding so they don't look tall and stretched */
+  .btn,
+  .IconBtn button {
+    padding: 10px 14px;
+    font-size: 15px;
+    border-radius: 8px;
+    min-height: 42px;
+  }
+
+  /* Make action buttons stack nicely but not too tall */
   .form-actions {
-    flex-direction: column-reverse;
+    flex-direction: column-reverse; /* keeps primary first on top visually */
     gap: 12px;
     align-items: stretch;
   }
@@ -169,7 +267,48 @@ select.input {
   .btn,
   .IconBtn button {
     width: 100%;
-    padding: 12px 16px;
+  }
+
+  /* Avatar area smaller padding and actions full width */
+  .profile-form .avatar-card,
+  .profile-picture-card,
+  .avatar-card {
+    gap: 8px;
+  }
+
+  .profile-form .avatar-card .actions,
+  .profile-picture-card .actions,
+  .avatar-card .actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Make delete card more compact vertically on mobile */
+  .delete-account-card,
+  .delete-card,
+  .danger-card,
+  .delete-account {
+    padding: 12px;
+    gap: 12px;
+    border-radius: 10px;
+    align-items: center;
+  }
+
+  .delete-account-card .icon,
+  .delete-card .icon,
+  .danger-card .icon,
+  .delete-account .icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  .delete-account-card .content,
+  .delete-card .content,
+  .danger-card .content,
+  .delete-account .content {
+    flex: 1 1 0;
   }
 }
 
@@ -184,16 +323,26 @@ select.input {
     gap: 16px;
   }
 
-  /* reduce min-width so two-column rows can collapse gracefully when needed */
   .form-row .form-group {
     min-width: 180px;
   }
 }
 
+/* Extra guard: prevent accidental horizontal scroll from very long strings */
+.profile-form,
+.form-section,
+.form-row,
+.form-group,
+.input,
+.input.textarea,
+select.input {
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+}
+
 /* Optional: small visual tweak for selects on many browsers */
 select.input {
   appearance: none;
-  -moz-appearance: none;
   background-image: linear-gradient(45deg, transparent 50%, #ccc 50%),
                     linear-gradient(135deg, #ccc 50%, transparent 50%),
                     linear-gradient(to right, #2b2d35, #2b2d35);
