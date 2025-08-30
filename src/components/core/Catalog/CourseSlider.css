@@ -1,4 +1,5 @@
-/* CourseSlider.css - shrink left/right padding so cards start flush left */
+/* CourseSlider.css - updated so nav buttons don't block swipe on mobile
+   (no -webkit properties, touch-action enabled, visual look preserved) */
 
 /* wrapper positions nav buttons and keeps layout full width */
 .course-slider-wrapper {
@@ -10,23 +11,22 @@
   align-items: center;
 }
 
-/* keep a *small* padding so content doesn't touch the viewport edge */
+/* scroller: allow horizontal panning on touch devices */
 .course-slider-container {
   overflow-x: auto;
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;       /* allow horizontal pan (important for mobile swipe) */
+  -ms-touch-action: pan-x;   /* IE / Edge */
   scroll-behavior: smooth;
   width: 100%;
   box-sizing: border-box;
   padding: 0 12px;        /* << reduced from 56px to 12px */
+  overscroll-behavior-x: contain;
 }
 
-/* hide native scrollbar visually but keep functionality */
+/* hide native scrollbar in Firefox (keeps functionality) */
 .course-slider-container {
   scrollbar-width: none; /* firefox */
-}
-.course-slider-container::-webkit-scrollbar {
-  display: none; /* webkit */
 }
 
 /* slider row */
@@ -45,7 +45,9 @@
   box-sizing: border-box;
 }
 
-/* nav buttons - moved closer to the edges so they don't push content */
+/* NAV: outer positioned element (visual container) */
+/* IMPORTANT: this outer container is pointer-events: none so touches pass to the scroller.
+   The actual clickable button (slider-control) inside has pointer-events enabled. */
 .slider-nav {
   position: absolute;
   top: 50%;
@@ -56,6 +58,28 @@
   justify-content: center;
   width: 48px;
   height: 48px;
+  /* outer container keeps layout/visual space but doesn't catch pointer events */
+  pointer-events: none;
+}
+
+/* keep left/right placement slightly inset from edges */
+.slider-nav-left {
+  left: 6px;
+}
+.slider-nav-right {
+  right: 6px;
+}
+
+/* Actual clickable control styled to match original design.
+   This is the element that receives pointer events. */
+.slider-control {
+  /* make this the visual button (same look as previous .slider-nav) */
+  pointer-events: auto;
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(6, 10, 20, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.06);
   color: #fff;
@@ -65,24 +89,21 @@
   backdrop-filter: blur(4px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.45);
   outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* left and right placement slightly inset from edges */
-.slider-nav-left {
-  left: 6px;   /* << was 12px / container padding was 56px previously */
-}
-.slider-nav-right {
-  right: 6px;
+/* hover / press styles only apply on the inner control */
+.slider-control:hover {
+  transform: scale(1.03);
 }
 
-.slider-nav:hover {
-  transform: translateY(-50%) scale(1.03);
-}
-
-/* disabled visual */
-.slider-nav.disabled {
+/* disabled visual - applied on outer container and inner control */
+.slider-nav.disabled .slider-control,
+.slider-control:disabled {
   opacity: 0.32;
-  pointer-events: none;
+  pointer-events: none; /* inner control disabled stops clicks */
 }
 
 /* responsiveness */
@@ -97,12 +118,6 @@
   .slider-nav {
     width: 44px;
     height: 44px;
-  }
-  .slider-nav-left {
-    left: 6px;
-  }
-  .slider-nav-right {
-    right: 6px;
   }
 }
 
