@@ -148,11 +148,13 @@ if (!loading && !catalogPageData.success) {
       {/* Section 3: Frequently Bought */}
       <div className="catalog-section">
         <div className="section-heading">Frequently Bought</div>
-        <div className="catalog-grid">
-          {mostSellingCourses?.slice(0, 4).map((course, idx) => (
-            <Course_Card course={course} key={idx} Height="heigh-course-Card" />
-          ))}
-        </div>
+
+        {/* Use CourseSlider so this section is horizontally scrollable on touch and via buttons */}
+        {mostSellingCourses && mostSellingCourses.length > 0 ? (
+          <CourseSlider Courses={mostSellingCourses.slice(0, 12)} />
+        ) : (
+          <p className="no-courses">No frequently bought courses found.</p>
+        )}
       </div>
 
       <Footer />

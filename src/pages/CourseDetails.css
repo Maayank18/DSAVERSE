@@ -1,10 +1,11 @@
-/* ======= Responsive Course Details CSS (fixed) ======= */
+/* ===== Final responsive fixes for Course Details (no -webkit- prefixes) ===== */
 
-/* Prevent horizontal overflow and ensure consistent box-sizing */
+/* Reset & box-sizing + prevent horizontal overflow globally */
 html, body {
   width: 100%;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* global safety */
   box-sizing: border-box;
 }
 *, *::before, *::after {
@@ -15,7 +16,7 @@ html, body {
 .course-details-wrapper {
   background-color: #2c333f;
   width: 100%;
-  overflow-x: hidden; /* extra safety */
+  overflow-x: hidden;
   padding-bottom: 2.5rem;
 }
 
@@ -23,29 +24,38 @@ html, body {
 .course-details-container {
   max-width: 1260px;
   margin: 0 auto;
-  /* use clamp so padding adapts on very small/large screens */
   padding: 0 clamp(1rem, 3vw, 1.5rem);
   position: relative;
-  min-width: 0; /* allow children to shrink */
+  min-width: 0; /* allow shrink */
+  width: 100%;
+  padding-right: max(1rem, env(safe-area-inset-right)); /* avoid notch / right cut */
 }
 
-/* Two-Column Layout */
+/* Ensure all children inside container can't force overflow */
+.course-details-container,
+.course-details-container * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Two-column layout */
 .course-details-main {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: clamp(1rem, 2.5vw, 2rem);
   padding: 2rem 0;
   align-items: start;
-  /* ensure grid children can shrink instead of creating overflow */
   min-width: 0;
 }
 
-/* Ensure each direct child can shrink (fixes long content overflow) */
+/* Make sure grid children can shrink instead of overflowing */
 .course-details-main > * {
   min-width: 0;
+  max-width: 100%;
 }
 
-/* Left Column */
+/* Left column */
 .course-left-column {
   display: flex;
   flex-direction: column;
@@ -82,9 +92,10 @@ html, body {
   object-fit: cover;
   object-position: center;
   border-radius: 0.75rem;
+  max-width: 100%;
 }
 
-/* Course Meta */
+/* Course meta */
 .course-meta {
   color: #f1f2f4;
   display: flex;
@@ -136,7 +147,7 @@ html, body {
   margin-right: 0.25rem;
 }
 
-/* Right Column (Card) */
+/* Right column (card) */
 .course-card-desktop {
   background-color: #1e2531;
   border-radius: 0.75rem;
@@ -150,10 +161,29 @@ html, body {
   position: sticky;
   top: 4rem;
   width: 100%;
-  min-width: 0; /* critical: prevents overflow from children */
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible; /* ensure no internal scrollbar */
 }
 
-/* Course Content Wrapper */
+/* Defensive rule: if child inside card tries to be wider */
+.course-card-desktop * {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Card images, icons, media scale down properly */
+.course-card-desktop img,
+.course-card-desktop svg,
+.course-card-desktop video,
+.course-card-desktop iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Course content wrapper & sections */
 .course-content-wrapper {
   max-width: 1260px;
   margin: 0 auto;
@@ -162,19 +192,25 @@ html, body {
   min-width: 0;
 }
 
-/* What You'll Learn */
-.course-what-you-learn {
+/* Content blocks */
+.course-what-you-learn,
+.course-content,
+.course-author {
   background-color: #1e2531;
   border: 1px solid #374151;
   border-radius: 0.75rem;
   padding: 1.25rem;
   margin-top: 1.5rem;
+  min-width: 0;
+  max-width: 100%;
 }
-.course-what-you-learn .section-title {
+.course-what-you-learn .section-title,
+.course-content-header .section-title,
+.course-author .section-title {
   font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
   color: #f1f2f4;
+  margin: 0 0 0.75rem 0;
 }
 .section-body {
   font-size: 1rem;
@@ -184,25 +220,12 @@ html, body {
   overflow-wrap: break-word;
 }
 
-/* Course Content */
-.course-content {
-  background-color: #1e2531;
-  border: 1px solid #374151;
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-  margin-top: 1.5rem;
-  min-width: 0;
-}
+/* Course content header */
 .course-content-header {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1rem;
-}
-.course-content-header .section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #f1f2f4;
 }
 .course-content-summary {
   display: flex;
@@ -223,7 +246,7 @@ html, body {
   padding: 0.25rem 0;
 }
 
-/* Accordion Styles */
+/* Accordion & lecture list */
 .accordion-section {
   margin-top: 1rem;
   border-top: 1px solid #374151;
@@ -232,8 +255,6 @@ html, body {
 .accordion-item {
   min-width: 0;
 }
-
-/* Lecture list items - ensure they wrap nicely */
 .lecture-list .lecture-item {
   display: flex;
   justify-content: space-between;
@@ -243,21 +264,7 @@ html, body {
   word-break: break-word;
 }
 
-/* Author Info */
-.course-author {
-  background-color: #1e2531;
-  border: 1px solid #374151;
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-  margin-top: 1.5rem;
-  margin-bottom: 2.5rem;
-}
-.course-author .section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: #f1f2f4;
-}
+/* Author info */
 .author-info {
   display: flex;
   align-items: center;
@@ -270,11 +277,6 @@ html, body {
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-}
-.author-info p {
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: #f8fafc;
 }
 .author-bio {
   font-size: 0.95rem;
@@ -289,80 +291,61 @@ html, body {
   min-height: 100vh;
 }
 
-/* ===== Responsive tweaks ===== */
+/* Utility: make inline/long content wrap (defensive) */
+.course-meta, .course-description, .section-body, .lecture-item, .author-bio,
+.course-card-desktop, .course-details-container {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
 
-/* Disable sticky card and reduce padding for mid-sized screens to avoid overlap */
+/* Remove any accidental 100vw usage by children */
+[class*="-vw"] { max-width: 100%; }
+
+/* ===== Responsive rules ===== */
+
+/* <= 1024 — stack columns and disable sticky to avoid overlap */
 @media (max-width: 1024px) {
+  .course-details-main {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
   .course-card-desktop {
     position: static;
     margin-top: 1rem;
     top: auto;
-  }
-
-  .course-details-main {
-    grid-template-columns: 1fr; /* stack on medium screens to avoid narrow right column */
-    gap: 1rem;
+    order: 2;
   }
 }
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
-  .course-details-main {
-    grid-template-columns: 1fr;
-  }
-
-  .course-card-desktop {
-    position: static;
-    margin-top: 0.75rem;
-    order: 2; /* card will appear after the left column content */
-  }
-
-  .course-thumbnail-mobile {
-    max-height: 18rem;
-  }
-
-  .course-title {
-    font-size: 1.25rem;
-  }
-
-  .course-description {
-    font-size: 0.95rem;
-  }
-
+  .course-thumbnail-mobile { max-height: 18rem; }
+  .course-title { font-size: 1.25rem; }
+  .course-description { font-size: 0.95rem; }
   .course-what-you-learn,
   .course-content,
-  .course-author {
-    padding: 1rem;
-  }
-
-  .course-content-summary {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
+  .course-author { padding: 1rem; }
+  .course-content-summary { flex-direction: column; gap: 0.5rem; }
+  .course-card-desktop { padding: 0.9rem; }
 }
 
-/* Extra small screens */
+/* Extra small */
 @media (max-width: 420px) {
-  .course-thumbnail-mobile {
-    max-height: 12rem;
-  }
-
-  .author-avatar {
-    width: 48px;
-    height: 48px;
-  }
+  .course-thumbnail-mobile { max-height: 12rem; }
+  .author-avatar { width: 48px; height: 48px; }
 }
 
-/* Utility: ensure long inline elements (links/code) don't expand container */
-.course-meta, .course-description, .section-body, .lecture-item, .author-bio {
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
-
-/* Final safety - prevent any accidental right-side overflow from children */
-.course-details-container,
+/* Final safety: forbid horizontal scroll accidentally introduced later */
 .course-details-wrapper,
+.course-details-container,
 .course-content-wrapper {
-  -webkit-overflow-scrolling: touch;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+}
+
+/* Force images, iframes, SVGs site-wide to never overflow */
+img, svg, video, iframe, canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }

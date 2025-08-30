@@ -1,8 +1,4 @@
-/* CourseSlider.css
-   - Touch-friendly scroller
-   - Buttons visible & clickable on desktop + mobile
-   - Minimal changes from your original styles
-*/
+/* CourseSlider.css - updated for reliable touch & button scrolling (no webkit scrollbar rule) */
 
 /* wrapper positions nav buttons and keeps layout full width */
 .course-slider-wrapper {
@@ -12,8 +8,6 @@
   padding: 0.65rem 0;
   display: flex;
   align-items: center;
-
-  /* allow nav buttons to be visible outside the scroller */
   overflow: visible;
 }
 
@@ -23,16 +17,12 @@
   overflow-x: auto;
   overflow-y: hidden;
   touch-action: pan-x;       /* allow horizontal pan (important for mobile swipe) */
-  -ms-touch-action: pan-x;   /* IE / Edge */
   scroll-behavior: smooth;
   width: 100%;
   box-sizing: border-box;
-
-  /* Reserve room for nav buttons at edges */
-  padding: 0 56px;
-
+  padding: 0 56px;           /* room for nav buttons */
   overscroll-behavior-x: contain;
-  scrollbar-width: none; /* firefox */
+  scrollbar-width: none; /* Firefox */
 }
 
 /* slider row */
@@ -52,7 +42,7 @@
 }
 
 /* NAV: outer positioned element (visual container).
-   Outer container typically does not intercept pointer events so swipes pass through.
+   The outer container should not intercept pointer events so swipes pass through.
 */
 .slider-nav {
   position: absolute;
@@ -64,12 +54,10 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-
-  /* default: outer container doesn't block swipes — inner control is clickable */
-  pointer-events: none;
+  pointer-events: none; /* outer container should NOT block swipes */
 }
 
-/* left/right placement; use safe-area for devices with notches */
+/* left/right placement */
 .slider-nav-left {
   left: env(safe-area-inset-left, 12px);
 }
@@ -91,11 +79,8 @@
   border-radius: 10px;
   cursor: pointer;
   transition: transform 0.12s ease, opacity 0.12s ease;
-  backdrop-filter: blur(4px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.45);
   outline: none;
-
-  /* help mobile register taps without interfering with pan intent */
   touch-action: manipulation;
 }
 
@@ -132,7 +117,6 @@
     width: 220px;
   }
 
-  /* keep some padding so cards don't sit under the buttons */
   .course-slider-container {
     padding: 0 40px;
   }
@@ -140,9 +124,8 @@
   .slider-nav {
     width: 40px;
     height: 40px;
-
-    /* make outer small container accept pointer events on mobile for reliable taps */
-    pointer-events: auto;
+    /* keep outer container non-intercepting so swipes work:
+       pointer-events remains 'none' here (button will still receive clicks) */
   }
 
   .slider-nav-left {
@@ -152,14 +135,18 @@
     right: 8px;
   }
 
-  /* keep inner control big enough to be tappable */
   .slider-control {
     width: 40px;
     height: 40px;
   }
 }
 
-/* optional: hide firefox scrollbar without removing functionality */
-.course-slider-container::-webkit-scrollbar {
-  display: none;
+/* keep images/media inside cards from overflowing */
+.course-slider-container img,
+.course-slider-container svg,
+.course-slider-container video,
+.course-slider-container iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
