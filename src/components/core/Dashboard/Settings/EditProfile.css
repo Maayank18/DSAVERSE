@@ -13,11 +13,16 @@
 
   display: flex;               /* enable flexbox */
   flex-direction: column;      /* stack form content vertically */
-  align-items: center;         /* center all child elements horizontally */
+
+  /* changed: allow form content to stretch full width (prevents inner card centering causing squeeze) */
+  align-items: stretch;
+  box-sizing: border-box;
 }
 
+/* Keep the main section full width inside the form */
 .form-section {
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* Layout for form rows */
@@ -25,12 +30,17 @@
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
-/* Make each field share row width equally */
+/* Make each field share row width equally
+   Updated to allow shrinking on narrow viewports:
+   - flex: 1 1 0 allows grow + shrink and avoids a forced basis
+   - min-width: 0 is essential so flex items can shrink below their content width */
 .form-row .form-group {
-  flex: 1;       /* equal space for each group in a row */
-  min-width: 250px; /* prevent too small on narrow screens */
+  flex: 1 1 0;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* Full-width rows stay full */
@@ -40,10 +50,12 @@
 
 /* Labels */
 .label {
+  display: block;
   font-size: 15px;
   font-weight: 500;
   margin-bottom: 6px;
   color: #dddddd;
+  box-sizing: border-box;
 }
 
 /* Inputs & Textareas fill their group */
@@ -59,8 +71,14 @@ select.input {
   background-color: #2b2d35;
   color: #eaeaea;
   transition: border-color 0.3s, background-color 0.3s;
+
+  /* allow long values to wrap if necessary and avoid overflow */
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
+/* Focus state */
 .input:focus {
   outline: none;
   border-color: #ffe400;
@@ -87,6 +105,7 @@ select.input {
   justify-content: flex-end;
   gap: 16px;
   margin-top: 32px;
+  box-sizing: border-box;
 }
 
 /* Buttons */
@@ -99,6 +118,7 @@ select.input {
   cursor: pointer;
   border: none;
   transition: background-color 0.3s;
+  box-sizing: border-box;
 }
 
 .cancel-btn {
@@ -108,4 +128,77 @@ select.input {
 
 .cancel-btn:hover {
   background-color: #50535c;
+}
+
+/* --------------------------
+   Responsive tweaks for small/mobile viewports
+   -------------------------- */
+@media (max-width: 480px) {
+  .profile-form {
+    padding: 16px;     /* reduce padding so inner content has more space */
+    margin: 20px auto;
+    border-radius: 10px;
+  }
+
+  .form-row {
+    gap: 12px;         /* smaller gaps on narrow screens */
+  }
+
+  .label {
+    font-size: 14px;
+  }
+
+  .input,
+  .input.textarea,
+  select.input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .input.textarea {
+    min-height: 120px;
+  }
+
+  /* Make action buttons stack nicely and use full width */
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .btn,
+  .IconBtn button {
+    width: 100%;
+    padding: 12px 16px;
+  }
+}
+
+/* Medium breakpoint adjustments (phones in landscape / small tablets) */
+@media (max-width: 768px) {
+  .profile-form {
+    padding: 20px;
+    margin: 24px auto;
+  }
+
+  .form-row {
+    gap: 16px;
+  }
+
+  /* reduce min-width so two-column rows can collapse gracefully when needed */
+  .form-row .form-group {
+    min-width: 180px;
+  }
+}
+
+/* Optional: small visual tweak for selects on many browsers */
+select.input {
+  appearance: none;
+  -moz-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #ccc 50%),
+                    linear-gradient(135deg, #ccc 50%, transparent 50%),
+                    linear-gradient(to right, #2b2d35, #2b2d35);
+  background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px), 100% 0;
+  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
+  background-repeat: no-repeat;
+  padding-right: 40px;
 }
