@@ -413,32 +413,58 @@ export const deleteCourse = async (courseId, token) => {
 //   }
 // };
 
+// export const getFullDetailsOfCourse = async (courseId, token = null) => {
+//   if (!courseId) throw new Error("courseId is required in getFullDetailsOfCourse");
+
+//   const hasToken =
+//     token && typeof token === "string" && token.trim() !== "" && token !== "null";
+
+//   // defensive: ensure endpoints exist (gives clearer error if names are wrong)
+//   const endpointAuth = courseEndpoints?.GET_FULL_COURSE_DETAILS_AUTHENTICATED;
+//   const endpointPublic = courseEndpoints?.GET_COURSE_DETAILS_NOT_AUTHENTICATED;
+
+//   if (hasToken) {
+//     if (!endpointAuth) {
+//       throw new Error("Authenticated endpoint not configured: courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED is missing");
+//     }
+//     const url = `${endpointAuth}?courseId=${courseId}`;
+//     const headers = { Authorization: `Bearer ${token}` };
+//     console.log("[getFullDetailsOfCourse] calling AUTH GET:", url);
+//     return apiConnector("GET", url, null, headers);
+//   } else {
+//     if (!endpointPublic) {
+//       throw new Error("Public endpoint not configured: courseEndpoints.GET_COURSE_DETAILS_NOT_AUTHENTICATED is missing");
+//     }
+//     const url = endpointPublic;
+//     const body = { courseId };
+//     console.log("[getFullDetailsOfCourse] calling PUBLIC POST:", url, body);
+//     return apiConnector("POST", url, body, {});
+//   }
+// };
+
 export const getFullDetailsOfCourse = async (courseId, token = null) => {
-  if (!courseId) throw new Error("courseId is required in getFullDetailsOfCourse");
+  if (!courseId) {
+    throw new Error("getFullDetailsOfCourse: courseId is required");
+  }
 
-  const hasToken =
-    token && typeof token === "string" && token.trim() !== "" && token !== "null";
+  const hasToken = token && typeof token === "string" && token.trim() !== "" && token !== "null";
 
-  // defensive: ensure endpoints exist (gives clearer error if names are wrong)
   const endpointAuth = courseEndpoints?.GET_FULL_COURSE_DETAILS_AUTHENTICATED;
   const endpointPublic = courseEndpoints?.GET_COURSE_DETAILS_NOT_AUTHENTICATED;
 
   if (hasToken) {
     if (!endpointAuth) {
-      throw new Error("Authenticated endpoint not configured: courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED is missing");
+      throw new Error("courseEndpoints.GET_FULL_COURSE_DETAILS_AUTHENTICATED is not configured");
     }
     const url = `${endpointAuth}?courseId=${courseId}`;
-    const headers = { Authorization: `Bearer ${token}` };
-    console.log("[getFullDetailsOfCourse] calling AUTH GET:", url);
-    return apiConnector("GET", url, null, headers);
+    console.info("[getFullDetailsOfCourse] AUTH GET ->", url);
+    return apiConnector("GET", url, null, { Authorization: `Bearer ${token}` });
   } else {
     if (!endpointPublic) {
-      throw new Error("Public endpoint not configured: courseEndpoints.GET_COURSE_DETAILS_NOT_AUTHENTICATED is missing");
+      throw new Error("courseEndpoints.GET_COURSE_DETAILS_NOT_AUTHENTICATED is not configured");
     }
-    const url = endpointPublic;
-    const body = { courseId };
-    console.log("[getFullDetailsOfCourse] calling PUBLIC POST:", url, body);
-    return apiConnector("POST", url, body, {});
+    console.info("[getFullDetailsOfCourse] PUBLIC POST ->", endpointPublic, { courseId });
+    return apiConnector("POST", endpointPublic, { courseId }, {});
   }
 };
 
