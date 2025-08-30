@@ -405,15 +405,6 @@
   }
 }
 
-
-
-
-
-
-
-
-
-
 /* Hide Profile & Dashboard from the mobile hamburger menu only */
 @media (max-width: 768px) {
   /* target links inside the mobile menu - adjust #mobile-menu if your id is different */
@@ -434,11 +425,16 @@
   }
 }
 
-/* hide the top cart icon on mobile; keep it visible on desktop */
+/* hide the top cart icon on mobile; keep it visible on desktop
+   (this is placed last for specificity/override) */
 @media screen and (max-width: 768px) {
+  .navbar-auth .cart-icon,
+  .navbar-auth .cart-icon .icon,
+  .navbar-auth .cart-count,
   .hide-on-mobile {
     display: none !important;
-    visibility: hidden;
-    pointer-events: none;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
   }
 }
