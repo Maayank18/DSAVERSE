@@ -266,12 +266,6 @@
   pointer-events: none;
 }
 
-/* Slightly smaller on narrow mobile screens */
-@media screen and (max-width: 480px) {
-  .navbar-logo {
-    max-height: 40px;
-  }
-}
 
 
 
