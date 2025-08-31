@@ -261,6 +261,7 @@
   display: block;
   width: auto;
   height: 40px;
+  width: 200px;
   object-fit: contain;
   pointer-events: none;
 }
