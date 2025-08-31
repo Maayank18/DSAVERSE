@@ -247,7 +247,8 @@
 /* Logo area */
 /* Logo area: keep wrapper same height as navbar */
 .navbar-logo-wrapper {
-  height: 56px;        /* same as navbar */
+  height: 100%;  
+  width: 220px;      /* same as navbar */
   display: flex;
   align-items: center; /* vertical center */
   overflow: hidden;    /* fine to keep */
