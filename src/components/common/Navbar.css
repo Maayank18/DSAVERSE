@@ -273,13 +273,6 @@
   }
 }
 
-/* Optional: larger on very wide desktops (if you want a more prominent logo) */
-@media screen and (min-width: 1200px) {
-  .navbar-logo {
-    max-height: 60px; /* will still be constrained by the wrapper height (56px),
-                         so increase wrapper too if you change this */
-  }
-}
 
 
 /* Slightly smaller on narrow mobile screens */
