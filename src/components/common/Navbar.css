@@ -245,22 +245,32 @@
 }
 
 /* Logo area */
+/* Logo area: keep wrapper same height as navbar */
 .navbar-logo-wrapper {
   height: 56px;        /* same as navbar */
   display: flex;
-  align-items: center; /* center logo vertically */
-  overflow: hidden;    /* cut off extra invisible space */
+  align-items: center; /* vertical center */
+  overflow: hidden;    /* fine to keep */
+  padding: 0;          /* prevent extra spacing */
 }
 
-/* Logo sizing - keep within navbar height to avoid overlaps */
-/* If your logo looked huge, lower this value (e.g. 36px or 40px) */
+/* Logo sizing: use max-height so logo never exceeds wrapper */
 .navbar-logo {
-  height: 160px; /* adjusted to fit the navbar height */
-  width: auto;
-  object-fit: contain;
   display: block;
+  width: auto;
+  max-height: 44px;    /* fits comfortably inside 56px navbar (padding + gap) */
+  height: auto;
+  object-fit: contain;
   pointer-events: none;
 }
+
+/* Slightly smaller on narrow mobile screens */
+@media screen and (max-width: 480px) {
+  .navbar-logo {
+    max-height: 36px;
+  }
+}
+
 
 /* -------------------- MOBILE MENU STYLES -------------------- */
 
