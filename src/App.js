@@ -1,6 +1,7 @@
 import "./App.css";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Analytics } from "@vercel/analytics/react";
 
 import Home from "./pages/Home";
 import Navbar from "./components/common/Navbar";
@@ -130,6 +131,7 @@ function App() {
 
         <Route path="*" element={<Error />} />
       </Routes>
+      <Analytics />
     </div>
   );
 }
