@@ -568,12 +568,17 @@ export const createRating = async (data, token) => {
 
   try {
     // Standard Axios-style config: headers must be under `headers`
+    // const response = await apiConnector("POST", CREATE_RATING_API, data, {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //     "Content-Type": "application/json",
+    //   },
+    // });
     const response = await apiConnector("POST", CREATE_RATING_API, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     });
+
 
     console.log("CREATE RATING API RESPONSE............", response);
 
