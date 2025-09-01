@@ -1,14 +1,3 @@
-/* EnrolledCourses.css
-   Original desktop/tablet styles preserved.
-   Only responsive (mobile) rules updated so desktop website view stays exactly the same.
-   Mobile fixes:
-   - Prevent title from being cut on mobile by allowing it to wrap (up to 3 lines)
-   - Keep thumbnail compact (not full-width) on mobile so layout remains balanced
-   - Allow course description to wrap to a couple of lines instead of single-line truncation
-   - Keep progress area full-width underneath the left area on mobile
-*/
-
-/* ===== original (desktop) rules - unchanged ===== */
 .enrolled-wrapper {
   color: #f1f5f9;
 }
@@ -111,80 +100,19 @@
   margin: 0;
 }
 
-/* ===== UPDATED RESPONSIVE RULES (only this block changed) ===== */
+/* Responsive */
 @media (max-width: 768px) {
-  /* stack row vertically but keep left area (thumbnail + info) in a single row so title can wrap */
   .enrolled-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.9rem;
   }
 
-  /* keep thumbnail + info side-by-side on mobile for a compact card look */
-  .course-left {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.9rem;
-    width: 100%;
-    min-width: 0;      /* important so children can shrink */
-    overflow: visible; /* allow wrapping for title text */
-  }
-
-  /* make thumbnail smaller (not full width) on mobile to avoid huge images */
-  .thumbnail-wrapper {
-    width: 120px;       /* compact thumbnail on mobile */
-    max-width: 40%;
-    aspect-ratio: 16 / 9;
-    flex: 0 0 auto;
-  }
-
-  /* course-info needs to allow wrapping text and not be clipped */
-  .course-info {
-    flex: 1 1 auto;
-    min-width: 0;       /* critical to allow children to shrink / wrap */
-    overflow: visible;
-  }
-
-  /* allow the title to wrap (up to 3 lines) so it is not cut off on narrow screens */
-  .course-title {
-    white-space: normal;                 /* allow wrapping on mobile */
-    display: block;
-    overflow: hidden;                    /* hide any overflow beyond max-height */
-    max-height: calc(1.2rem * 3);        /* allow up to 3 lines (change to 2 if you prefer) */
-    line-height: 1.2rem;
-    text-overflow: ellipsis;
-    word-break: break-word;              /* prevent long words from causing overflow */
-  }
-
-  /* allow description to use up to 2 lines (instead of a single nowrap line) */
-  .course-desc {
-    white-space: normal;
-    display: block;
-    overflow: hidden;
-    max-height: calc(1.1rem * 2);        /* show up to 2 lines */
-    text-overflow: ellipsis;
-    word-break: break-word;
-  }
-
-  /* progress area becomes full-width below left area on mobile */
   .course-progress {
     width: 100%;
     margin-top: 0.75rem;
-    margin-left: 0;
-    min-width: 0;
-    align-items: stretch;
   }
 
-  /* ensure injected progress bar stretches fully */
-  .course-progress .react-progress-bar,
-  .course-progress .progress-bar,
-  .course-progress .progress-wrapper,
-  .course-progress .progressbar {
-    width: 100% !important;
-    max-width: 100% !important;
+  .thumbnail-wrapper {
+    width: 100%; /* full width thumbnail on small screens */
   }
 }
-
-/* ===== end of CSS ===== */
