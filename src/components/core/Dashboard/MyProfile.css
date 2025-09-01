@@ -23,10 +23,11 @@
 
 .profile-img {
   width: 78px;
-  aspect-ratio: 1 / 1;
-  border-radius: 9999px;
+  height: 78px;       /* force equal height */
+  border-radius: 50%; /* simpler and safe */
   object-fit: cover;
 }
+
 
 .profile-info {
   display: flex;
