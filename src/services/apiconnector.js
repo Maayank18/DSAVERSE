@@ -17,15 +17,18 @@ const axiosInstance = axios.create({
 
 export const apiConnector = async (method, url, bodyData = null, headers = {}, params = {}) => {
   try {
+    // normalize possible nested shape (caller passed { headers: { ... } })
+    const finalHeaders = headers && headers.headers ? headers.headers : headers;
+
     console.log("📤 Request →", method, url);
     console.log("📨 Payload:", bodyData);
-    console.log("📨 Headers being sent:", headers);
+    console.log("📨 Headers being sent:", finalHeaders);
 
     const response = await axiosInstance({
       method,
       url,
       data: bodyData,
-      headers,
+      headers: finalHeaders,
       params,
     });
 
@@ -43,4 +46,33 @@ export const apiConnector = async (method, url, bodyData = null, headers = {}, p
     throw error;
   }
 };
+
+// export const apiConnector = async (method, url, bodyData = null, headers = {}, params = {}) => {
+//   try {
+//     console.log("📤 Request →", method, url);
+//     console.log("📨 Payload:", bodyData);
+//     console.log("📨 Headers being sent:", headers);
+
+//     const response = await axiosInstance({
+//       method,
+//       url,
+//       data: bodyData,
+//       headers,
+//       params,
+//     });
+
+//     console.log("📥 Response:", response);
+//     return response;
+//   } catch (error) {
+//     console.error("❌ API Error:", error);
+//     if (error.response) {
+//       console.error("❌ Error Response:", error.response.status, error.response.data);
+//     } else if (error.request) {
+//       console.error("❌ No Response Received:", error.request);
+//     } else {
+//       console.error("❌ Setup Error:", error.message);
+//     }
+//     throw error;
+//   }
+// };
 
