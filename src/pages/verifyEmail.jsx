@@ -25,31 +25,60 @@ function VerifyEmail() {
   }, [signupData, navigate]);
 
   // Send OTP on first mount (guarded)
+  // useEffect(() => {
+  //   if (!signupData?.email || otpSentOnce.current) return;
+
+  //   otpSentOnce.current = true;
+
+  //   const sendInitialOtp = async () => {
+  //     try {
+  //       setSending(true);
+  //       // await dispatch(sendOtp(signupData.email, navigate, true, false)).unwrap(); // showToast = false
+  //       dispatch(sendOtp(signupData.email, navigate, true, false));
+  //       setResendCooldown(30); // Start cooldown after initial send
+  //     } catch (err) {
+  //       console.error("Initial OTP send failed:", err);
+  //     } finally {
+  //       setSending(false);
+  //     }
+  //   };
+
+  //   // Avoid React 18 double fire
+  //   const timer = setTimeout(() => {
+  //     sendInitialOtp();
+  //   }, 0);
+
+  //   return () => clearTimeout(timer);
+  // }, [signupData, dispatch, navigate]);
   useEffect(() => {
-    if (!signupData?.email || otpSentOnce.current) return;
+  if (!signupData?.email || otpSentOnce.current) return;
 
-    otpSentOnce.current = true;
+  otpSentOnce.current = true; // set guard immediately
 
-    const sendInitialOtp = async () => {
-      try {
-        setSending(true);
-        // await dispatch(sendOtp(signupData.email, navigate, true, false)).unwrap(); // showToast = false
-        dispatch(sendOtp(signupData.email, navigate, true, false));
-        setResendCooldown(30); // Start cooldown after initial send
-      } catch (err) {
-        console.error("Initial OTP send failed:", err);
-      } finally {
-        setSending(false);
-      }
-    };
+  const sendInitialOtp = async () => {
+    try {
+      setSending(true);
+      // await the dispatch so we don't cause race or accidental re-send
+      await dispatch(sendOtp(signupData.email, navigate, true, false)).unwrap();
+      setResendCooldown(30);
+      console.log("Initial OTP sent:", signupData.email);
+    } catch (err) {
+      console.error("Initial OTP send failed:", err);
+      // if you want to allow retry on failure, clear the guard:
+      otpSentOnce.current = false;
+    } finally {
+      setSending(false);
+    }
+  };
 
-    // Avoid React 18 double fire
-    const timer = setTimeout(() => {
-      sendInitialOtp();
-    }, 0);
+  // Keep setTimeout(0) if you were avoiding double effect calls during dev
+  const timer = setTimeout(() => {
+    sendInitialOtp();
+  }, 0);
 
-    return () => clearTimeout(timer);
-  }, [signupData, dispatch, navigate]);
+  return () => clearTimeout(timer);
+}, [signupData, dispatch, navigate]);
+
 
   // Cooldown timer
   useEffect(() => {
