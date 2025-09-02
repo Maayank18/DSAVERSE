@@ -94,7 +94,7 @@ function VerifyEmail() {
           </p>
 
           <form onSubmit={handleVerifyAndSignup} className="verify-form">
-            <OtpInput
+            {/* <OtpInput
               value={otp}
               onChange={setOtp}
               numInputs={6}
@@ -104,7 +104,25 @@ function VerifyEmail() {
                 <input {...props} placeholder="-" className="otp-input" />
               )}
               containerStyle={{ justifyContent: "space-between", gap: "0 6px" }}
+            /> */}
+            <OtpInput
+              value={otp}
+              onChange={setOtp}
+              numInputs={6}
+              shouldAutoFocus
+              renderInput={(props) => (
+                <input
+                  {...props}
+                  type="tel"          // ✅ iOS-friendly
+                  inputMode="numeric" // ✅ shows numeric keyboard
+                  pattern="[0-9]*"    // ✅ restricts to digits
+                  placeholder="-"
+                  className="otp-input"
+                />
+              )}
+              containerStyle={{ justifyContent: "space-between", gap: "0 6px" }}
             />
+
             <button type="submit" className="verify-button" disabled={otp.length < 6}>
               Verify Email
             </button>
