@@ -53,19 +53,47 @@ exports.createCategory = async (req,res) => {
 
 
 // Controller for GET all categories
+// exports.showAllCategories = async (req, res) => {
+//   try {
+//     const allCategories = await Category.find({}).populate("courses").exec();
+
+//     res.status(200).json({
+//       success: true,
+//       message: "All categories fetched successfully",
+//       data: allCategories,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error",
+//     });
+//   }
+// };
+
+
 exports.showAllCategories = async (req, res) => {
   try {
-    const allCategories = await Category.find({}).populate("courses").exec();
+    console.log("➡️  Incoming request: GET /showAllCategories");
 
-    res.status(200).json({
+    const allCategories = await Category.find({})
+      .populate("courses")
+      .exec();
+
+    console.log("✅ Categories found:", allCategories.length);
+
+    return res.status(200).json({
       success: true,
       message: "All categories fetched successfully",
       data: allCategories,
     });
+
   } catch (error) {
+    console.error("❌ showAllCategories ERROR:", error.stack || error);
+
     return res.status(500).json({
       success: false,
       message: "Internal server error",
+      error: error.message,  // <-- expose reason (temporary)
     });
   }
 };
