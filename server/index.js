@@ -120,6 +120,7 @@ const envOrigins = frontendEnv.length
   : [];
 
 const defaultOrigins = [
+  "*",
   "http://localhost:3000",
   "https://dsaverse-five.vercel.app",
   "https://dsaverse-git-main-mayank-gargs-projects-3b98a4f8.vercel.app",
